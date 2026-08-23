@@ -59,6 +59,7 @@ export function SurgeonProfileForm({
   const { fields, append, remove } = useFieldArray({ control: form.control, name: "locations" });
   const subspecialties = form.watch("subspecialties");
   const languages = form.watch("languages");
+  const bio = form.watch("bio");
 
   function toggleSubspecialty(tag: string, checked: boolean) {
     const current = form.getValues("subspecialties");
@@ -98,8 +99,15 @@ export function SurgeonProfileForm({
     onSaved?.();
   }
 
+  function onInvalid() {
+    // react-hook-form blocks the submit silently otherwise, so the only
+    // sign anything went wrong is a small red line under one of the many
+    // fields — easy to miss, which reads as "guardar no hace nada".
+    toast.error("Revisá los campos marcados en rojo antes de guardar.");
+  }
+
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8" noValidate>
+    <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="space-y-8" noValidate>
       <section className="space-y-4">
         <h2 className="font-heading text-lg font-semibold text-foreground">Datos básicos</h2>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -159,6 +167,9 @@ export function SurgeonProfileForm({
         <div className="space-y-1.5">
           <Label htmlFor="bio">Biografía</Label>
           <Textarea id="bio" rows={6} {...form.register("bio")} />
+          <p className="text-xs text-muted-foreground">
+            {bio?.length ?? 0}/4000 caracteres · mínimo 50
+          </p>
           {form.formState.errors.bio && (
             <p className="text-xs text-destructive">{form.formState.errors.bio.message}</p>
           )}
