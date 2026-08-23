@@ -7,7 +7,7 @@ const validProfile = {
   primarySpecialty: "orthopedic_spine_surgeon" as const,
   subspecialties: ["Spinal Deformity"],
   bio: "A".repeat(60),
-  hospitalAffiliation: "Hospital Central",
+  hospitalAffiliations: ["Hospital Central"],
   medicalLicenseNumber: "12345",
   medicalLicenseCountry: "Argentina",
   yearsExperience: 12,

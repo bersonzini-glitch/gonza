@@ -99,7 +99,7 @@ export function SurgeonReviewActions({
 
   return (
     <div className="flex flex-wrap gap-2">
-      {(status === "submitted" || status === "rejected") && (
+      {(status === "submitted" || status === "rejected" || status === "suspended") && (
         <Button
           disabled={isPending}
           onClick={() =>

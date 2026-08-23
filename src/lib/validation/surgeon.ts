@@ -45,6 +45,11 @@ export const surgeonLocationSchema = z.object({
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
+const optionalUrlField = () =>
+  z
+    .union([z.url({ protocol: /^https?$/, message: "Debe ser una URL http(s) válida" }), z.literal("")])
+    .optional();
+
 export const surgeonProfileSchema = z.object({
   fullName: z.string().trim().min(3, "El nombre completo es muy corto").max(150),
   // Empty/omitted means "don't change it" — the field is only shown once a
@@ -70,18 +75,19 @@ export const surgeonProfileSchema = z.object({
     .trim()
     .min(50, "La biografía debe tener al menos 50 caracteres")
     .max(4000, "La biografía es muy larga"),
-  hospitalAffiliation: z.string().trim().max(200).optional().or(z.literal("")),
+  hospitalAffiliations: z
+    .array(z.string().trim().min(1, "El nombre no puede estar vacío").max(200))
+    .max(10, "Máximo 10 hospitales o clínicas")
+    .optional(),
   medicalLicenseNumber: z.string().trim().max(100).optional().or(z.literal("")),
   medicalLicenseCountry: z.string().trim().max(100).optional().or(z.literal("")),
+  specialistLicenseNumber: z.string().trim().max(100).optional().or(z.literal("")),
   yearsExperience: z.coerce.number().int().min(0).max(70).optional(),
   consultationFormat: z.enum(CONSULTATION_FORMATS),
   languages: z.array(z.enum(LANGUAGE_OPTIONS)).min(1, "Seleccioná al menos un idioma"),
-  websiteUrl: z
-    .union([
-      z.url({ protocol: /^https?$/, message: "Debe ser una URL http(s) válida" }),
-      z.literal(""),
-    ])
-    .optional(),
+  websiteUrl: optionalUrlField(),
+  instagramUrl: optionalUrlField(),
+  linkedinUrl: optionalUrlField(),
   contactEmail: z
     .union([z.email({ message: "Debe ser un email válido" }), z.literal("")])
     .optional(),

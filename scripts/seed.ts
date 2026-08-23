@@ -99,13 +99,16 @@ interface SeedSurgeon {
   fullName: string;
   primarySpecialty: PrimarySpecialty;
   bio: string;
-  hospitalAffiliation: string | null;
+  hospitalAffiliations?: string[];
   medicalLicenseNumber: string | null;
   medicalLicenseCountry: string | null;
+  specialistLicenseNumber?: string | null;
   yearsExperience: number | null;
   consultationFormat: ConsultationFormat;
   languages: string[];
   websiteUrl: string | null;
+  instagramUrl?: string | null;
+  linkedinUrl?: string | null;
   contactEmail: string | null;
   contactPhone: string | null;
   subspecialties: string[];
@@ -227,15 +230,18 @@ async function seedDemoSurgeons(supabase: SupabaseClient<Database>) {
           full_name: surgeon.fullName,
           primary_specialty: surgeon.primarySpecialty,
           bio: surgeon.bio,
-          hospital_affiliation: surgeon.hospitalAffiliation,
+          hospital_affiliations: surgeon.hospitalAffiliations ?? [],
           medical_license_number: surgeon.medicalLicenseNumber,
           medical_license_country: surgeon.medicalLicenseCountry,
+          specialist_license_number: surgeon.specialistLicenseNumber ?? null,
           years_experience: surgeon.yearsExperience,
           consultation_format: surgeon.consultationFormat,
           in_person_available: inPersonAvailable,
           telemedicine_available: telemedicineAvailable,
           languages: surgeon.languages,
           website_url: surgeon.websiteUrl,
+          instagram_url: surgeon.instagramUrl ?? null,
+          linkedin_url: surgeon.linkedinUrl ?? null,
           contact_email: surgeon.contactEmail,
           contact_phone: surgeon.contactPhone,
           status: "approved",

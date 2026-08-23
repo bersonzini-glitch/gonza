@@ -1,4 +1,15 @@
-import { BadgeCheck, Building2, Globe, Languages, Mail, MapPin, Phone, Video } from "lucide-react";
+import {
+  AtSign,
+  BadgeCheck,
+  Building2,
+  Globe,
+  Languages,
+  Link2,
+  Mail,
+  MapPin,
+  Phone,
+  Video,
+} from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -160,12 +171,18 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
             </div>
           ))}
 
-          {surgeon.hospital_affiliation && (
+          {surgeon.hospital_affiliations.length > 0 && (
             <div className="flex gap-2.5">
               <Building2 className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
               <div>
-                <p className="text-xs font-medium text-muted-foreground">Hospital / clínica</p>
-                <p className="text-sm text-foreground">{surgeon.hospital_affiliation}</p>
+                <p className="text-xs font-medium text-muted-foreground">
+                  {surgeon.hospital_affiliations.length > 1
+                    ? "Hospitales / clínicas"
+                    : "Hospital / clínica"}
+                </p>
+                <p className="text-sm text-foreground">
+                  {surgeon.hospital_affiliations.join(", ")}
+                </p>
               </div>
             </div>
           )}
@@ -181,6 +198,18 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
                   {surgeon.medical_license_number}
                   {surgeon.medical_license_country ? ` (${surgeon.medical_license_country})` : ""}
                 </p>
+              </div>
+            </div>
+          )}
+
+          {surgeon.specialist_license_number && (
+            <div className="flex gap-2.5">
+              <BadgeCheck className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
+              <div>
+                <p className="text-xs font-medium text-muted-foreground">
+                  Matrícula de especialista
+                </p>
+                <p className="text-sm text-foreground">{surgeon.specialist_license_number}</p>
               </div>
             </div>
           )}
@@ -211,7 +240,11 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
           </div>
         </div>
 
-        {(surgeon.website_url || surgeon.contact_email || surgeon.contact_phone) && (
+        {(surgeon.website_url ||
+          surgeon.instagram_url ||
+          surgeon.linkedin_url ||
+          surgeon.contact_email ||
+          surgeon.contact_phone) && (
           <div className="mt-6 flex flex-wrap gap-4 text-sm">
             {surgeon.website_url && (
               <a
@@ -222,6 +255,28 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
               >
                 <Globe className="size-4" aria-hidden="true" />
                 Sitio web profesional
+              </a>
+            )}
+            {surgeon.instagram_url && (
+              <a
+                href={surgeon.instagram_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-primary hover:underline"
+              >
+                <AtSign className="size-4" aria-hidden="true" />
+                Instagram
+              </a>
+            )}
+            {surgeon.linkedin_url && (
+              <a
+                href={surgeon.linkedin_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-primary hover:underline"
+              >
+                <Link2 className="size-4" aria-hidden="true" />
+                LinkedIn
               </a>
             )}
             {surgeon.contact_email && (

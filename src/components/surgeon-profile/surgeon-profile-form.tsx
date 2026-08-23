@@ -70,6 +70,25 @@ export function SurgeonProfileForm({
   const subspecialties = form.watch("subspecialties");
   const languages = form.watch("languages");
   const bio = form.watch("bio");
+  const hospitalAffiliations = form.watch("hospitalAffiliations") ?? [];
+
+  function addHospital() {
+    form.setValue("hospitalAffiliations", [...hospitalAffiliations, ""], {
+      shouldValidate: true,
+    });
+  }
+
+  function updateHospital(index: number, value: string) {
+    const current = [...(form.getValues("hospitalAffiliations") ?? [])];
+    current[index] = value;
+    form.setValue("hospitalAffiliations", current, { shouldValidate: true });
+  }
+
+  function removeHospital(index: number) {
+    const current = [...(form.getValues("hospitalAffiliations") ?? [])];
+    current.splice(index, 1);
+    form.setValue("hospitalAffiliations", current, { shouldValidate: true });
+  }
 
   function toggleSubspecialty(tag: string, checked: boolean) {
     const current = form.getValues("subspecialties");
@@ -247,20 +266,49 @@ export function SurgeonProfileForm({
         <h2 className="font-heading text-lg font-semibold text-foreground">
           Afiliación y credenciales
         </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <Label htmlFor="hospitalAffiliation">Hospital / clínica</Label>
-            <Input
-              id="hospitalAffiliation"
-              aria-invalid={!!form.formState.errors.hospitalAffiliation}
-              {...form.register("hospitalAffiliation")}
-            />
-            {form.formState.errors.hospitalAffiliation && (
-              <p className="text-xs text-destructive">
-                {form.formState.errors.hospitalAffiliation.message}
-              </p>
-            )}
+
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <Label>Hospitales / clínicas</Label>
+            <Button type="button" variant="outline" size="sm" onClick={addHospital}>
+              <Plus className="size-4" /> Agregar
+            </Button>
           </div>
+          {hospitalAffiliations.length === 0 && (
+            <p className="text-xs text-muted-foreground">
+              Agregá los hospitales o clínicas donde atendés.
+            </p>
+          )}
+          {hospitalAffiliations.map((value, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Input
+                value={value}
+                aria-invalid={!!form.formState.errors.hospitalAffiliations?.[index]}
+                onChange={(e) => updateHospital(index, e.target.value)}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="shrink-0 text-destructive"
+                onClick={() => removeHospital(index)}
+                aria-label="Quitar hospital o clínica"
+              >
+                <Trash2 className="size-4" />
+              </Button>
+            </div>
+          ))}
+          {form.formState.errors.hospitalAffiliations && (
+            <p className="text-xs text-destructive">
+              {arrayFieldErrorMessage(
+                form.formState.errors.hospitalAffiliations,
+                "Revisá los hospitales o clínicas agregados.",
+              )}
+            </p>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="medicalLicenseNumber">Número de matrícula</Label>
             <Input
@@ -284,6 +332,19 @@ export function SurgeonProfileForm({
             {form.formState.errors.medicalLicenseCountry && (
               <p className="text-xs text-destructive">
                 {form.formState.errors.medicalLicenseCountry.message}
+              </p>
+            )}
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="specialistLicenseNumber">Matrícula de especialista</Label>
+            <Input
+              id="specialistLicenseNumber"
+              aria-invalid={!!form.formState.errors.specialistLicenseNumber}
+              {...form.register("specialistLicenseNumber")}
+            />
+            {form.formState.errors.specialistLicenseNumber && (
+              <p className="text-xs text-destructive">
+                {form.formState.errors.specialistLicenseNumber.message}
               </p>
             )}
           </div>
@@ -495,6 +556,34 @@ export function SurgeonProfileForm({
             {form.formState.errors.websiteUrl && (
               <p className="text-xs text-destructive">
                 {form.formState.errors.websiteUrl.message}
+              </p>
+            )}
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="instagramUrl">Instagram</Label>
+            <Input
+              id="instagramUrl"
+              placeholder="https://instagram.com/…"
+              aria-invalid={!!form.formState.errors.instagramUrl}
+              {...form.register("instagramUrl")}
+            />
+            {form.formState.errors.instagramUrl && (
+              <p className="text-xs text-destructive">
+                {form.formState.errors.instagramUrl.message}
+              </p>
+            )}
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="linkedinUrl">LinkedIn</Label>
+            <Input
+              id="linkedinUrl"
+              placeholder="https://linkedin.com/in/…"
+              aria-invalid={!!form.formState.errors.linkedinUrl}
+              {...form.register("linkedinUrl")}
+            />
+            {form.formState.errors.linkedinUrl && (
+              <p className="text-xs text-destructive">
+                {form.formState.errors.linkedinUrl.message}
               </p>
             )}
           </div>
