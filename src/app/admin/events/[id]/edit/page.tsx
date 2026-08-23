@@ -54,10 +54,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
         <h2 className="font-heading text-2xl font-semibold text-foreground">Editar evento</h2>
         <DeleteEventButton eventId={event.id} />
       </div>
-      <EventForm
-        defaultValues={defaultValues}
-        action={(values) => updateEventAction(event.id, values)}
-      />
+      <EventForm defaultValues={defaultValues} action={updateEventAction.bind(null, event.id)} />
     </div>
   );
 }

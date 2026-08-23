@@ -21,8 +21,15 @@ export default async function AdminEventsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">{events.length} eventos</p>
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <h2 className="font-heading text-2xl font-semibold text-foreground">
+            Gestionar eventos
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {events.length} {events.length === 1 ? "evento" : "eventos"} en el índice.
+          </p>
+        </div>
         <Button asChild>
           <Link href="/admin/events/new">
             <Plus className="size-4" /> Nuevo evento
@@ -30,9 +37,9 @@ export default async function AdminEventsPage() {
         </Button>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-border">
+      <div className="surface-flat overflow-x-auto">
         <table className="w-full min-w-[640px] text-sm">
-          <thead className="border-b border-border bg-secondary/40 text-left text-xs uppercase text-muted-foreground">
+          <thead className="border-b border-border bg-secondary/40 text-left text-xs font-medium tracking-wide text-muted-foreground uppercase">
             <tr>
               <th className="px-4 py-3">Título</th>
               <th className="px-4 py-3">Fecha</th>

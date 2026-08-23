@@ -39,16 +39,33 @@ export default async function AdminOverviewPage() {
 
   return (
     <div className="space-y-6">
+      <div>
+        <h2 className="font-heading text-2xl font-semibold text-foreground">Resumen</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Estado general del directorio y la cola de revisión.
+        </p>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => (
           <Link
             key={card.label}
             href={card.href}
-            className={`rounded-xl border p-5 transition-colors hover:border-primary/40 ${
-              card.highlight ? "border-primary/40 bg-accent/30" : "border-border bg-card"
+            className={`group rounded-xl border p-5 transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-12px_rgba(15,23,42,0.18)] ${
+              card.highlight
+                ? "border-primary/30 bg-primary/5"
+                : "border-border bg-card hover:border-primary/30"
             }`}
           >
-            <card.icon className="size-5 text-primary" aria-hidden="true" />
+            <span
+              className={`flex size-9 items-center justify-center rounded-lg ${
+                card.highlight
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-primary"
+              }`}
+            >
+              <card.icon className="size-4.5" aria-hidden="true" />
+            </span>
             <p className="mt-3 font-heading text-3xl font-semibold text-foreground">{card.value}</p>
             <p className="mt-1 text-sm text-muted-foreground">{card.label}</p>
           </Link>
@@ -56,7 +73,7 @@ export default async function AdminOverviewPage() {
       </div>
 
       {metrics.pendingSurgeons > 0 && (
-        <div className="rounded-xl border border-primary/30 bg-accent/20 p-5">
+        <div className="surface-raised flex flex-wrap items-center justify-between gap-3 border-primary/30 bg-primary/5 p-5">
           <p className="text-sm text-foreground">
             <strong>{metrics.pendingSurgeons}</strong>{" "}
             {metrics.pendingSurgeons === 1
@@ -66,7 +83,7 @@ export default async function AdminOverviewPage() {
           </p>
           <Link
             href="/admin/surgeons?status=submitted"
-            className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
+            className="text-sm font-medium text-primary hover:underline"
           >
             Revisar ahora →
           </Link>

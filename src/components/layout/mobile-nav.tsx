@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { NAV_LINKS } from "@/lib/nav-links";
 import { SignOutButton } from "@/components/layout/sign-out-button";
+import { NavLink } from "@/components/shared/nav-link";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -34,12 +35,13 @@ export function MobileNav({ profile }: { profile: CurrentProfile | null }) {
         <nav aria-label="Móvil" className="flex flex-col gap-1 px-4">
           {NAV_LINKS.map((link) => (
             <SheetClose asChild key={link.href}>
-              <Link
+              <NavLink
                 href={link.href}
                 className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-secondary"
+                activeClassName="bg-secondary text-primary"
               >
                 {link.label}
-              </Link>
+              </NavLink>
             </SheetClose>
           ))}
 

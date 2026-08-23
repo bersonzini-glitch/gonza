@@ -87,7 +87,6 @@ export default async function DashboardPage() {
       };
 
   const statusMeta = surgeon ? STATUS_META[surgeon.status] : null;
-  const canEdit = !surgeon || surgeon.status === "draft" || surgeon.status === "rejected";
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
@@ -129,7 +128,7 @@ export default async function DashboardPage() {
       )}
 
       {surgeon && (
-        <div className="mt-8">
+        <div className="surface-flat mt-8 p-6">
           <PhotoUpload
             surgeonId={surgeon.id}
             hasPhoto={Boolean(surgeon.photo_path)}
@@ -138,25 +137,18 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <div className="mt-8">
-        {canEdit ? (
-          <>
-            <SurgeonProfileForm defaultValues={defaultValues} />
-            {surgeon && (
-              <div className="mt-6 border-t border-border pt-6">
-                <p className="mb-3 text-sm text-muted-foreground">
-                  ¿Listo para la revisión? Primero guardá tus cambios de arriba y después enviá.
-                </p>
-                <SubmitButton />
-              </div>
-            )}
-          </>
-        ) : (
-          <p className="rounded-lg border border-dashed border-border p-6 text-sm text-muted-foreground">
-            Tu perfil no se puede editar mientras esté en estado &ldquo;
-            {surgeon ? STATUS_META[surgeon.status].label.toLowerCase() : ""}&rdquo;. Contactá a
-            un administrador si necesitás hacer cambios.
-          </p>
+      <div className="surface-flat mt-8 p-6">
+        <h2 className="mb-5 font-heading text-lg font-semibold text-foreground">
+          Editar información del perfil
+        </h2>
+        <SurgeonProfileForm defaultValues={defaultValues} />
+        {surgeon && (surgeon.status === "draft" || surgeon.status === "rejected") && (
+          <div className="mt-6 border-t border-border pt-6">
+            <p className="mb-3 text-sm text-muted-foreground">
+              ¿Listo para la revisión? Primero guardá tus cambios de arriba y después enviá.
+            </p>
+            <SubmitButton />
+          </div>
         )}
       </div>
     </div>

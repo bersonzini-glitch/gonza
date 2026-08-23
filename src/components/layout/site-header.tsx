@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { UserMenu } from "@/components/layout/user-menu";
+import { NavLink } from "@/components/shared/nav-link";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { getCurrentProfile } from "@/lib/auth/session";
 import { NAV_LINKS } from "@/lib/nav-links";
@@ -17,7 +18,9 @@ export async function SiteHeader() {
           href="/"
           className="flex items-center gap-2 rounded-md font-heading text-lg font-semibold tracking-tight text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <Activity className="size-5 text-primary" aria-hidden="true" />
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Activity className="size-4.5" aria-hidden="true" />
+          </span>
           <span>
             Columna<span className="text-primary">LATAM</span>
           </span>
@@ -25,13 +28,14 @@ export async function SiteHeader() {
 
         <nav aria-label="Principal" className="hidden items-center gap-1 md:flex">
           {NAV_LINKS.map((link) => (
-            <Link
+            <NavLink
               key={link.href}
               href={link.href}
               className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              activeClassName="bg-secondary text-foreground"
             >
               {link.label}
-            </Link>
+            </NavLink>
           ))}
         </nav>
 

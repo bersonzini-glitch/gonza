@@ -46,12 +46,6 @@ export async function saveSurgeonProfileAction(
     .eq("user_id", profile.id)
     .maybeSingle();
 
-  if (existing && !["draft", "rejected"].includes(existing.status)) {
-    return {
-      error: `Tu perfil no se puede editar mientras esté en estado ${existing.status}. Contactá a un administrador si necesitás hacer cambios.`,
-    };
-  }
-
   const baseFields = {
     full_name: data.fullName,
     professional_title: data.professionalTitle || null,
