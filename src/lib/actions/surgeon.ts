@@ -172,44 +172,54 @@ export async function uploadSurgeonPhotoAction(formData: FormData): Promise<Surg
     return { error: "La imagen debe pesar menos de 5 MB." };
   }
 
-  const supabase = await createClient();
+  try {
+    const supabase = await createClient();
 
-  const allowed = await checkRateLimit(supabase, profile.id, "surgeon-photo-upload", 10, 3600);
-  if (!allowed) return { error: "Demasiadas subidas. Volvé a intentar en un momento." };
+    const allowed = await checkRateLimit(supabase, profile.id, "surgeon-photo-upload", 10, 3600);
+    if (!allowed) return { error: "Demasiadas subidas. Volvé a intentar en un momento." };
 
-  const { data: surgeon } = await supabase
-    .from("surgeon_profiles")
-    .select("id, photo_path")
-    .eq("user_id", profile.id)
-    .maybeSingle();
+    const { data: surgeon } = await supabase
+      .from("surgeon_profiles")
+      .select("id, photo_path")
+      .eq("user_id", profile.id)
+      .maybeSingle();
 
-  if (!surgeon) return { error: "Creá tu perfil antes de subir una foto." };
+    if (!surgeon) return { error: "Creá tu perfil antes de subir una foto." };
 
-  const extension = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
-  const path = `${profile.id}/${randomUUID()}.${extension}`;
+    const extension =
+      file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+    const path = `${profile.id}/${randomUUID()}.${extension}`;
 
-  const { error: uploadError } = await supabase.storage
-    .from(SURGEON_PHOTOS_BUCKET)
-    .upload(path, file, { contentType: file.type, upsert: false });
+    const { error: uploadError } = await supabase.storage
+      .from(SURGEON_PHOTOS_BUCKET)
+      .upload(path, file, { contentType: file.type, upsert: false });
 
-  if (uploadError) return { error: `Error al subir: ${uploadError.message}` };
+    if (uploadError) return { error: `Error al subir: ${uploadError.message}` };
 
-  const previousPath = surgeon.photo_path;
+    const previousPath = surgeon.photo_path;
 
-  const { error: updateError } = await supabase
-    .from("surgeon_profiles")
-    .update({ photo_path: path })
-    .eq("id", surgeon.id);
+    const { error: updateError } = await supabase
+      .from("surgeon_profiles")
+      .update({ photo_path: path })
+      .eq("id", surgeon.id);
 
-  if (updateError) {
-    await supabase.storage.from(SURGEON_PHOTOS_BUCKET).remove([path]);
-    return { error: updateError.message };
+    if (updateError) {
+      await supabase.storage.from(SURGEON_PHOTOS_BUCKET).remove([path]);
+      return { error: updateError.message };
+    }
+
+    if (previousPath) {
+      await supabase.storage.from(SURGEON_PHOTOS_BUCKET).remove([previousPath]);
+    }
+
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (err) {
+    // A server misconfiguration (e.g. a missing env var) throws instead of
+    // returning a Supabase {error} — without this, that throw would escape
+    // the transition on the client and trigger the app's full-page error
+    // boundary instead of the inline message the form already renders.
+    console.error("uploadSurgeonPhotoAction failed unexpectedly:", err);
+    return { error: "No se pudo subir la foto. Intentá de nuevo en un momento." };
   }
-
-  if (previousPath) {
-    await supabase.storage.from(SURGEON_PHOTOS_BUCKET).remove([previousPath]);
-  }
-
-  revalidatePath("/dashboard");
-  return { success: true };
 }

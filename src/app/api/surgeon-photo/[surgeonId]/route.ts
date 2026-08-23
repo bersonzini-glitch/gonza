@@ -54,14 +54,22 @@ export async function GET(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const admin = createAdminClient();
-  const { data: signed, error } = await admin.storage
-    .from(SURGEON_PHOTOS_BUCKET)
-    .createSignedUrl(surgeon.photo_path, SIGNED_URL_TTL_SECONDS);
+  try {
+    const admin = createAdminClient();
+    const { data: signed, error } = await admin.storage
+      .from(SURGEON_PHOTOS_BUCKET)
+      .createSignedUrl(surgeon.photo_path, SIGNED_URL_TTL_SECONDS);
 
-  if (error || !signed) {
-    return NextResponse.json({ error: "Photo unavailable" }, { status: 404 });
+    if (error || !signed) {
+      return NextResponse.json({ error: "Photo unavailable" }, { status: 404 });
+    }
+
+    return NextResponse.redirect(signed.signedUrl, { status: 302 });
+  } catch (err) {
+    // createAdminClient() throws if SUPABASE_SERVICE_ROLE_KEY isn't set in
+    // this environment — surface it as a normal missing-image response
+    // instead of an unhandled route error.
+    console.error("surgeon-photo route failed unexpectedly:", err);
+    return NextResponse.json({ error: "Photo unavailable" }, { status: 500 });
   }
-
-  return NextResponse.redirect(signed.signedUrl, { status: 302 });
 }
