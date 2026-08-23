@@ -13,8 +13,7 @@ export function SignOutItem() {
     <DropdownMenuItem
       variant="destructive"
       disabled={isPending}
-      onSelect={(event) => {
-        event.preventDefault();
+      onClick={() => {
         startTransition(() => {
           void signOutAction();
         });
