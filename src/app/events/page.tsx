@@ -49,7 +49,7 @@ export default async function EventsPage({
         </p>
       </div>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr]">
+      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[280px_1fr]">
         <aside className="lg:sticky lg:top-20 lg:self-start">
           <EventFilters />
         </aside>
@@ -70,7 +70,7 @@ export default async function EventsPage({
             </div>
           ) : (
             <>
-              <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {events.map((event, i) => (
                   <FadeIn as="li" delay={i * 0.03} key={event.id}>
                     <EventCard event={event} />

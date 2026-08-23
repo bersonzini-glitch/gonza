@@ -136,7 +136,7 @@ export function SurgeonProfileForm({
     <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="space-y-8" noValidate>
       <section className="space-y-4">
         <h2 className="font-heading text-lg font-semibold text-foreground">Datos básicos</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="fullName">Nombre completo</Label>
             <Input
@@ -237,7 +237,7 @@ export function SurgeonProfileForm({
         <h2 className="font-heading text-lg font-semibold text-foreground">
           Afiliación y credenciales
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="hospitalAffiliation">Hospital / clínica</Label>
             <Input
@@ -398,7 +398,7 @@ export function SurgeonProfileForm({
         {fields.map((field, index) => (
           <div
             key={field.id}
-            className="grid gap-3 rounded-lg border border-border p-4 sm:grid-cols-[1fr_1fr_auto_auto]"
+            className="grid grid-cols-1 gap-3 rounded-lg border border-border p-4 sm:grid-cols-[1fr_1fr_auto_auto]"
           >
             <div className="space-y-1.5">
               <Label>País</Label>
@@ -473,7 +473,7 @@ export function SurgeonProfileForm({
         <h2 className="font-heading text-lg font-semibold text-foreground">
           Contacto y enlaces
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="websiteUrl">Sitio web profesional</Label>
             <Input

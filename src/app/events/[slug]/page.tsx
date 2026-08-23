@@ -118,7 +118,7 @@ export default async function EventDetailPage({ params }: PageProps<"/events/[sl
           {event.title}
         </h1>
 
-        <dl className="mt-6 grid gap-4 rounded-xl border border-border bg-card p-5 sm:grid-cols-2">
+        <dl className="mt-6 grid grid-cols-1 gap-4 rounded-xl border border-border bg-card p-5 sm:grid-cols-2">
           <div className="flex gap-2.5">
             <CalendarDays className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
             <div>
@@ -235,7 +235,7 @@ export default async function EventDetailPage({ params }: PageProps<"/events/[sl
           <h2 className="font-heading text-xl font-semibold text-foreground">
             Eventos relacionados
           </h2>
-          <ul className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {relatedEvents.map((related) => (
               <li key={related.id}>
                 <EventCard event={related} />

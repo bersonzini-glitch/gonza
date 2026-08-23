@@ -6,9 +6,9 @@ export default function EventsLoading() {
       <Skeleton className="h-9 w-96 max-w-full" />
       <Skeleton className="mt-3 h-5 w-48" />
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr]">
+      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[280px_1fr]">
         <Skeleton className="h-96 rounded-xl" />
-        <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3" aria-hidden="true">
+        <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3" aria-hidden="true">
           {Array.from({ length: 6 }).map((_, i) => (
             <li key={i}>
               <Skeleton className="h-52 rounded-xl" />

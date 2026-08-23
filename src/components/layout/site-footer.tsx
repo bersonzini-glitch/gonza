@@ -29,7 +29,7 @@ export function SiteFooter() {
   return (
     <footer className="mt-auto border-t border-border bg-secondary/40">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="max-w-xs">
             <div className="flex items-center gap-2 font-heading text-lg font-semibold">
               <Activity className="size-5 text-primary" aria-hidden="true" />

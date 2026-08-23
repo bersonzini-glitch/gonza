@@ -27,7 +27,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         Conectado como <span className="font-medium text-foreground">{admin.username}</span>
       </p>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[240px_1fr] lg:gap-8">
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[240px_1fr] lg:gap-8">
         <nav
           aria-label="Administración"
           className="flex gap-1 overflow-x-auto rounded-xl border border-border bg-card p-2 lg:flex-col lg:self-start"

@@ -84,7 +84,7 @@ export default async function HomePage() {
           <FadeIn>
             <Link
               href={`/events/${featuredEvent.slug}`}
-              className="group grid gap-6 rounded-2xl border border-primary/20 bg-accent/40 p-6 transition-colors hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-10 md:grid-cols-[1fr_auto] md:items-center"
+              className="group grid grid-cols-1 gap-6 rounded-2xl border border-primary/20 bg-accent/40 p-6 transition-colors hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-10 md:grid-cols-[1fr_auto] md:items-center"
             >
               <div>
                 <Badge className="mb-3 bg-primary text-primary-foreground">
@@ -123,7 +123,7 @@ export default async function HomePage() {
             <p className="mt-3">Todavía no hay congresos publicados. Volvé a revisar pronto.</p>
           </div>
         ) : (
-          <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {upcomingEvents.map((event, i) => (
               <FadeIn as="li" delay={i * 0.04} key={event.id}>
                 <EventCard event={event} />
@@ -157,7 +157,7 @@ export default async function HomePage() {
       )}
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <div>
             <h2 className="flex items-center gap-2 font-heading text-2xl font-semibold text-foreground">
               <ShieldCheck className="size-5 text-primary" aria-hidden="true" />

@@ -104,7 +104,7 @@ export function EventForm({
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8" noValidate>
-      <section className="grid gap-4 sm:grid-cols-2">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5 sm:col-span-2">
           <Label htmlFor="title">Título</Label>
           <Input id="title" {...form.register("title")} />
@@ -195,7 +195,7 @@ export function EventForm({
         </label>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-3">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">
           <Label htmlFor="startDate">Fecha de inicio</Label>
           <Input id="startDate" type="date" {...form.register("startDate")} />
@@ -229,7 +229,7 @@ export function EventForm({
         </div>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-3">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">
           <Label htmlFor="country">País</Label>
           <Select
@@ -293,7 +293,7 @@ export function EventForm({
         )}
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="officialUrl">URL del sitio oficial</Label>
           <Input id="officialUrl" placeholder="https://" {...form.register("officialUrl")} />
@@ -336,7 +336,7 @@ export function EventForm({
         {fields.map((field, index) => (
           <div
             key={field.id}
-            className="grid gap-3 rounded-lg border border-border p-4 sm:grid-cols-[1fr_1fr_1fr_auto]"
+            className="grid grid-cols-1 gap-3 rounded-lg border border-border p-4 sm:grid-cols-[1fr_1fr_1fr_auto]"
           >
             <div className="space-y-1.5">
               <Label>Nombre de la fuente</Label>

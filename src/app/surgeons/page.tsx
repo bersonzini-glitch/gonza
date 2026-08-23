@@ -43,7 +43,7 @@ export default async function SurgeonsPage({
         </p>
       </div>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr]">
+      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[280px_1fr]">
         <aside className="lg:sticky lg:top-20 lg:self-start">
           <SurgeonFilters />
         </aside>
@@ -64,7 +64,7 @@ export default async function SurgeonsPage({
             </div>
           ) : (
             <>
-              <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {surgeons.map((surgeon, i) => (
                   <FadeIn as="li" delay={i * 0.03} key={surgeon.id}>
                     <SurgeonCard surgeon={surgeon} />

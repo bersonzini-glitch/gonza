@@ -153,7 +153,7 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
           </div>
         )}
 
-        <div className="mt-8 grid gap-4 rounded-xl border border-border bg-card p-5 sm:grid-cols-2">
+        <div className="mt-8 grid grid-cols-1 gap-4 rounded-xl border border-border bg-card p-5 sm:grid-cols-2">
           {surgeon.surgeon_locations.map((location) => (
             <div key={location.id} className="flex gap-2.5">
               <MapPin className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
