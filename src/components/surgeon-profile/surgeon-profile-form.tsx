@@ -38,6 +38,13 @@ const CONSULTATION_FORMAT_OPTIONS: Record<(typeof CONSULTATION_FORMATS)[number],
   both: "Presencial y telemedicina",
 };
 
+// Base UI's <Select.Value> only resolves a label for the current value from
+// an explicit `items` map passed to <Select.Root> — without it, it falls
+// back to showing the raw stored value (e.g. the enum key itself).
+const COUNTRY_ITEMS: Record<string, string> = Object.fromEntries(
+  LATAM_COUNTRIES.map((c) => [c, c]),
+);
+
 export function SurgeonProfileForm({
   defaultValues,
   onSaved,
@@ -158,6 +165,7 @@ export function SurgeonProfileForm({
           <div className="space-y-1.5">
             <Label htmlFor="primarySpecialty">Especialidad principal</Label>
             <Select
+              items={PRIMARY_SPECIALTY_LABELS}
               value={form.watch("primarySpecialty")}
               onValueChange={(v) =>
                 form.setValue(
@@ -339,6 +347,7 @@ export function SurgeonProfileForm({
           Modalidad de consulta
         </h2>
         <Select
+          items={CONSULTATION_FORMAT_OPTIONS}
           value={form.watch("consultationFormat")}
           onValueChange={(v) =>
             form.setValue(
@@ -394,6 +403,7 @@ export function SurgeonProfileForm({
             <div className="space-y-1.5">
               <Label>País</Label>
               <Select
+                items={COUNTRY_ITEMS}
                 value={form.watch(`locations.${index}.country`)}
                 onValueChange={(v) =>
                   form.setValue(`locations.${index}.country`, v ?? "", { shouldValidate: true })

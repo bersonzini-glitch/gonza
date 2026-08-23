@@ -25,6 +25,29 @@ const SORT_OPTIONS = [
 
 const ANY = "__any__";
 
+// Base UI's <Select.Value> only resolves a label for the current value from
+// an explicit `items` map passed to <Select.Root> — without it, it falls
+// back to showing the raw stored value (e.g. the ANY sentinel itself).
+const COUNTRY_ITEMS: Record<string, string> = {
+  [ANY]: "Cualquier país",
+  ...Object.fromEntries(LATAM_COUNTRIES.map((c) => [c, c])),
+};
+const EVENT_TYPE_ITEMS: Record<string, string> = {
+  [ANY]: "Cualquier tipo",
+  ...EVENT_TYPE_LABELS,
+};
+const FORMAT_ITEMS: Record<string, string> = {
+  [ANY]: "Cualquier modalidad",
+  ...EVENT_FORMAT_LABELS,
+};
+const TOPIC_ITEMS: Record<string, string> = {
+  [ANY]: "Cualquier tema",
+  ...Object.fromEntries(EVENT_TOPICS.map((t) => [t, t])),
+};
+const SORT_ITEMS: Record<string, string> = Object.fromEntries(
+  SORT_OPTIONS.map((o) => [o.value, o.label]),
+);
+
 export function EventFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -91,6 +114,7 @@ export function EventFilters() {
             País
           </Label>
           <Select
+            items={COUNTRY_ITEMS}
             value={searchParams.get("country") ?? ANY}
             onValueChange={(v) => updateParam("country", v)}
           >
@@ -113,6 +137,7 @@ export function EventFilters() {
             Tipo de evento
           </Label>
           <Select
+            items={EVENT_TYPE_ITEMS}
             value={searchParams.get("eventType") ?? ANY}
             onValueChange={(v) => updateParam("eventType", v)}
           >
@@ -135,6 +160,7 @@ export function EventFilters() {
             Modalidad
           </Label>
           <Select
+            items={FORMAT_ITEMS}
             value={searchParams.get("format") ?? ANY}
             onValueChange={(v) => updateParam("format", v)}
           >
@@ -157,6 +183,7 @@ export function EventFilters() {
             Tema
           </Label>
           <Select
+            items={TOPIC_ITEMS}
             value={searchParams.get("topic") ?? ANY}
             onValueChange={(v) => updateParam("topic", v)}
           >
@@ -206,6 +233,7 @@ export function EventFilters() {
           Ordenar por
         </Label>
         <Select
+          items={SORT_ITEMS}
           value={searchParams.get("sort") ?? "soonest"}
           onValueChange={(v) => updateParam("sort", v)}
         >

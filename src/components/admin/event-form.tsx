@@ -48,6 +48,13 @@ const EVENT_STATUS_LABELS: Record<(typeof EVENT_STATUSES)[number], string> = {
   rejected: "Rechazado",
 };
 
+// Base UI's <Select.Value> only resolves a label for the current value from
+// an explicit `items` map passed to <Select.Root> — without it, it falls
+// back to showing the raw stored value (e.g. the enum key itself).
+const COUNTRY_ITEMS: Record<string, string> = Object.fromEntries(
+  LATAM_COUNTRIES.map((c) => [c, c]),
+);
+
 export function EventForm({
   defaultValues,
   action,
@@ -119,6 +126,7 @@ export function EventForm({
         <div className="space-y-1.5">
           <Label htmlFor="eventType">Tipo de evento</Label>
           <Select
+            items={EVENT_TYPE_LABELS}
             value={form.watch("eventType")}
             onValueChange={(v) =>
               form.setValue("eventType", v as EventInput["eventType"], { shouldValidate: true })
@@ -139,6 +147,7 @@ export function EventForm({
         <div className="space-y-1.5">
           <Label htmlFor="format">Modalidad</Label>
           <Select
+            items={EVENT_FORMAT_LABELS}
             value={form.watch("format")}
             onValueChange={(v) =>
               form.setValue("format", v as EventInput["format"], { shouldValidate: true })
@@ -159,6 +168,7 @@ export function EventForm({
         <div className="space-y-1.5">
           <Label htmlFor="status">Estado</Label>
           <Select
+            items={EVENT_STATUS_LABELS}
             value={form.watch("status")}
             onValueChange={(v) =>
               form.setValue("status", v as EventInput["status"], { shouldValidate: true })
@@ -223,6 +233,7 @@ export function EventForm({
         <div className="space-y-1.5">
           <Label htmlFor="country">País</Label>
           <Select
+            items={COUNTRY_ITEMS}
             value={form.watch("country")}
             onValueChange={(v) => form.setValue("country", v ?? "", { shouldValidate: true })}
           >
@@ -338,6 +349,7 @@ export function EventForm({
             <div className="space-y-1.5">
               <Label>Tipo</Label>
               <Select
+                items={SOURCE_TYPE_LABELS}
                 value={form.watch(`sources.${index}.sourceType`)}
                 onValueChange={(v) =>
                   form.setValue(

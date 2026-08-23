@@ -21,6 +21,22 @@ import { LATAM_COUNTRIES } from "@/lib/validation/event";
 
 const ANY = "__any__";
 
+// Base UI's <Select.Value> only resolves a label for the current value from
+// an explicit `items` map passed to <Select.Root> — without it, it falls
+// back to showing the raw stored value (e.g. the ANY sentinel itself).
+const COUNTRY_ITEMS: Record<string, string> = {
+  [ANY]: "Cualquier país",
+  ...Object.fromEntries(LATAM_COUNTRIES.map((c) => [c, c])),
+};
+const SPECIALTY_ITEMS: Record<string, string> = {
+  [ANY]: "Cualquier especialidad",
+  ...PRIMARY_SPECIALTY_LABELS,
+};
+const LANGUAGE_ITEMS: Record<string, string> = {
+  [ANY]: "Cualquier idioma",
+  ...Object.fromEntries(LANGUAGE_OPTIONS.map((l) => [l, l])),
+};
+
 export function SurgeonFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -77,6 +93,7 @@ export function SurgeonFilters() {
             País
           </Label>
           <Select
+            items={COUNTRY_ITEMS}
             value={searchParams.get("country") ?? ANY}
             onValueChange={(v) => updateParam("country", v)}
           >
@@ -99,6 +116,7 @@ export function SurgeonFilters() {
             Especialidad
           </Label>
           <Select
+            items={SPECIALTY_ITEMS}
             value={searchParams.get("specialty") ?? ANY}
             onValueChange={(v) => updateParam("specialty", v)}
           >
@@ -121,6 +139,7 @@ export function SurgeonFilters() {
             Idioma
           </Label>
           <Select
+            items={LANGUAGE_ITEMS}
             value={searchParams.get("language") ?? ANY}
             onValueChange={(v) => updateParam("language", v)}
           >
