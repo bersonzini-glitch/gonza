@@ -1,0 +1,198 @@
+[
+  {
+    "title": "27° Congreso Argentino de Columna 2026 — 50° Aniversario SAPCV / 1° Congreso Ítalo-Argentino de Columna",
+    "organizer": "Sociedad Argentina de Patología de la Columna Vertebral (SAPCV)",
+    "officialUrl": "http://columna.org.ar/activities/congreso2026/",
+    "sourceUrl": "http://columna.org.ar/activities/congreso2026/",
+    "city": "Buenos Aires",
+    "country": "Argentina",
+    "venue": "Alvear Icon Hotel, Puerto Madero",
+    "startDate": "2026-08-05",
+    "endDate": "2026-08-07",
+    "dateNote": "",
+    "format": "in_person",
+    "eventType": "congress",
+    "topics": [
+      "Spinal Deformity",
+      "Spinal Trauma",
+      "Cervical Spine",
+      "Endoscopic Spine Surgery",
+      "Spine Oncology",
+      "Spine Infection"
+    ],
+    "registrationUrl": "",
+    "description": "Three-day congress marking the 50th anniversary of SAPCV, held jointly with the 1st Italo-Argentine Spine Congress. Program includes precongress offerings from EUROSPINE, Instituto Rizzoli, and AO Spine, covering pediatric and adult deformity, trauma, cervical pathology, endoscopy, artificial intelligence, infections, tumors, bone health, workshops, Meet the Expert sessions, and a Young Surgeons Committee course.",
+    "sources": [
+      {
+        "sourceName": "SAPCV — Congreso 2026 (official)",
+        "sourceUrl": "http://columna.org.ar/activities/congreso2026/",
+        "sourceType": "official_society",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "title": "XLII Congreso Latinoamericano de Neurocirugía — CLAN Panamá 2026",
+    "organizer": "Federación Latinoamericana de Sociedades de Neurocirugía (FLANC) and Asociación Panameña de Neurocirugía y Cirugía de Columna",
+    "officialUrl": "https://clanpanama2026.com/",
+    "sourceUrl": "https://clanpanama2026.com/",
+    "city": "Panama City",
+    "country": "Panama",
+    "venue": "Hotel Sortis",
+    "startDate": "2026-10-12",
+    "endDate": "2026-10-16",
+    "dateNote": "",
+    "format": "in_person",
+    "eventType": "congress",
+    "topics": ["Neurosurgery", "Spinal Surgery"],
+    "registrationUrl": "https://esimposio.com/clanpanama2026/registro.php",
+    "description": "Latin American Neurosurgery Congress expected to bring together more than 1,000 neurosurgeons and health professionals from Latin America, the Caribbean, and beyond. Ten specialty modules, precongress courses, and free paper submissions; spine surgery is one of the covered subspecialties given the co-organizing role of Panama's neurosurgery and spine-surgery association.",
+    "sources": [
+      {
+        "sourceName": "CLAN Panamá 2026 (official congress site)",
+        "sourceUrl": "https://clanpanama2026.com/",
+        "sourceType": "event_organizer",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "title": "10° Congreso de la Sociedad Dominicana de Cirugía de Columna con V Curso Internacional SILACO",
+    "organizer": "Sociedad Dominicana de Cirugía de Columna (SDCC), with the Sociedad Iberolatinoamericana de Columna (SILACO)",
+    "officialUrl": "https://www.elcaribe.com.do/panorama/pais/sociedad-dominicana-de-columna-inaugura-su-10-o-congreso-con-curso-silaco/",
+    "sourceUrl": "https://www.elcaribe.com.do/panorama/pais/sociedad-dominicana-de-columna-inaugura-su-10-o-congreso-con-curso-silaco/",
+    "city": "Punta Cana",
+    "country": "Dominican Republic",
+    "venue": "Live Aqua Punta Cana Convention Center",
+    "startDate": "2026-07-29",
+    "endDate": "2026-08-01",
+    "dateNote": "Verified via local press coverage (elCaribe) — no dedicated congress microsite was found.",
+    "format": "in_person",
+    "eventType": "congress",
+    "topics": [
+      "Spinal Deformity",
+      "Scoliosis",
+      "Pediatric Spine",
+      "Spinal Trauma",
+      "Endoscopic Spine Surgery",
+      "Spine Infection",
+      "Cervical Spine"
+    ],
+    "registrationUrl": "",
+    "description": "Held for neurosurgeons, spine surgeons, orthopedists/traumatologists, physiatrists, pain physicians, physiotherapists, and residents. Opening day featured a Research Project Workshop and a Pediatric Scoliosis module, including AI-in-medicine applications; the broader program covers scoliosis, trauma, degenerative disease, tumors, endoscopic surgery, bone weakness, infections, cervical pathology, and revision surgery.",
+    "sources": [
+      {
+        "sourceName": "elCaribe — coverage of SDCC's 10th congress",
+        "sourceUrl": "https://www.elcaribe.com.do/panorama/pais/sociedad-dominicana-de-columna-inaugura-su-10-o-congreso-con-curso-silaco/",
+        "sourceType": "other",
+        "notes": "Local press coverage, used because no official congress microsite was found."
+      }
+    ]
+  },
+  {
+    "title": "20º Congresso da Sociedade Brasileira de Coluna (CSBC 2026)",
+    "organizer": "Sociedade Brasileira de Coluna (SBC)",
+    "officialUrl": "https://csbc.coluna.com.br/",
+    "sourceUrl": "https://csbc.coluna.com.br/",
+    "city": "Curitiba",
+    "country": "Brazil",
+    "venue": "Viasoft Experience",
+    "startDate": "2026-04-18",
+    "endDate": "2026-04-21",
+    "dateNote": "Exact dates confirmed via a secondary source (iot.com.br); the official microsite's crawled text did not itself surface the dates.",
+    "format": "in_person",
+    "eventType": "congress",
+    "topics": [
+      "Spinal Deformity",
+      "Pediatric Spine",
+      "Endoscopic Spine Surgery",
+      "Spinal Trauma",
+      "Spine Oncology"
+    ],
+    "registrationUrl": "",
+    "description": "Brazil's national spine congress, organized by the Sociedade Brasileira de Coluna (founded 1994, uniting orthopedic and neurosurgical spine surgeons). Thematic tracks include adult and pediatric deformity, endoscopic spine surgery, pain management, trauma, tumors, navigation and robotics, spinal infections, complication prevention, and hands-on cadaver courses.",
+    "sources": [
+      {
+        "sourceName": "CSBC 2026 (official congress microsite)",
+        "sourceUrl": "https://csbc.coluna.com.br/",
+        "sourceType": "official_society",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "title": "XXVI Congreso Anual AMCICO 2026",
+    "organizer": "Asociación Mexicana de Cirujanos de Columna, A.C. (AMCICO)",
+    "officialUrl": "https://amcico.com.mx/amcico/congreso.php",
+    "sourceUrl": "https://amcico.com.mx/amcico/congreso.php",
+    "city": "Cancún",
+    "country": "Mexico",
+    "venue": "AVA Resort Cancún, Quintana Roo",
+    "startDate": "2026-09-11",
+    "endDate": "2026-09-14",
+    "dateNote": "",
+    "format": "in_person",
+    "eventType": "congress",
+    "topics": ["Spinal Surgery", "Orthopedics", "Neurosurgery"],
+    "registrationUrl": "",
+    "description": "Annual congress of the Mexican Association of Spine Surgeons (AMCICO). AMCICO brings together orthopedic surgeons and neurosurgeons specializing in spine surgery, including those in academic training.",
+    "sources": [
+      {
+        "sourceName": "AMCICO — Congreso (official)",
+        "sourceUrl": "https://amcico.com.mx/amcico/congreso.php",
+        "sourceType": "official_society",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "title": "AO Regional Courses Latin America 2026",
+    "organizer": "AO Foundation / AO Spine Latin America",
+    "officialUrl": "https://www.aofoundation.org/who-we-are/about-ao/news/2026/ao-regional-courses-latin-america-2026",
+    "sourceUrl": "https://www.aofoundation.org/who-we-are/about-ao/news/2026/ao-regional-courses-latin-america-2026",
+    "city": "Santiago",
+    "country": "Chile",
+    "venue": "",
+    "startDate": "2026-08-16",
+    "endDate": "2026-08-21",
+    "dateNote": "Ten educational activities running across the week; most courses (including the AO Spine Regional Course) are concentrated Aug 18–21, with an AI-focused cross-clinical seminar on Aug 19.",
+    "format": "in_person",
+    "eventType": "course",
+    "topics": ["Spinal Surgery", "Minimally Invasive Surgery"],
+    "registrationUrl": "",
+    "description": "Third edition of the AO Foundation's regional educational event in Latin America, combining ten courses and one cross-clinical seminar on AI in clinical research across trauma, spine, craniomaxillofacial, veterinary, sports, and reconstructive surgery. Expected to draw over 100 international faculty and roughly 600 participants.",
+    "sources": [
+      {
+        "sourceName": "AO Foundation — AO Regional Courses Latin America 2026 (official)",
+        "sourceUrl": "https://www.aofoundation.org/who-we-are/about-ao/news/2026/ao-regional-courses-latin-america-2026",
+        "sourceType": "official_society",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "title": "5° Congreso Regional SCHOT",
+    "organizer": "Sociedad Chilena de Ortopedia y Traumatología (SCHOT) — Centro Norte Regional Branch",
+    "officialUrl": "https://www.schot.org/save-the-date-5-congreso-regional-schot/",
+    "sourceUrl": "https://www.schot.org/save-the-date-5-congreso-regional-schot/",
+    "city": "Coquimbo",
+    "country": "Chile",
+    "venue": "Hotel Enjoy",
+    "startDate": "2026-04-24",
+    "endDate": "2026-04-25",
+    "dateNote": "General regional orthopedics/traumatology congress, included because SCHOT maintains a standing spine committee (Comité de Columna) contributing to its scientific programming.",
+    "format": "in_person",
+    "eventType": "congress",
+    "topics": ["Orthopedics", "Spinal Surgery"],
+    "registrationUrl": "",
+    "description": "Regional congress of the Chilean Society of Orthopedics and Traumatology, held with activities extending to La Serena, organized by SCHOT's Centro Norte regional branch.",
+    "sources": [
+      {
+        "sourceName": "SCHOT — Save the Date, 5° Congreso Regional (official)",
+        "sourceUrl": "https://www.schot.org/save-the-date-5-congreso-regional-schot/",
+        "sourceType": "official_society",
+        "notes": ""
+      }
+    ]
+  }
+]
