@@ -25,13 +25,15 @@ export function DeleteEventButton({ eventId }: { eventId: string }) {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="destructive" type="button">
-          <Trash2 className="size-4" /> Delete event
+          <Trash2 className="size-4" /> Eliminar evento
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete this event?</DialogTitle>
-          <DialogDescription>This permanently removes the event and its sources.</DialogDescription>
+          <DialogTitle>¿Eliminar este evento?</DialogTitle>
+          <DialogDescription>
+            Esto elimina permanentemente el evento y sus fuentes.
+          </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button
@@ -44,13 +46,13 @@ export function DeleteEventButton({ eventId }: { eventId: string }) {
                   toast.error(result.error);
                   return;
                 }
-                toast.success("Event deleted");
+                toast.success("Evento eliminado");
                 router.push("/admin/events");
                 router.refresh();
               })
             }
           >
-            {isPending ? "Deleting…" : "Delete permanently"}
+            {isPending ? "Eliminando…" : "Eliminar definitivamente"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -10,9 +10,9 @@ import { searchEvents } from "@/lib/data/events";
 import { eventSearchSchema } from "@/lib/validation/event";
 
 export const metadata: Metadata = {
-  title: "Spine Surgery Congresses in Latin America",
+  title: "Congresos de cirugía de columna en Latinoamérica",
   description:
-    "Search and filter upcoming spine surgery congresses, courses, workshops, and webinars across Latin America by country, date, format, and topic.",
+    "Buscá y filtrá próximos congresos, cursos, talleres y webinars de cirugía de columna en Latinoamérica por país, fecha, modalidad y tema.",
 };
 
 export default async function EventsPage({
@@ -41,10 +41,11 @@ export default async function EventsPage({
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="max-w-2xl">
         <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
-          Spine surgery congresses across Latin America
+          Congresos de cirugía de columna en Latinoamérica
         </h1>
         <p className="mt-2 text-muted-foreground">
-          {total} {total === 1 ? "event" : "events"} verified from official sources.
+          {total} {total === 1 ? "evento verificado" : "eventos verificados"} a partir de fuentes
+          oficiales.
         </p>
       </div>
 
@@ -58,13 +59,13 @@ export default async function EventsPage({
             <div className="rounded-xl border border-dashed border-border p-12 text-center">
               <CalendarX2 className="mx-auto size-10 text-muted-foreground" aria-hidden="true" />
               <h2 className="mt-4 font-heading text-xl font-semibold text-foreground">
-                No congresses match your filters
+                Ningún congreso coincide con tus filtros
               </h2>
               <p className="mt-2 text-muted-foreground">
-                Try widening your date range or clearing a filter.
+                Probá ampliar el rango de fechas o quitar algún filtro.
               </p>
               <Button variant="outline" className="mt-5" asChild>
-                <Link href="/events">Clear all filters</Link>
+                <Link href="/events">Limpiar todos los filtros</Link>
               </Button>
             </div>
           ) : (
@@ -79,18 +80,18 @@ export default async function EventsPage({
 
               {totalPages > 1 && (
                 <nav
-                  aria-label="Pagination"
+                  aria-label="Paginación"
                   className="mt-10 flex items-center justify-center gap-3"
                 >
                   <Button variant="outline" disabled={page <= 1} asChild={page > 1}>
                     {page > 1 ? (
-                      <Link href={buildPageHref(rawParams, page - 1)}>Previous</Link>
+                      <Link href={buildPageHref(rawParams, page - 1)}>Anterior</Link>
                     ) : (
-                      <span>Previous</span>
+                      <span>Anterior</span>
                     )}
                   </Button>
                   <span className="text-sm text-muted-foreground">
-                    Page {page} of {totalPages}
+                    Página {page} de {totalPages}
                   </span>
                   <Button
                     variant="outline"
@@ -98,9 +99,9 @@ export default async function EventsPage({
                     asChild={page < totalPages}
                   >
                     {page < totalPages ? (
-                      <Link href={buildPageHref(rawParams, page + 1)}>Next</Link>
+                      <Link href={buildPageHref(rawParams, page + 1)}>Siguiente</Link>
                     ) : (
-                      <span>Next</span>
+                      <span>Siguiente</span>
                     )}
                   </Button>
                 </nav>

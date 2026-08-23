@@ -7,8 +7,14 @@ import { Button } from "@/components/ui/button";
 import { formatDateRange } from "@/lib/format";
 import { listEventsForAdmin } from "@/lib/data/admin";
 
-export const metadata: Metadata = { title: "Manage events" };
+export const metadata: Metadata = { title: "Gestionar eventos" };
 export const dynamic = "force-dynamic";
+
+const EVENT_STATUS_LABELS: Record<string, string> = {
+  pending: "pendiente",
+  approved: "aprobado",
+  rejected: "rechazado",
+};
 
 export default async function AdminEventsPage() {
   const events = await listEventsForAdmin();
@@ -16,10 +22,10 @@ export default async function AdminEventsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">{events.length} events</p>
+        <p className="text-sm text-muted-foreground">{events.length} eventos</p>
         <Button asChild>
           <Link href="/admin/events/new">
-            <Plus className="size-4" /> New event
+            <Plus className="size-4" /> Nuevo evento
           </Link>
         </Button>
       </div>
@@ -28,10 +34,10 @@ export default async function AdminEventsPage() {
         <table className="w-full min-w-[640px] text-sm">
           <thead className="border-b border-border bg-secondary/40 text-left text-xs uppercase text-muted-foreground">
             <tr>
-              <th className="px-4 py-3">Title</th>
-              <th className="px-4 py-3">Date</th>
-              <th className="px-4 py-3">Country</th>
-              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Título</th>
+              <th className="px-4 py-3">Fecha</th>
+              <th className="px-4 py-3">País</th>
+              <th className="px-4 py-3">Estado</th>
             </tr>
           </thead>
           <tbody>
@@ -48,7 +54,7 @@ export default async function AdminEventsPage() {
                     {event.title}
                   </Link>
                   {event.is_featured && (
-                    <span className="ml-2 text-xs text-muted-foreground">★ featured</span>
+                    <span className="ml-2 text-xs text-muted-foreground">★ destacado</span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">
@@ -57,7 +63,7 @@ export default async function AdminEventsPage() {
                 <td className="px-4 py-3 text-muted-foreground">{event.country}</td>
                 <td className="px-4 py-3">
                   <Badge variant={event.status === "approved" ? "secondary" : "outline"}>
-                    {event.status}
+                    {EVENT_STATUS_LABELS[event.status]}
                   </Badge>
                 </td>
               </tr>
@@ -65,7 +71,7 @@ export default async function AdminEventsPage() {
             {events.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-4 py-10 text-center text-muted-foreground">
-                  No events yet.
+                  Todavía no hay eventos.
                 </td>
               </tr>
             )}

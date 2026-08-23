@@ -4,33 +4,33 @@ import Link from "next/link";
 
 import { getAdminOverviewMetrics } from "@/lib/data/admin";
 
-export const metadata: Metadata = { title: "Admin overview" };
+export const metadata: Metadata = { title: "Resumen de administración" };
 
 export default async function AdminOverviewPage() {
   const metrics = await getAdminOverviewMetrics();
 
   const cards = [
     {
-      label: "Pending surgeon reviews",
+      label: "Cirujanos pendientes de revisión",
       value: metrics.pendingSurgeons,
       icon: Clock,
       href: "/admin/surgeons?status=submitted",
       highlight: metrics.pendingSurgeons > 0,
     },
     {
-      label: "Approved surgeons",
+      label: "Cirujanos aprobados",
       value: metrics.approvedSurgeons,
       icon: ShieldCheck,
       href: "/admin/surgeons?status=approved",
     },
     {
-      label: "Total surgeon profiles",
+      label: "Total de perfiles de cirujanos",
       value: metrics.totalSurgeons,
       icon: Users,
       href: "/admin/surgeons",
     },
     {
-      label: "Published events",
+      label: "Eventos publicados",
       value: metrics.approvedEvents,
       icon: CalendarCheck,
       href: "/admin/events",
@@ -58,14 +58,17 @@ export default async function AdminOverviewPage() {
       {metrics.pendingSurgeons > 0 && (
         <div className="rounded-xl border border-primary/30 bg-accent/20 p-5">
           <p className="text-sm text-foreground">
-            <strong>{metrics.pendingSurgeons}</strong> surgeon{" "}
-            {metrics.pendingSurgeons === 1 ? "profile is" : "profiles are"} waiting for review.
+            <strong>{metrics.pendingSurgeons}</strong>{" "}
+            {metrics.pendingSurgeons === 1
+              ? "perfil de cirujano está"
+              : "perfiles de cirujanos están"}{" "}
+            esperando revisión.
           </p>
           <Link
             href="/admin/surgeons?status=submitted"
             className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
           >
-            Review now →
+            Revisar ahora →
           </Link>
         </div>
       )}

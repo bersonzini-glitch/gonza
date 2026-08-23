@@ -22,6 +22,26 @@ async function getClientIp(): Promise<string> {
   return h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 }
 
+// Supabase Auth returns its own error messages in English (they come
+// from the auth service, not our code). This maps the common ones to
+// Spanish for a fully localized UI; anything unrecognized falls back to
+// the original message rather than being silently swallowed.
+const AUTH_ERROR_TRANSLATIONS: Record<string, string> = {
+  "User already registered": "Ese email ya está registrado.",
+  "Password should be at least 6 characters":
+    "La contraseña debe tener al menos 6 caracteres.",
+  "Email not confirmed": "Todavía no confirmaste tu email.",
+  "Invalid login credentials": "Email o contraseña inválidos.",
+  "Unable to validate email address: invalid format": "El formato del email no es válido.",
+  "Signup requires a valid password": "El registro requiere una contraseña válida.",
+  "For security purposes, you can only request this after some time.":
+    "Por seguridad, solo podés solicitar esto de nuevo después de un tiempo.",
+};
+
+function translateAuthError(message: string): string {
+  return AUTH_ERROR_TRANSLATIONS[message] ?? message;
+}
+
 export async function signUpAction(
   _prevState: AuthActionState,
   formData: FormData,
@@ -34,7 +54,7 @@ export async function signUpAction(
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
+    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
   const supabase = await createClient();
@@ -42,14 +62,14 @@ export async function signUpAction(
 
   const allowed = await checkRateLimit(supabase, ip, "sign-up", 5, 60 * 15);
   if (!allowed) {
-    return { error: "Too many attempts. Please wait a few minutes and try again." };
+    return { error: "Demasiados intentos. Esperá unos minutos y volvé a intentar." };
   }
 
   const { data: available } = await supabase.rpc("is_username_available", {
     check_username: parsed.data.username,
   });
   if (available === false) {
-    return { error: "That username is already taken." };
+    return { error: "Ese nombre de usuario ya está en uso." };
   }
 
   const h = await headers();
@@ -65,11 +85,12 @@ export async function signUpAction(
   });
 
   if (error) {
-    return { error: error.message };
+    return { error: translateAuthError(error.message) };
   }
 
   return {
-    success: "Account created. Check your email to confirm your address before signing in.",
+    success:
+      "Cuenta creada. Revisá tu email para confirmar tu dirección antes de iniciar sesión.",
   };
 }
 
@@ -83,7 +104,7 @@ export async function signInAction(
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
+    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
   const supabase = await createClient();
@@ -97,7 +118,7 @@ export async function signInAction(
     60 * 10,
   );
   if (!allowed) {
-    return { error: "Too many attempts. Please wait a few minutes and try again." };
+    return { error: "Demasiados intentos. Esperá unos minutos y volvé a intentar." };
   }
 
   let email = parsed.data.identifier;
@@ -106,7 +127,7 @@ export async function signInAction(
       lookup_username: parsed.data.identifier,
     });
     if (!resolvedEmail) {
-      return { error: "Invalid username/email or password." };
+      return { error: "Usuario/email o contraseña inválidos." };
     }
     email = resolvedEmail;
   }
@@ -117,7 +138,7 @@ export async function signInAction(
   });
 
   if (error) {
-    return { error: "Invalid username/email or password." };
+    return { error: "Usuario/email o contraseña inválidos." };
   }
 
   const next = formData.get("next");
@@ -137,7 +158,7 @@ export async function requestPasswordResetAction(
   const parsed = requestPasswordResetSchema.safeParse({ email: formData.get("email") });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
+    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
   const supabase = await createClient();
@@ -145,7 +166,7 @@ export async function requestPasswordResetAction(
 
   const allowed = await checkRateLimit(supabase, ip, "reset-request", 5, 60 * 15);
   if (!allowed) {
-    return { error: "Too many attempts. Please wait a few minutes and try again." };
+    return { error: "Demasiados intentos. Esperá unos minutos y volvé a intentar." };
   }
 
   const h = await headers();
@@ -156,7 +177,7 @@ export async function requestPasswordResetAction(
   });
 
   // Always report success to avoid leaking whether an email is registered.
-  return { success: "If that email is registered, a reset link is on its way." };
+  return { success: "Si ese email está registrado, te llegará un enlace de recuperación." };
 }
 
 export async function updatePasswordAction(
@@ -169,7 +190,7 @@ export async function updatePasswordAction(
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
+    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
 
   const supabase = await createClient();
@@ -178,13 +199,13 @@ export async function updatePasswordAction(
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { error: "Your password reset link has expired. Please request a new one." };
+    return { error: "Tu enlace de recuperación expiró. Solicitá uno nuevo." };
   }
 
   const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
 
   if (error) {
-    return { error: error.message };
+    return { error: translateAuthError(error.message) };
   }
 
   redirect("/dashboard");

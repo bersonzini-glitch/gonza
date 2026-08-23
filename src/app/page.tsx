@@ -12,7 +12,7 @@ import { getDistinctCountries, getFeaturedEvent, getUpcomingEvents } from "@/lib
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "LATAM Spine Surgery Congresses & Verified Surgeon Directory",
+  title: "Congresos de columna y directorio de cirujanos verificados en LATAM",
 };
 
 export default async function HomePage() {
@@ -29,15 +29,15 @@ export default async function HomePage() {
           <FadeIn>
             <Badge variant="outline" className="mb-4 gap-1.5 border-primary/30 text-primary">
               <Sparkles className="size-3.5" aria-hidden="true" />
-              Latin America · Spine surgery
+              Latinoamérica · Cirugía de columna
             </Badge>
             <h1 className="max-w-3xl font-heading text-4xl font-semibold leading-tight tracking-tight text-foreground sm:text-5xl">
-              Find every spine congress and every verified spine surgeon in LATAM
+              Encontrá todos los congresos de columna y cirujanos verificados en LATAM
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-              One trustworthy, editorial index of upcoming congresses, courses, and workshops —
-              alongside a searchable directory of orthopedic and neurosurgical spine specialists
-              across Latin America.
+              Un índice editorial confiable de próximos congresos, cursos y talleres, junto con un
+              directorio buscable de especialistas en columna traumatólogos y neurocirujanos en
+              toda Latinoamérica.
             </p>
           </FadeIn>
 
@@ -46,22 +46,22 @@ export default async function HomePage() {
               action="/events"
               method="GET"
               role="search"
-              aria-label="Search congresses"
+              aria-label="Buscar congresos"
               className="mt-8 flex max-w-xl flex-col gap-2 sm:flex-row"
             >
               <label htmlFor="home-search" className="sr-only">
-                Search congresses by name, organizer, city, or topic
+                Buscar congresos por nombre, organizador, ciudad o tema
               </label>
               <input
                 id="home-search"
                 name="q"
                 type="search"
-                placeholder="Search by event name, organizer, city, or topic…"
+                placeholder="Buscá por nombre del evento, organizador, ciudad o tema…"
                 className="h-12 w-full rounded-lg border border-input bg-card px-4 text-sm shadow-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               />
               <Button type="submit" size="lg" className="h-12 shrink-0 gap-2">
                 <CalendarSearch className="size-4" aria-hidden="true" />
-                Search congresses
+                Buscar congresos
               </Button>
             </form>
           </FadeIn>
@@ -69,10 +69,10 @@ export default async function HomePage() {
           <FadeIn delay={0.15}>
             <div className="mt-6 flex flex-wrap gap-3">
               <Button variant="outline" asChild>
-                <Link href="/surgeons">Browse the surgeon directory</Link>
+                <Link href="/surgeons">Ver el directorio de cirujanos</Link>
               </Button>
               <Button variant="ghost" asChild>
-                <Link href="/about">How we verify our data</Link>
+                <Link href="/about">Cómo verificamos nuestros datos</Link>
               </Button>
             </div>
           </FadeIn>
@@ -87,7 +87,9 @@ export default async function HomePage() {
               className="group grid gap-6 rounded-2xl border border-primary/20 bg-accent/40 p-6 transition-colors hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-10 md:grid-cols-[1fr_auto] md:items-center"
             >
               <div>
-                <Badge className="mb-3 bg-primary text-primary-foreground">Featured congress</Badge>
+                <Badge className="mb-3 bg-primary text-primary-foreground">
+                  Congreso destacado
+                </Badge>
                 <h2 className="font-heading text-2xl font-semibold text-foreground sm:text-3xl">
                   {featuredEvent.title}
                 </h2>
@@ -98,7 +100,7 @@ export default async function HomePage() {
                 </p>
               </div>
               <Button className="w-fit" size="lg">
-                View details
+                Ver detalles
               </Button>
             </Link>
           </FadeIn>
@@ -108,17 +110,17 @@ export default async function HomePage() {
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between gap-4">
           <h2 className="font-heading text-2xl font-semibold text-foreground">
-            Upcoming congresses
+            Próximos congresos
           </h2>
           <Link href="/events" className="text-sm font-medium text-primary hover:underline">
-            View all
+            Ver todos
           </Link>
         </div>
 
         {upcomingEvents.length === 0 ? (
           <div className="mt-8 rounded-xl border border-dashed border-border p-10 text-center text-muted-foreground">
             <CalendarSearch className="mx-auto size-8" aria-hidden="true" />
-            <p className="mt-3">No upcoming congresses are published yet. Check back soon.</p>
+            <p className="mt-3">Todavía no hay congresos publicados. Volvé a revisar pronto.</p>
           </div>
         ) : (
           <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -136,7 +138,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <h2 className="flex items-center gap-2 font-heading text-2xl font-semibold text-foreground">
               <MapPinned className="size-5 text-primary" aria-hidden="true" />
-              Browse by country
+              Explorar por país
             </h2>
             <div className="mt-6 flex flex-wrap gap-2">
               {countries.map((country) => (
@@ -159,29 +161,30 @@ export default async function HomePage() {
           <div>
             <h2 className="flex items-center gap-2 font-heading text-2xl font-semibold text-foreground">
               <ShieldCheck className="size-5 text-primary" aria-hidden="true" />
-              Where our data comes from
+              De dónde vienen nuestros datos
             </h2>
             <p className="mt-3 max-w-lg text-muted-foreground">
-              Every congress listed here is sourced from official society pages, hospitals,
-              universities, or event organizers — never fabricated. Every source is documented and
-              re-checked periodically, with a visible &ldquo;last verified&rdquo; date on each event
-              page.
+              Todos los congresos listados acá provienen de páginas oficiales de sociedades,
+              hospitales, universidades u organizadores de eventos — nunca son inventados. Cada
+              fuente está documentada y se revisa periódicamente, con una fecha visible de
+              &ldquo;última verificación&rdquo; en cada página de evento.
             </p>
             <Button variant="outline" className="mt-5" asChild>
-              <Link href="/about">Read our full methodology</Link>
+              <Link href="/about">Leé nuestra metodología completa</Link>
             </Button>
           </div>
           <div>
             <h2 className="font-heading text-2xl font-semibold text-foreground">
-              A verified surgeon directory
+              Un directorio de cirujanos verificados
             </h2>
             <p className="mt-3 max-w-lg text-muted-foreground">
-              Spine surgeons submit their own profile; nothing goes live until our team reviews and
-              approves it. Look for the verified badge, and always confirm credentials directly with
-              the surgeon or their institution before making care decisions.
+              Los cirujanos de columna envían su propio perfil; nada se publica hasta que nuestro
+              equipo lo revisa y aprueba. Buscá la insignia de verificado, y siempre confirmá las
+              credenciales directamente con el cirujano o su institución antes de tomar decisiones
+              de atención.
             </p>
             <Button variant="outline" className="mt-5" asChild>
-              <Link href="/surgeons">Explore the directory</Link>
+              <Link href="/surgeons">Explorar el directorio</Link>
             </Button>
           </div>
         </div>

@@ -13,7 +13,7 @@ const validProfile = {
   medicalLicenseCountry: "Argentina",
   yearsExperience: 12,
   consultationFormat: "both" as const,
-  languages: ["Spanish", "English"] as const,
+  languages: ["Español", "Inglés"] as const,
   websiteUrl: "https://example.com",
   contactEmail: "ana@example.com",
   contactPhone: "+54 11 5555 5555",

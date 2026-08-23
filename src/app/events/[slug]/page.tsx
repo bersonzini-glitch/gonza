@@ -87,6 +87,7 @@ export default async function EventDetailPage({ params }: PageProps<"/events/[sl
     organizer: { "@type": "Organization", name: event.organizer, url: event.official_url },
     description: event.description,
     url: `${SITE_URL}/events/${event.slug}`,
+    inLanguage: "es",
   };
 
   return (
@@ -96,9 +97,9 @@ export default async function EventDetailPage({ params }: PageProps<"/events/[sl
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
+      <nav aria-label="Ruta de navegación" className="text-sm text-muted-foreground">
         <Link href="/events" className="hover:text-foreground">
-          Congresses
+          Congresos
         </Link>
         <span className="mx-1.5">/</span>
         <span className="text-foreground">{event.title}</span>
@@ -109,7 +110,7 @@ export default async function EventDetailPage({ params }: PageProps<"/events/[sl
           <Badge variant="secondary">{EVENT_TYPE_LABELS[event.event_type]}</Badge>
           <Badge variant="outline">{EVENT_FORMAT_LABELS[event.format]}</Badge>
           {event.is_featured && (
-            <Badge className="bg-accent text-accent-foreground">Featured</Badge>
+            <Badge className="bg-accent text-accent-foreground">Destacado</Badge>
           )}
         </div>
 
@@ -121,7 +122,7 @@ export default async function EventDetailPage({ params }: PageProps<"/events/[sl
           <div className="flex gap-2.5">
             <CalendarDays className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
             <div>
-              <dt className="text-xs font-medium text-muted-foreground">Date</dt>
+              <dt className="text-xs font-medium text-muted-foreground">Fecha</dt>
               <dd className="text-sm text-foreground">
                 {formatDateRange(event.start_date, event.end_date)} ({event.timezone})
               </dd>
@@ -138,7 +139,7 @@ export default async function EventDetailPage({ params }: PageProps<"/events/[sl
           <div className="flex gap-2.5">
             <MapPin className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
             <div>
-              <dt className="text-xs font-medium text-muted-foreground">Location</dt>
+              <dt className="text-xs font-medium text-muted-foreground">Ubicación</dt>
               <dd className="text-sm text-foreground">
                 {[event.venue, event.city, event.country].filter(Boolean).join(", ")}
               </dd>
@@ -147,14 +148,14 @@ export default async function EventDetailPage({ params }: PageProps<"/events/[sl
           <div className="flex gap-2.5">
             <Globe className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
             <div>
-              <dt className="text-xs font-medium text-muted-foreground">Organizer</dt>
+              <dt className="text-xs font-medium text-muted-foreground">Organizador</dt>
               <dd className="text-sm text-foreground">{event.organizer}</dd>
             </div>
           </div>
           <div className="flex gap-2.5">
             <CheckCircle2 className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
             <div>
-              <dt className="text-xs font-medium text-muted-foreground">Last verified</dt>
+              <dt className="text-xs font-medium text-muted-foreground">Última verificación</dt>
               <dd className="text-sm text-foreground">{formatDate(event.last_verified_at)}</dd>
             </div>
           </div>
@@ -163,7 +164,7 @@ export default async function EventDetailPage({ params }: PageProps<"/events/[sl
         <div className="mt-6 flex flex-wrap gap-3">
           <Button asChild>
             <a href={event.official_url} target="_blank" rel="noopener noreferrer">
-              Official website
+              Sitio oficial
               <ExternalLink className="size-4" aria-hidden="true" />
             </a>
           </Button>
@@ -171,27 +172,29 @@ export default async function EventDetailPage({ params }: PageProps<"/events/[sl
             <Button variant="outline" asChild>
               <a href={event.registration_url} target="_blank" rel="noopener noreferrer">
                 <Ticket className="size-4" aria-hidden="true" />
-                Register
+                Inscribirse
               </a>
             </Button>
           )}
           <Button variant="outline" asChild>
             <a href={`/events/${event.slug}/ics`} download>
               <Download className="size-4" aria-hidden="true" />
-              Add to calendar
+              Agregar al calendario
             </a>
           </Button>
           <ShareButton title={event.title} url={`${SITE_URL}/events/${event.slug}`} />
         </div>
 
         <div className="prose prose-neutral dark:prose-invert mt-10 max-w-none">
-          <h2 className="font-heading text-xl font-semibold text-foreground">About this event</h2>
+          <h2 className="font-heading text-xl font-semibold text-foreground">
+            Sobre este evento
+          </h2>
           <p className="whitespace-pre-line text-muted-foreground">{event.description}</p>
         </div>
 
         {event.topics.length > 0 && (
           <div className="mt-6">
-            <h2 className="text-sm font-semibold text-foreground">Topics</h2>
+            <h2 className="text-sm font-semibold text-foreground">Temas</h2>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {event.topics.map((topic) => (
                 <Badge key={topic} variant="secondary">
@@ -204,7 +207,7 @@ export default async function EventDetailPage({ params }: PageProps<"/events/[sl
 
         {sources.length > 0 && (
           <div className="mt-10 rounded-xl border border-border bg-secondary/30 p-5">
-            <h2 className="text-sm font-semibold text-foreground">Data sources</h2>
+            <h2 className="text-sm font-semibold text-foreground">Fuentes de datos</h2>
             <ul className="mt-2 space-y-1.5">
               {sources.map((source) => (
                 <li key={source.id} className="text-sm">
@@ -218,7 +221,7 @@ export default async function EventDetailPage({ params }: PageProps<"/events/[sl
                   </a>
                   <span className="text-muted-foreground">
                     {" "}
-                    · retrieved {formatDate(source.fetched_at.slice(0, 10))}
+                    · consultado el {formatDate(source.fetched_at.slice(0, 10))}
                   </span>
                 </li>
               ))}
@@ -229,7 +232,9 @@ export default async function EventDetailPage({ params }: PageProps<"/events/[sl
 
       {relatedEvents.length > 0 && (
         <section className="mt-14">
-          <h2 className="font-heading text-xl font-semibold text-foreground">Related events</h2>
+          <h2 className="font-heading text-xl font-semibold text-foreground">
+            Eventos relacionados
+          </h2>
           <ul className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {relatedEvents.map((related) => (
               <li key={related.id}>

@@ -14,7 +14,9 @@ export function EventCard({ event }: { event: EventRow }) {
       <div className="flex flex-wrap items-center gap-1.5">
         <Badge variant="secondary">{EVENT_TYPE_LABELS[event.event_type]}</Badge>
         <Badge variant="outline">{EVENT_FORMAT_LABELS[event.format]}</Badge>
-        {event.is_featured && <Badge className="bg-accent text-accent-foreground">Featured</Badge>}
+        {event.is_featured && (
+          <Badge className="bg-accent text-accent-foreground">Destacado</Badge>
+        )}
       </div>
 
       <h3 className="font-heading text-lg font-semibold leading-snug text-foreground group-hover:text-primary">

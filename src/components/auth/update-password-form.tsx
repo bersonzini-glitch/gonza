@@ -17,7 +17,7 @@ export function UpdatePasswordForm() {
   return (
     <form action={formAction} className="space-y-4" noValidate>
       <div className="space-y-1.5">
-        <Label htmlFor="password">New password</Label>
+        <Label htmlFor="password">Nueva contraseña</Label>
         <Input
           id="password"
           name="password"
@@ -28,7 +28,7 @@ export function UpdatePasswordForm() {
         />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="confirmPassword">Confirm new password</Label>
+        <Label htmlFor="confirmPassword">Confirmá la nueva contraseña</Label>
         <Input
           id="confirmPassword"
           name="confirmPassword"
@@ -47,7 +47,7 @@ export function UpdatePasswordForm() {
       )}
 
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Updating…" : "Update password"}
+        {isPending ? "Actualizando…" : "Actualizar contraseña"}
       </Button>
     </form>
   );

@@ -18,10 +18,10 @@ export function UserMenu({ profile }: { profile: CurrentProfile | null }) {
     return (
       <div className="flex items-center gap-2">
         <Button variant="ghost" asChild>
-          <Link href="/sign-in">Sign in</Link>
+          <Link href="/sign-in">Iniciar sesión</Link>
         </Button>
         <Button asChild>
-          <Link href="/sign-up">Join as a surgeon</Link>
+          <Link href="/sign-up">Sumate como cirujano</Link>
         </Button>
       </div>
     );
@@ -41,14 +41,14 @@ export function UserMenu({ profile }: { profile: CurrentProfile | null }) {
         <DropdownMenuItem asChild>
           <Link href="/dashboard">
             <LayoutDashboard className="size-4" aria-hidden="true" />
-            My surgeon profile
+            Mi perfil de cirujano
           </Link>
         </DropdownMenuItem>
         {profile.role === "admin" && (
           <DropdownMenuItem asChild>
             <Link href="/admin">
               <ShieldCheck className="size-4" aria-hidden="true" />
-              Admin dashboard
+              Panel de administración
             </Link>
           </DropdownMenuItem>
         )}

@@ -19,14 +19,14 @@ export function SignInForm({ next }: { next?: string }) {
     <form action={formAction} className="space-y-4" noValidate>
       {next && <input type="hidden" name="next" value={next} />}
       <div className="space-y-1.5">
-        <Label htmlFor="identifier">Username or email</Label>
+        <Label htmlFor="identifier">Usuario o email</Label>
         <Input id="identifier" name="identifier" autoComplete="username" required />
       </div>
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">Contraseña</Label>
           <Link href="/reset-password" className="text-xs text-primary hover:underline">
-            Forgot password?
+            ¿Olvidaste tu contraseña?
           </Link>
         </div>
         <Input
@@ -46,7 +46,7 @@ export function SignInForm({ next }: { next?: string }) {
       )}
 
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Signing in…" : "Sign in"}
+        {isPending ? "Iniciando sesión…" : "Iniciar sesión"}
       </Button>
     </form>
   );

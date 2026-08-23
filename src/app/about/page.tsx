@@ -2,46 +2,49 @@ import { BookOpenCheck, Database, ShieldCheck, Users } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About & Data Sources",
+  title: "Quiénes somos y fuentes de datos",
   description:
-    "How ColumnaLATAM sources spine congress data and verifies spine surgeon profiles across Latin America.",
+    "Cómo ColumnaLATAM obtiene los datos de congresos de columna y verifica los perfiles de cirujanos en Latinoamérica.",
 };
 
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
       <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
-        About ColumnaLATAM
+        Sobre ColumnaLATAM
       </h1>
       <p className="mt-4 text-lg text-muted-foreground">
-        ColumnaLATAM is an independent, editorial directory of spine surgery congresses and verified
-        spine surgeons across Latin America. We built it because information about regional spine
-        events and specialists is scattered across dozens of society websites, hospital pages, and
-        social feeds — we bring it into one trustworthy place.
+        ColumnaLATAM es un directorio editorial independiente de congresos de cirugía de columna y
+        cirujanos de columna verificados en Latinoamérica. Lo creamos porque la información sobre
+        eventos y especialistas de columna en la región está dispersa en decenas de sitios de
+        sociedades, páginas de hospitales y redes sociales — nosotros la reunimos en un solo lugar
+        confiable.
       </p>
 
       <section className="mt-12">
         <h2 className="flex items-center gap-2 font-heading text-xl font-semibold text-foreground">
           <Database className="size-5 text-primary" aria-hidden="true" />
-          Congress data methodology
+          Metodología de datos de congresos
         </h2>
         <div className="mt-3 space-y-3 text-muted-foreground">
           <p>
-            Every congress, conference, course, workshop, or webinar listed here is sourced from a
-            real, public origin — an official society page, a hospital or university CME calendar,
-            an event organizer&rsquo;s own site, or a public RSS/open API feed. We do not fabricate
-            events, dates, organizers, or URLs.
+            Todo congreso, conferencia, curso, taller o webinar listado acá proviene de una fuente
+            real y pública — la página oficial de una sociedad, un calendario de educación médica
+            continua de un hospital o universidad, el sitio propio de un organizador de eventos, o
+            un feed RSS/API pública abierta. No inventamos eventos, fechas, organizadores ni URLs.
           </p>
           <p>
-            Each event page lists its data source(s) and a &ldquo;last verified&rdquo; date. When a
-            source only publishes a month/year, or says an event is annual with dates not yet
-            announced, we say so explicitly (via a date note) rather than inventing a specific day.
+            Cada página de evento lista su(s) fuente(s) de datos y una fecha de &ldquo;última
+            verificación&rdquo;. Cuando una fuente solo publica mes/año, o dice que un evento es
+            anual con fechas aún no anunciadas, lo indicamos explícitamente (a través de una nota
+            de fecha) en vez de inventar un día específico.
           </p>
           <p>
-            The event pipeline is intentionally simple and auditable: admins add and periodically
-            re-verify events through the admin dashboard, and every event links back to at least one
-            source URL you can check yourself. We do not scrape sites that prohibit it, bypass
-            access controls, or generate abusive request volume against any source.
+            El proceso de carga de eventos es intencionalmente simple y auditable: los
+            administradores agregan y re-verifican periódicamente los eventos a través del panel
+            de administración, y cada evento enlaza a al menos una fuente que podés verificar vos
+            mismo. No hacemos scraping de sitios que lo prohíben, no evadimos controles de acceso
+            ni generamos volúmenes de solicitudes abusivos contra ninguna fuente.
           </p>
         </div>
       </section>
@@ -49,25 +52,26 @@ export default function AboutPage() {
       <section className="mt-12">
         <h2 className="flex items-center gap-2 font-heading text-xl font-semibold text-foreground">
           <Users className="size-5 text-primary" aria-hidden="true" />
-          Surgeon directory & verification
+          Directorio de cirujanos y verificación
         </h2>
         <div className="mt-3 space-y-3 text-muted-foreground">
           <p>
-            Surgeons create their own account and submit their profile. A profile is{" "}
-            <strong>never publicly visible</strong> until an administrator reviews and approves it —
-            draft and submitted profiles are only visible to their owner and to admins.
+            Los cirujanos crean su propia cuenta y envían su perfil. Un perfil{" "}
+            <strong>nunca es visible públicamente</strong> hasta que un administrador lo revisa y
+            aprueba — los perfiles en borrador o enviados solo son visibles para su dueño y para
+            los administradores.
           </p>
           <p>
-            We do not invent surgeon identities, qualifications, license numbers, contact details,
-            or photos. Any demo/sample profiles used to illustrate the directory before real
-            submissions are onboarded are clearly labeled &ldquo;Sample profile&rdquo; everywhere
-            they appear, including on their own page.
+            No inventamos identidades de cirujanos, títulos, números de matrícula, datos de
+            contacto ni fotos. Cualquier perfil de muestra usado para ilustrar el directorio antes
+            de que se incorporen envíos reales está claramente identificado como &ldquo;Perfil de
+            muestra&rdquo; en todos los lugares donde aparece, incluida su propia página.
           </p>
           <p>
-            A &ldquo;verified&rdquo; badge means the profile passed our review process for
-            completeness and internal consistency — it is not a substitute for independently
-            confirming a surgeon&rsquo;s license and credentials with their local medical board or
-            institution before making any care decision.
+            Una insignia de &ldquo;verificado&rdquo; significa que el perfil pasó nuestro proceso
+            de revisión de completitud y consistencia interna — no reemplaza confirmar de forma
+            independiente la matrícula y credenciales de un cirujano con su colegio médico local o
+            institución antes de tomar cualquier decisión de atención.
           </p>
         </div>
       </section>
@@ -75,19 +79,21 @@ export default function AboutPage() {
       <section className="mt-12">
         <h2 className="flex items-center gap-2 font-heading text-xl font-semibold text-foreground">
           <ShieldCheck className="size-5 text-primary" aria-hidden="true" />
-          Security & data handling
+          Seguridad y manejo de datos
         </h2>
         <div className="mt-3 space-y-3 text-muted-foreground">
           <p>
-            Authentication, password storage, and session handling are delegated entirely to
-            Supabase Auth — we never see or store plaintext passwords. Every table is protected by
-            Row Level Security so that, regardless of application bugs, the database itself enforces
-            who can read or write which rows.
+            La autenticación, el almacenamiento de contraseñas y el manejo de sesiones están
+            delegados enteramente a Supabase Auth — nunca vemos ni guardamos contraseñas en texto
+            plano. Cada tabla está protegida por Row Level Security, de modo que,
+            independientemente de errores en la aplicación, es la propia base de datos la que
+            impone quién puede leer o escribir cada fila.
           </p>
           <p>
-            Sensitive administrative actions (approving, rejecting, suspending, or deleting a
-            profile; creating or editing events) are written to an append-only audit log that no
-            role, including admins, can edit or delete through the application.
+            Las acciones administrativas sensibles (aprobar, rechazar, suspender o eliminar un
+            perfil; crear o editar eventos) se registran en un historial de auditoría de solo
+            escritura que ningún rol, ni siquiera los administradores, puede editar o borrar desde
+            la aplicación.
           </p>
         </div>
       </section>
@@ -95,12 +101,13 @@ export default function AboutPage() {
       <section className="mt-12">
         <h2 className="flex items-center gap-2 font-heading text-xl font-semibold text-foreground">
           <BookOpenCheck className="size-5 text-primary" aria-hidden="true" />
-          Corrections
+          Correcciones
         </h2>
         <p className="mt-3 text-muted-foreground">
-          Spot an error in an event listing or a surgeon profile? Sign in and use your dashboard to
-          request changes to your own profile, or reach out through the contact details published on
-          the relevant event&rsquo;s official website to have us correct event information.
+          ¿Encontraste un error en un evento o en un perfil de cirujano? Iniciá sesión y usá tu
+          panel para solicitar cambios en tu propio perfil, o contactanos a través de los datos de
+          contacto publicados en el sitio oficial del evento correspondiente para que corrijamos
+          la información.
         </p>
       </section>
     </div>

@@ -33,13 +33,19 @@ import {
 } from "@/lib/validation/event";
 
 const SOURCE_TYPE_LABELS: Record<(typeof EVENT_SOURCE_TYPES)[number], string> = {
-  official_society: "Official society",
+  official_society: "Sociedad oficial",
   hospital: "Hospital",
-  university: "University",
-  organizer: "Event organizer",
-  rss: "Public RSS feed",
-  public_api: "Open/public API",
-  other: "Other",
+  university: "Universidad",
+  organizer: "Organizador del evento",
+  rss: "Feed RSS público",
+  public_api: "API abierta/pública",
+  other: "Otro",
+};
+
+const EVENT_STATUS_LABELS: Record<(typeof EVENT_STATUSES)[number], string> = {
+  pending: "Pendiente",
+  approved: "Aprobado",
+  rejected: "Rechazado",
 };
 
 export function EventForm({
@@ -84,7 +90,7 @@ export function EventForm({
       setServerError(result.error);
       return;
     }
-    toast.success("Saved");
+    toast.success("Guardado");
     router.push("/admin/events");
     router.refresh();
   }
@@ -93,25 +99,25 @@ export function EventForm({
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8" noValidate>
       <section className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5 sm:col-span-2">
-          <Label htmlFor="title">Title</Label>
+          <Label htmlFor="title">Título</Label>
           <Input id="title" {...form.register("title")} />
           {form.formState.errors.title && (
             <p className="text-xs text-destructive">{form.formState.errors.title.message}</p>
           )}
         </div>
         <div className="space-y-1.5 sm:col-span-2">
-          <Label htmlFor="description">Description</Label>
+          <Label htmlFor="description">Descripción</Label>
           <Textarea id="description" rows={5} {...form.register("description")} />
           {form.formState.errors.description && (
             <p className="text-xs text-destructive">{form.formState.errors.description.message}</p>
           )}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="organizer">Organizer</Label>
+          <Label htmlFor="organizer">Organizador</Label>
           <Input id="organizer" {...form.register("organizer")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="eventType">Event type</Label>
+          <Label htmlFor="eventType">Tipo de evento</Label>
           <Select
             value={form.watch("eventType")}
             onValueChange={(v) =>
@@ -131,7 +137,7 @@ export function EventForm({
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="format">Format</Label>
+          <Label htmlFor="format">Modalidad</Label>
           <Select
             value={form.watch("format")}
             onValueChange={(v) =>
@@ -151,7 +157,7 @@ export function EventForm({
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="status">Status</Label>
+          <Label htmlFor="status">Estado</Label>
           <Select
             value={form.watch("status")}
             onValueChange={(v) =>
@@ -164,7 +170,7 @@ export function EventForm({
             <SelectContent>
               {EVENT_STATUSES.map((s) => (
                 <SelectItem key={s} value={s}>
-                  {s}
+                  {EVENT_STATUS_LABELS[s]}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -175,39 +181,39 @@ export function EventForm({
             checked={form.watch("isFeatured")}
             onCheckedChange={(checked) => form.setValue("isFeatured", checked === true)}
           />
-          Featured on homepage
+          Destacado en la página de inicio
         </label>
       </section>
 
       <section className="grid gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">
-          <Label htmlFor="startDate">Start date</Label>
+          <Label htmlFor="startDate">Fecha de inicio</Label>
           <Input id="startDate" type="date" {...form.register("startDate")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="endDate">End date</Label>
+          <Label htmlFor="endDate">Fecha de fin</Label>
           <Input id="endDate" type="date" {...form.register("endDate")} />
           {form.formState.errors.endDate && (
             <p className="text-xs text-destructive">{form.formState.errors.endDate.message}</p>
           )}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="timezone">Timezone</Label>
+          <Label htmlFor="timezone">Zona horaria</Label>
           <Input id="timezone" placeholder="America/Sao_Paulo" {...form.register("timezone")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="startTime">Start time (optional)</Label>
+          <Label htmlFor="startTime">Hora de inicio (opcional)</Label>
           <Input id="startTime" type="time" {...form.register("startTime")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="endTime">End time (optional)</Label>
+          <Label htmlFor="endTime">Hora de fin (opcional)</Label>
           <Input id="endTime" type="time" {...form.register("endTime")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="dateNote">Date note (optional)</Label>
+          <Label htmlFor="dateNote">Nota de fecha (opcional)</Label>
           <Input
             id="dateNote"
-            placeholder="Annual course, exact dates TBD"
+            placeholder="Curso anual, fechas exactas por confirmar"
             {...form.register("dateNote")}
           />
         </div>
@@ -215,13 +221,13 @@ export function EventForm({
 
       <section className="grid gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">
-          <Label htmlFor="country">Country</Label>
+          <Label htmlFor="country">País</Label>
           <Select
             value={form.watch("country")}
             onValueChange={(v) => form.setValue("country", v ?? "", { shouldValidate: true })}
           >
             <SelectTrigger id="country" className="w-full">
-              <SelectValue placeholder="Select country" />
+              <SelectValue placeholder="Seleccioná el país" />
             </SelectTrigger>
             <SelectContent>
               {LATAM_COUNTRIES.map((c) => (
@@ -233,17 +239,17 @@ export function EventForm({
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="city">City</Label>
+          <Label htmlFor="city">Ciudad</Label>
           <Input id="city" {...form.register("city")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="venue">Venue</Label>
+          <Label htmlFor="venue">Sede</Label>
           <Input id="venue" {...form.register("venue")} />
         </div>
       </section>
 
       <section className="space-y-3">
-        <Label>Topics</Label>
+        <Label>Temas</Label>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {EVENT_TOPICS.map((topic) => (
             <label key={topic} className="flex items-center gap-2 text-sm">
@@ -257,7 +263,7 @@ export function EventForm({
         </div>
         <div className="flex gap-2">
           <Input
-            placeholder="Add another topic…"
+            placeholder="Agregar otro tema…"
             value={customTopic}
             onChange={(e) => setCustomTopic(e.target.value)}
             onKeyDown={(e) => {
@@ -268,7 +274,7 @@ export function EventForm({
             }}
           />
           <Button type="button" variant="outline" onClick={addCustomTopic}>
-            <Plus className="size-4" /> Add
+            <Plus className="size-4" /> Agregar
           </Button>
         </div>
         {form.formState.errors.topics && (
@@ -278,14 +284,14 @@ export function EventForm({
 
       <section className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="officialUrl">Official website URL</Label>
+          <Label htmlFor="officialUrl">URL del sitio oficial</Label>
           <Input id="officialUrl" placeholder="https://" {...form.register("officialUrl")} />
           {form.formState.errors.officialUrl && (
             <p className="text-xs text-destructive">{form.formState.errors.officialUrl.message}</p>
           )}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="registrationUrl">Registration URL (optional)</Label>
+          <Label htmlFor="registrationUrl">URL de inscripción (opcional)</Label>
           <Input
             id="registrationUrl"
             placeholder="https://"
@@ -293,18 +299,18 @@ export function EventForm({
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="sourceUrl">Primary source URL</Label>
+          <Label htmlFor="sourceUrl">URL de la fuente principal</Label>
           <Input id="sourceUrl" placeholder="https://" {...form.register("sourceUrl")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="lastVerifiedAt">Last verified</Label>
+          <Label htmlFor="lastVerifiedAt">Última verificación</Label>
           <Input id="lastVerifiedAt" type="date" {...form.register("lastVerifiedAt")} />
         </div>
       </section>
 
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <Label>Data sources</Label>
+          <Label>Fuentes de datos</Label>
           <Button
             type="button"
             variant="outline"
@@ -313,7 +319,7 @@ export function EventForm({
               append({ sourceName: "", sourceUrl: "", sourceType: "official_society", notes: "" })
             }
           >
-            <Plus className="size-4" /> Add source
+            <Plus className="size-4" /> Agregar fuente
           </Button>
         </div>
         {fields.map((field, index) => (
@@ -322,15 +328,15 @@ export function EventForm({
             className="grid gap-3 rounded-lg border border-border p-4 sm:grid-cols-[1fr_1fr_1fr_auto]"
           >
             <div className="space-y-1.5">
-              <Label>Source name</Label>
+              <Label>Nombre de la fuente</Label>
               <Input {...form.register(`sources.${index}.sourceName`)} />
             </div>
             <div className="space-y-1.5">
-              <Label>Source URL</Label>
+              <Label>URL de la fuente</Label>
               <Input {...form.register(`sources.${index}.sourceUrl`)} />
             </div>
             <div className="space-y-1.5">
-              <Label>Type</Label>
+              <Label>Tipo</Label>
               <Select
                 value={form.watch(`sources.${index}.sourceType`)}
                 onValueChange={(v) =>
@@ -358,7 +364,7 @@ export function EventForm({
               size="icon"
               className="self-end text-destructive"
               onClick={() => remove(index)}
-              aria-label="Remove source"
+              aria-label="Quitar fuente"
             >
               <Trash2 className="size-4" />
             </Button>
@@ -366,7 +372,7 @@ export function EventForm({
         ))}
         {form.formState.errors.sources && (
           <p className="text-xs text-destructive">
-            {form.formState.errors.sources.message ?? "Check your data sources."}
+            {form.formState.errors.sources.message ?? "Revisá tus fuentes de datos."}
           </p>
         )}
       </section>
@@ -379,7 +385,7 @@ export function EventForm({
       )}
 
       <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
-        {form.formState.isSubmitting ? "Saving…" : "Save event"}
+        {form.formState.isSubmitting ? "Guardando…" : "Guardar evento"}
       </Button>
     </form>
   );

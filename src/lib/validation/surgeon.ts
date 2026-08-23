@@ -11,68 +11,74 @@ export const CONSULTATION_FORMATS = ["in_person", "telemedicine", "both"] as con
 // directory filter — surgeons aren't limited to it, but it keeps the
 // common cases consistent.
 export const SUGGESTED_SUBSPECIALTIES = [
-  "Degenerative Spine",
-  "Spinal Deformity",
-  "Spinal Trauma",
-  "Minimally Invasive Surgery",
-  "Spine Tumor / Oncology",
-  "Pediatric Spine",
-  "Revision Spine Surgery",
-  "Spine Infection",
-  "Sports Spine",
-  "Pain Management",
-  "Robotics & Navigation",
-  "Endoscopic Spine Surgery",
-  "Cervical Spine",
-  "Lumbar Spine",
-  "Scoliosis",
+  "Columna degenerativa",
+  "Deformidad espinal",
+  "Trauma espinal",
+  "Cirugía mínimamente invasiva",
+  "Tumores de columna / Oncología",
+  "Columna pediátrica",
+  "Cirugía de revisión de columna",
+  "Infecciones de columna",
+  "Columna deportiva",
+  "Manejo del dolor",
+  "Robótica y navegación",
+  "Cirugía endoscópica de columna",
+  "Columna cervical",
+  "Columna lumbar",
+  "Escoliosis",
 ] as const;
 
 export const LANGUAGE_OPTIONS = [
-  "Spanish",
-  "Portuguese",
-  "English",
-  "French",
-  "Italian",
-  "German",
+  "Español",
+  "Portugués",
+  "Inglés",
+  "Francés",
+  "Italiano",
+  "Alemán",
 ] as const;
 
 export const surgeonLocationSchema = z.object({
-  country: z.string().trim().min(2, "Country is required").max(100),
-  city: z.string().trim().min(2, "City is required").max(100),
+  country: z.string().trim().min(2, "El país es obligatorio").max(100),
+  city: z.string().trim().min(2, "La ciudad es obligatoria").max(100),
   isPrimary: z.boolean(),
 });
 
 export const surgeonProfileSchema = z.object({
-  fullName: z.string().trim().min(3, "Full name is too short").max(150),
+  fullName: z.string().trim().min(3, "El nombre completo es muy corto").max(150),
   professionalTitle: z.string().trim().max(150).optional().or(z.literal("")),
   primarySpecialty: z.enum(PRIMARY_SPECIALTIES),
   subspecialties: z
     .array(z.string().trim().min(2).max(80))
-    .min(1, "Select or add at least one subspecialty")
+    .min(1, "Seleccioná o agregá al menos una subespecialidad")
     .max(15),
   bio: z
     .string()
     .trim()
-    .min(50, "Biography should be at least 50 characters")
-    .max(4000, "Biography is too long"),
+    .min(50, "La biografía debe tener al menos 50 caracteres")
+    .max(4000, "La biografía es muy larga"),
   hospitalAffiliation: z.string().trim().max(200).optional().or(z.literal("")),
   medicalLicenseNumber: z.string().trim().max(100).optional().or(z.literal("")),
   medicalLicenseCountry: z.string().trim().max(100).optional().or(z.literal("")),
   yearsExperience: z.coerce.number().int().min(0).max(70).optional(),
   consultationFormat: z.enum(CONSULTATION_FORMATS),
-  languages: z.array(z.enum(LANGUAGE_OPTIONS)).min(1, "Select at least one language"),
+  languages: z.array(z.enum(LANGUAGE_OPTIONS)).min(1, "Seleccioná al menos un idioma"),
   websiteUrl: z
-    .union([z.url({ protocol: /^https?$/, message: "Must be a valid http(s) URL" }), z.literal("")])
+    .union([
+      z.url({ protocol: /^https?$/, message: "Debe ser una URL http(s) válida" }),
+      z.literal(""),
+    ])
     .optional(),
   contactEmail: z.union([z.email(), z.literal("")]).optional(),
   contactPhone: z.string().trim().max(40).optional().or(z.literal("")),
-  locations: z.array(surgeonLocationSchema).min(1, "Add at least one practice location").max(10),
+  locations: z
+    .array(surgeonLocationSchema)
+    .min(1, "Agregá al menos un lugar de atención")
+    .max(10),
 });
 
 export type SurgeonProfileFormValues = z.infer<typeof surgeonProfileSchema>;
 
-/** Derives the two DB boolean columns from the single consultationFormat field. */
+/** Deriva las dos columnas booleanas de la DB a partir del campo consultationFormat. */
 export function deriveConsultationAvailability(format: (typeof CONSULTATION_FORMATS)[number]) {
   return {
     inPersonAvailable: format === "in_person" || format === "both",

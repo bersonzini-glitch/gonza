@@ -43,14 +43,14 @@ export function SurgeonCard({ surgeon }: { surgeon: SurgeonWithRelations }) {
         {!surgeon.is_demo && (
           <BadgeCheck
             className="ml-auto size-5 shrink-0 text-primary"
-            aria-label="Verified profile"
+            aria-label="Perfil verificado"
           />
         )}
       </div>
 
       <div className="flex flex-wrap gap-1.5">
         <Badge variant="secondary">{PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]}</Badge>
-        {surgeon.is_demo && <Badge variant="outline">Sample profile</Badge>}
+        {surgeon.is_demo && <Badge variant="outline">Perfil de muestra</Badge>}
       </div>
 
       <div className="mt-auto space-y-1.5 text-sm text-muted-foreground">
@@ -63,7 +63,7 @@ export function SurgeonCard({ surgeon }: { surgeon: SurgeonWithRelations }) {
         {surgeon.telemedicine_available && (
           <p className="flex items-center gap-1.5">
             <Video className="size-3.5 shrink-0" aria-hidden="true" />
-            Telemedicine available
+            Telemedicina disponible
           </p>
         )}
       </div>

@@ -4,18 +4,18 @@ import Link from "next/link";
 import { AuthCard } from "@/components/auth/auth-card";
 import { SignUpForm } from "@/components/auth/sign-up-form";
 
-export const metadata: Metadata = { title: "Create your account" };
+export const metadata: Metadata = { title: "Creá tu cuenta" };
 
 export default function SignUpPage() {
   return (
     <AuthCard
-      title="Create your surgeon account"
-      description="Register to submit and manage your profile in the LATAM spine surgeon directory."
+      title="Creá tu cuenta de cirujano"
+      description="Registrate para enviar y administrar tu perfil en el directorio de cirujanos de columna de LATAM."
       footer={
         <>
-          Already have an account?{" "}
+          ¿Ya tenés una cuenta?{" "}
           <Link href="/sign-in" className="font-medium text-primary hover:underline">
-            Sign in
+            Iniciar sesión
           </Link>
         </>
       }

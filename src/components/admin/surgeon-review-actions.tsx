@@ -53,7 +53,7 @@ function ReasonDialog({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <div className="space-y-1.5">
-          <Label htmlFor="reason">Reason</Label>
+          <Label htmlFor="reason">Motivo</Label>
           <Textarea
             id="reason"
             value={reason}
@@ -73,13 +73,13 @@ function ReasonDialog({
                   return;
                 }
                 setOpen(false);
-                toast.success("Done");
+                toast.success("Listo");
                 if (redirectTo) router.push(redirectTo);
                 else router.refresh();
               })
             }
           >
-            {isPending ? "Submitting…" : "Confirm"}
+            {isPending ? "Enviando…" : "Confirmar"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -107,13 +107,13 @@ export function SurgeonReviewActions({
               const result = await approveSurgeonAction(surgeonId);
               if (result.error) toast.error(result.error);
               else {
-                toast.success("Profile approved");
+                toast.success("Perfil aprobado");
                 router.refresh();
               }
             })
           }
         >
-          <Check className="size-4" /> Approve
+          <Check className="size-4" /> Aprobar
         </Button>
       )}
 
@@ -121,11 +121,11 @@ export function SurgeonReviewActions({
         <ReasonDialog
           trigger={
             <Button variant="outline">
-              <X className="size-4" /> Reject
+              <X className="size-4" /> Rechazar
             </Button>
           }
-          title="Reject this profile"
-          description="Explain what the surgeon needs to change. They'll see this note in their dashboard."
+          title="Rechazar este perfil"
+          description="Explicá qué necesita cambiar el cirujano. Verá esta nota en su panel."
           onConfirm={(reason) => rejectSurgeonAction(surgeonId, reason)}
         />
       )}
@@ -134,11 +134,11 @@ export function SurgeonReviewActions({
         <ReasonDialog
           trigger={
             <Button variant="outline">
-              <ShieldAlert className="size-4" /> Suspend
+              <ShieldAlert className="size-4" /> Suspender
             </Button>
           }
-          title="Suspend this profile"
-          description="The profile will be immediately removed from public view."
+          title="Suspender este perfil"
+          description="El perfil se quitará de la vista pública inmediatamente."
           onConfirm={(reason) => suspendSurgeonAction(surgeonId, reason)}
         />
       )}
@@ -146,11 +146,11 @@ export function SurgeonReviewActions({
       <ReasonDialog
         trigger={
           <Button variant="destructive">
-            <Trash2 className="size-4" /> Delete
+            <Trash2 className="size-4" /> Eliminar
           </Button>
         }
-        title="Delete this profile permanently"
-        description="This cannot be undone. The reason is recorded in the audit log before deletion."
+        title="Eliminar este perfil permanentemente"
+        description="Esta acción no se puede deshacer. El motivo se registra en el historial de auditoría antes de eliminar."
         onConfirm={async () => deleteSurgeonAction(surgeonId)}
         redirectTo="/admin/surgeons"
       />

@@ -10,9 +10,9 @@ import { searchSurgeons } from "@/lib/data/surgeons";
 import { surgeonSearchSchema } from "@/lib/validation/surgeon";
 
 export const metadata: Metadata = {
-  title: "LATAM Spine Surgeon Directory",
+  title: "Directorio de cirujanos de columna en LATAM",
   description:
-    "Search verified orthopedic and neurosurgical spine surgeons across Latin America by country, city, specialty, subspecialty, and language.",
+    "Buscá traumatólogos y neurocirujanos de columna verificados en Latinoamérica por país, ciudad, especialidad, subespecialidad e idioma.",
 };
 
 export default async function SurgeonsPage({
@@ -31,13 +31,13 @@ export default async function SurgeonsPage({
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="max-w-2xl">
         <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
-          Verified spine surgeons in Latin America
+          Cirujanos de columna verificados en Latinoamérica
         </h1>
         <p className="mt-2 text-muted-foreground">
-          {total} verified {total === 1 ? "profile" : "profiles"}. Informational directory only —
-          not a substitute for medical advice.{" "}
+          {total} {total === 1 ? "perfil verificado" : "perfiles verificados"}. Directorio solo
+          informativo — no reemplaza el consejo médico profesional.{" "}
           <Link href="/privacy" className="text-primary hover:underline">
-            Read our disclaimer
+            Leé nuestro aviso legal
           </Link>
           .
         </p>
@@ -53,13 +53,13 @@ export default async function SurgeonsPage({
             <div className="rounded-xl border border-dashed border-border p-12 text-center">
               <UserX className="mx-auto size-10 text-muted-foreground" aria-hidden="true" />
               <h2 className="mt-4 font-heading text-xl font-semibold text-foreground">
-                No surgeons match your filters
+                Ningún cirujano coincide con tus filtros
               </h2>
               <p className="mt-2 text-muted-foreground">
-                Try clearing a filter to see more results.
+                Probá quitar algún filtro para ver más resultados.
               </p>
               <Button variant="outline" className="mt-5" asChild>
-                <Link href="/surgeons">Clear all filters</Link>
+                <Link href="/surgeons">Limpiar todos los filtros</Link>
               </Button>
             </div>
           ) : (
@@ -74,18 +74,18 @@ export default async function SurgeonsPage({
 
               {totalPages > 1 && (
                 <nav
-                  aria-label="Pagination"
+                  aria-label="Paginación"
                   className="mt-10 flex items-center justify-center gap-3"
                 >
                   <Button variant="outline" disabled={page <= 1} asChild={page > 1}>
                     {page > 1 ? (
-                      <Link href={buildHref(rawParams, page - 1)}>Previous</Link>
+                      <Link href={buildHref(rawParams, page - 1)}>Anterior</Link>
                     ) : (
-                      <span>Previous</span>
+                      <span>Anterior</span>
                     )}
                   </Button>
                   <span className="text-sm text-muted-foreground">
-                    Page {page} of {totalPages}
+                    Página {page} de {totalPages}
                   </span>
                   <Button
                     variant="outline"
@@ -93,9 +93,9 @@ export default async function SurgeonsPage({
                     asChild={page < totalPages}
                   >
                     {page < totalPages ? (
-                      <Link href={buildHref(rawParams, page + 1)}>Next</Link>
+                      <Link href={buildHref(rawParams, page + 1)}>Siguiente</Link>
                     ) : (
-                      <span>Next</span>
+                      <span>Siguiente</span>
                     )}
                   </Button>
                 </nav>

@@ -45,7 +45,7 @@ export async function approveSurgeonAction(surgeonId: string): Promise<AdminActi
     .select("slug")
     .single();
 
-  if (error || !surgeon) return { error: error?.message ?? "Could not approve profile." };
+  if (error || !surgeon) return { error: error?.message ?? "No se pudo aprobar el perfil." };
 
   await logAdminAction(supabase, "approve_surgeon_profile", "surgeon_profiles", surgeonId, {
     admin: admin.username,
@@ -61,7 +61,7 @@ export async function rejectSurgeonAction(
   surgeonId: string,
   reason: string,
 ): Promise<AdminActionResult> {
-  if (!reason.trim()) return { error: "A reason is required so the surgeon knows what to fix." };
+  if (!reason.trim()) return { error: "El motivo es obligatorio para que el cirujano sepa qué corregir." };
   const { admin, supabase } = await requireAdminClient();
 
   const { error } = await supabase
@@ -84,7 +84,7 @@ export async function suspendSurgeonAction(
   surgeonId: string,
   reason: string,
 ): Promise<AdminActionResult> {
-  if (!reason.trim()) return { error: "A reason is required for the audit log." };
+  if (!reason.trim()) return { error: "El motivo es obligatorio para el historial de auditoría." };
   const { admin, supabase } = await requireAdminClient();
 
   const { data: surgeon, error } = await supabase
@@ -94,7 +94,7 @@ export async function suspendSurgeonAction(
     .select("slug")
     .single();
 
-  if (error || !surgeon) return { error: error?.message ?? "Could not suspend profile." };
+  if (error || !surgeon) return { error: error?.message ?? "No se pudo suspender el perfil." };
 
   await logAdminAction(supabase, "suspend_surgeon_profile", "surgeon_profiles", surgeonId, {
     admin: admin.username,
@@ -142,7 +142,7 @@ export async function adminUpdateSurgeonProfileAction(
   const { admin, supabase } = await requireAdminClient();
 
   const parsed = surgeonProfileSchema.safeParse(input);
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   const data = parsed.data;
   const { inPersonAvailable, telemedicineAvailable } = deriveConsultationAvailability(
     data.consultationFormat,
@@ -231,7 +231,7 @@ export async function createEventAction(input: EventInput): Promise<AdminActionR
   const { admin, supabase } = await requireAdminClient();
 
   const parsed = eventSchema.safeParse(input);
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   const data = parsed.data;
 
   const slug = `${slugify(data.title)}-${randomUUID().slice(0, 6)}`;
@@ -242,7 +242,7 @@ export async function createEventAction(input: EventInput): Promise<AdminActionR
     .select("id, slug")
     .single();
 
-  if (error || !event) return { error: error?.message ?? "Could not create event." };
+  if (error || !event) return { error: error?.message ?? "No se pudo crear el evento." };
 
   const { error: sourcesError } = await supabase.from("event_sources").insert(
     data.sources.map((s) => ({
@@ -270,7 +270,7 @@ export async function updateEventAction(
   const { admin, supabase } = await requireAdminClient();
 
   const parsed = eventSchema.safeParse(input);
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   const data = parsed.data;
 
   const { data: event, error } = await supabase
@@ -280,7 +280,7 @@ export async function updateEventAction(
     .select("slug")
     .single();
 
-  if (error || !event) return { error: error?.message ?? "Could not update event." };
+  if (error || !event) return { error: error?.message ?? "No se pudo actualizar el evento." };
 
   await supabase.from("event_sources").delete().eq("event_id", eventId);
   const { error: sourcesError } = await supabase.from("event_sources").insert(

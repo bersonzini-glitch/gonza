@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { PRIMARY_SPECIALTY_LABELS } from "@/lib/format";
 import { listSurgeonsForAdmin } from "@/lib/data/admin";
 
-export const metadata: Metadata = { title: "Surgeon queue" };
+export const metadata: Metadata = { title: "Cola de cirujanos" };
 
 const STATUS_OPTIONS = ["submitted", "approved", "rejected", "suspended", "draft"] as const;
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline" | "destructive"> = {
@@ -14,6 +14,13 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline" | "dest
   rejected: "destructive",
   suspended: "destructive",
   draft: "outline",
+};
+const STATUS_LABELS: Record<string, string> = {
+  submitted: "enviado",
+  approved: "aprobado",
+  rejected: "rechazado",
+  suspended: "suspendido",
+  draft: "borrador",
 };
 
 export default async function AdminSurgeonsPage({
@@ -37,22 +44,22 @@ export default async function AdminSurgeonsPage({
           defaultValue={params.status ?? ""}
           className="h-9 rounded-md border border-input bg-card px-2 text-sm"
         >
-          <option value="">All statuses</option>
+          <option value="">Todos los estados</option>
           {STATUS_OPTIONS.map((s) => (
             <option key={s} value={s}>
-              {s}
+              {STATUS_LABELS[s]}
             </option>
           ))}
         </select>
         <input
           name="country"
-          placeholder="Country"
+          placeholder="País"
           defaultValue={params.country ?? ""}
           className="h-9 rounded-md border border-input bg-card px-3 text-sm"
         />
         <input
           name="q"
-          placeholder="Search by name…"
+          placeholder="Buscar por nombre…"
           defaultValue={params.q ?? ""}
           className="h-9 rounded-md border border-input bg-card px-3 text-sm"
         />
@@ -60,11 +67,11 @@ export default async function AdminSurgeonsPage({
           type="submit"
           className="h-9 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground"
         >
-          Filter
+          Filtrar
         </button>
         {(params.status || params.country || params.q) && (
           <Link href="/admin/surgeons" className="text-sm text-muted-foreground hover:underline">
-            Clear
+            Limpiar
           </Link>
         )}
       </form>
@@ -73,10 +80,10 @@ export default async function AdminSurgeonsPage({
         <table className="w-full min-w-[640px] text-sm">
           <thead className="border-b border-border bg-secondary/40 text-left text-xs uppercase text-muted-foreground">
             <tr>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Specialty</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Submitted</th>
+              <th className="px-4 py-3">Nombre</th>
+              <th className="px-4 py-3">Especialidad</th>
+              <th className="px-4 py-3">Estado</th>
+              <th className="px-4 py-3">Enviado</th>
             </tr>
           </thead>
           <tbody>
@@ -89,23 +96,25 @@ export default async function AdminSurgeonsPage({
                   >
                     {s.full_name}
                   </Link>
-                  {s.is_demo && <span className="ml-2 text-xs text-muted-foreground">(demo)</span>}
+                  {s.is_demo && (
+                    <span className="ml-2 text-xs text-muted-foreground">(demo)</span>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">
                   {PRIMARY_SPECIALTY_LABELS[s.primary_specialty]}
                 </td>
                 <td className="px-4 py-3">
-                  <Badge variant={STATUS_VARIANT[s.status]}>{s.status}</Badge>
+                  <Badge variant={STATUS_VARIANT[s.status]}>{STATUS_LABELS[s.status]}</Badge>
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">
-                  {s.submitted_at ? new Date(s.submitted_at).toLocaleDateString() : "—"}
+                  {s.submitted_at ? new Date(s.submitted_at).toLocaleDateString("es-419") : "—"}
                 </td>
               </tr>
             ))}
             {surgeons.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-4 py-10 text-center text-muted-foreground">
-                  No surgeon profiles match these filters.
+                  Ningún perfil de cirujano coincide con estos filtros.
                 </td>
               </tr>
             )}

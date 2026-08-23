@@ -21,15 +21,16 @@ export default function ErrorBoundary({
     <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center px-4 text-center">
       <AlertTriangle className="size-10 text-destructive" aria-hidden="true" />
       <h1 className="mt-4 font-heading text-2xl font-semibold text-foreground">
-        Something went wrong
+        Algo salió mal
       </h1>
       <p className="mt-2 text-muted-foreground">
-        We hit an unexpected error loading this page. You can try again, or head back home.
+        Ocurrió un error inesperado al cargar esta página. Podés intentar de nuevo o volver al
+        inicio.
       </p>
       <div className="mt-6 flex gap-3">
-        <Button onClick={reset}>Try again</Button>
+        <Button onClick={reset}>Intentar de nuevo</Button>
         <Button variant="outline" asChild>
-          <Link href="/">Go home</Link>
+          <Link href="/">Ir al inicio</Link>
         </Button>
       </div>
     </div>

@@ -4,18 +4,18 @@ import Link from "next/link";
 import { AuthCard } from "@/components/auth/auth-card";
 import { RequestResetForm } from "@/components/auth/request-reset-form";
 
-export const metadata: Metadata = { title: "Reset your password" };
+export const metadata: Metadata = { title: "Recuperar contraseña" };
 
 export default function ResetPasswordPage() {
   return (
     <AuthCard
-      title="Reset your password"
-      description="Enter your email and we'll send you a link to set a new password."
+      title="Recuperá tu contraseña"
+      description="Ingresá tu email y te enviaremos un enlace para definir una nueva contraseña."
       footer={
         <>
-          Remembered it?{" "}
+          ¿La recordaste?{" "}
           <Link href="/sign-in" className="font-medium text-primary hover:underline">
-            Sign in
+            Iniciar sesión
           </Link>
         </>
       }

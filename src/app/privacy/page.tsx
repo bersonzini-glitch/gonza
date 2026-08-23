@@ -2,82 +2,91 @@ import { AlertTriangle } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy & Medical Disclaimer",
-  description: "Privacy practices and the medical disclaimer for ColumnaLATAM.",
+  title: "Privacidad y aviso médico",
+  description: "Prácticas de privacidad y aviso médico de ColumnaLATAM.",
 };
 
 export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
       <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
-        Privacy & medical disclaimer
+        Privacidad y aviso médico
       </h1>
 
       <div className="mt-6 flex gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-5">
         <AlertTriangle className="size-5 shrink-0 text-destructive" aria-hidden="true" />
         <div className="text-sm text-foreground">
-          <p className="font-semibold">This is not a medical emergency service.</p>
+          <p className="font-semibold">Este no es un servicio de emergencias médicas.</p>
           <p className="mt-1 text-muted-foreground">
-            If you are experiencing a medical emergency, contact your local emergency services
-            immediately. Do not use this website to seek urgent or emergency care.
+            Si estás atravesando una emergencia médica, contactá a los servicios de emergencia
+            locales de inmediato. No uses este sitio para buscar atención urgente o de emergencia.
           </p>
         </div>
       </div>
 
       <section className="mt-10 space-y-3">
-        <h2 className="font-heading text-xl font-semibold text-foreground">Medical disclaimer</h2>
+        <h2 className="font-heading text-xl font-semibold text-foreground">Aviso médico</h2>
         <p className="text-muted-foreground">
-          ColumnaLATAM is an informational directory only. It does not provide medical advice,
-          diagnosis, or treatment, and listing a surgeon does not constitute an endorsement or
-          guarantee of their qualifications, availability, or fitness for any particular case.
-          Congress and event information is provided for discovery purposes and may change without
-          notice — always confirm dates, format, and registration details directly with the event
-          organizer before making travel or attendance plans.
+          ColumnaLATAM es solo un directorio informativo. No brinda consejo médico, diagnóstico ni
+          tratamiento, y que un cirujano figure en el listado no constituye un aval ni una
+          garantía de sus calificaciones, disponibilidad o idoneidad para ningún caso en
+          particular. La información de congresos y eventos se ofrece con fines de descubrimiento
+          y puede cambiar sin previo aviso — siempre confirmá fechas, modalidad y datos de
+          inscripción directamente con el organizador del evento antes de hacer planes de viaje o
+          asistencia.
         </p>
         <p className="text-muted-foreground">
-          Always independently verify a surgeon&rsquo;s license, credentials, and current practice
-          status with the relevant medical board or institution, and consult directly with a
-          qualified healthcare professional before making any decision about your care.
+          Siempre verificá de forma independiente la matrícula, credenciales y estado de ejercicio
+          actual de un cirujano con el colegio médico o institución correspondiente, y consultá
+          directamente con un profesional de la salud calificado antes de tomar cualquier decisión
+          sobre tu atención.
         </p>
       </section>
 
       <section className="mt-10 space-y-3">
-        <h2 className="font-heading text-xl font-semibold text-foreground">What we collect</h2>
+        <h2 className="font-heading text-xl font-semibold text-foreground">
+          Qué información recopilamos
+        </h2>
         <ul className="list-disc space-y-2 pl-5 text-muted-foreground">
           <li>
-            <strong>Account data:</strong> your email, username, and full name, managed by Supabase
-            Auth, used to authenticate you and let you manage your own submissions.
+            <strong>Datos de cuenta:</strong> tu email, nombre de usuario y nombre completo,
+            gestionados por Supabase Auth, usados para autenticarte y permitirte administrar tus
+            propios envíos.
           </li>
           <li>
-            <strong>Surgeon profile data:</strong> the information you choose to submit (biography,
-            affiliations, languages, contact links, and an optional photo). This stays private
-            (draft/submitted) until an administrator approves it for public display.
+            <strong>Datos de perfil de cirujano:</strong> la información que elegís enviar
+            (biografía, afiliaciones, idiomas, enlaces de contacto y una foto opcional). Esto se
+            mantiene privado (borrador/enviado) hasta que un administrador lo aprueba para
+            mostrarlo públicamente.
           </li>
           <li>
-            <strong>Basic technical data:</strong> IP address and timestamps used only for abuse
-            protection (rate limiting sign-up, sign-in, and submission endpoints) and are not sold
-            or shared with third parties.
+            <strong>Datos técnicos básicos:</strong> dirección IP y marcas de tiempo usadas solo
+            para protección contra abuso (limitación de intentos en registro, inicio de sesión y
+            envío de formularios) y que no se venden ni comparten con terceros.
           </li>
         </ul>
       </section>
 
       <section className="mt-10 space-y-3">
-        <h2 className="font-heading text-xl font-semibold text-foreground">How we protect it</h2>
+        <h2 className="font-heading text-xl font-semibold text-foreground">
+          Cómo la protegemos
+        </h2>
         <p className="text-muted-foreground">
-          Passwords are handled entirely by Supabase Auth and are never stored in plaintext or seen
-          by our application code. Database access is governed by Row Level Security policies, so
-          your draft or submitted profile is not readable by other users, and only administrators
-          can review it prior to approval. You can request deletion of your account and profile at
-          any time from your dashboard, or by contacting an administrator.
+          Las contraseñas son gestionadas enteramente por Supabase Auth y nunca se almacenan en
+          texto plano ni son vistas por nuestro código de aplicación. El acceso a la base de datos
+          está gobernado por políticas de Row Level Security, de modo que tu perfil en borrador o
+          enviado no puede ser leído por otros usuarios, y solo los administradores pueden
+          revisarlo antes de la aprobación. Podés solicitar la eliminación de tu cuenta y perfil
+          en cualquier momento desde tu panel, o contactando a un administrador.
         </p>
       </section>
 
       <section className="mt-10 space-y-3">
-        <h2 className="font-heading text-xl font-semibold text-foreground">Your choices</h2>
+        <h2 className="font-heading text-xl font-semibold text-foreground">Tus opciones</h2>
         <p className="text-muted-foreground">
-          You control what appears on your public surgeon profile before submitting it for review,
-          and can edit it again if it is returned to draft. You may withdraw your profile from the
-          directory at any time by contacting an administrator.
+          Vos controlás qué aparece en tu perfil público de cirujano antes de enviarlo a revisión,
+          y podés editarlo nuevamente si vuelve a estado borrador. Podés retirar tu perfil del
+          directorio en cualquier momento contactando a un administrador.
         </p>
       </section>
     </div>

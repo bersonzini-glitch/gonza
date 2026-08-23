@@ -38,7 +38,7 @@ export function RequestResetForm() {
       )}
 
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Sending…" : "Send reset link"}
+        {isPending ? "Enviando…" : "Enviar enlace de recuperación"}
       </Button>
     </form>
   );

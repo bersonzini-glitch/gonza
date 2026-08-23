@@ -18,7 +18,7 @@ export function SignOutButton({ className }: { className?: string }) {
       onClick={() => startTransition(() => void signOutAction())}
     >
       <LogOut className="size-4" aria-hidden="true" />
-      {isPending ? "Signing out…" : "Sign out"}
+      {isPending ? "Cerrando sesión…" : "Cerrar sesión"}
     </Button>
   );
 }

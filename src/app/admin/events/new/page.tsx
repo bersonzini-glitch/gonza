@@ -4,7 +4,7 @@ import { EventForm } from "@/components/admin/event-form";
 import { createEventAction } from "@/lib/actions/admin";
 import type { EventInput } from "@/lib/validation/event";
 
-export const metadata: Metadata = { title: "New event" };
+export const metadata: Metadata = { title: "Nuevo evento" };
 
 const defaultValues: EventInput = {
   title: "",
@@ -34,7 +34,7 @@ const defaultValues: EventInput = {
 export default function NewEventPage() {
   return (
     <div>
-      <h2 className="mb-6 font-heading text-2xl font-semibold text-foreground">New event</h2>
+      <h2 className="mb-6 font-heading text-2xl font-semibold text-foreground">Nuevo evento</h2>
       <EventForm defaultValues={defaultValues} action={createEventAction} />
     </div>
   );

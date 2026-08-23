@@ -7,7 +7,7 @@ import { UpdatePasswordForm } from "@/components/auth/update-password-form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Set a new password" };
+export const metadata: Metadata = { title: "Definir nueva contraseña" };
 
 export default async function ConfirmResetPasswordPage({
   searchParams,
@@ -24,7 +24,10 @@ export default async function ConfirmResetPasswordPage({
   }
 
   return (
-    <AuthCard title="Set a new password" description="Choose a new password for your account.">
+    <AuthCard
+      title="Definí una nueva contraseña"
+      description="Elegí una nueva contraseña para tu cuenta."
+    >
       {exchanged ? (
         <UpdatePasswordForm />
       ) : (
@@ -32,11 +35,11 @@ export default async function ConfirmResetPasswordPage({
           <Alert variant="destructive">
             <AlertCircle className="size-4" />
             <AlertDescription>
-              This reset link is invalid or has expired. Please request a new one.
+              Este enlace de recuperación no es válido o expiró. Solicitá uno nuevo.
             </AlertDescription>
           </Alert>
           <Link href="/reset-password" className="font-medium text-primary hover:underline">
-            Request a new reset link
+            Solicitar un nuevo enlace de recuperación
           </Link>
         </div>
       )}

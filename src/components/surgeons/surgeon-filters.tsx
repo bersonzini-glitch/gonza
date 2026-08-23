@@ -47,7 +47,7 @@ export function SurgeonFilters() {
   return (
     <form
       onSubmit={handleSubmit}
-      aria-label="Filter surgeons"
+      aria-label="Filtrar cirujanos"
       className="space-y-4 rounded-xl border border-border bg-card p-4 sm:p-5"
     >
       <div className="flex flex-col gap-2 sm:flex-row">
@@ -57,34 +57,34 @@ export function SurgeonFilters() {
             aria-hidden="true"
           />
           <Label htmlFor="q" className="sr-only">
-            Search by name
+            Buscar por nombre
           </Label>
           <Input
             id="q"
             type="search"
-            placeholder="Search by name…"
+            placeholder="Buscar por nombre…"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             className="pl-9"
           />
         </div>
-        <Button type="submit">Apply</Button>
+        <Button type="submit">Aplicar</Button>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
           <Label htmlFor="country" className="mb-1.5 block text-xs">
-            Country
+            País
           </Label>
           <Select
             value={searchParams.get("country") ?? ANY}
             onValueChange={(v) => updateParam("country", v)}
           >
             <SelectTrigger id="country" className="w-full">
-              <SelectValue placeholder="Any country" />
+              <SelectValue placeholder="Cualquier país" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ANY}>Any country</SelectItem>
+              <SelectItem value={ANY}>Cualquier país</SelectItem>
               {LATAM_COUNTRIES.map((c) => (
                 <SelectItem key={c} value={c}>
                   {c}
@@ -96,17 +96,17 @@ export function SurgeonFilters() {
 
         <div>
           <Label htmlFor="specialty" className="mb-1.5 block text-xs">
-            Specialty
+            Especialidad
           </Label>
           <Select
             value={searchParams.get("specialty") ?? ANY}
             onValueChange={(v) => updateParam("specialty", v)}
           >
             <SelectTrigger id="specialty" className="w-full">
-              <SelectValue placeholder="Any specialty" />
+              <SelectValue placeholder="Cualquier especialidad" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ANY}>Any specialty</SelectItem>
+              <SelectItem value={ANY}>Cualquier especialidad</SelectItem>
               {Object.entries(PRIMARY_SPECIALTY_LABELS).map(([value, label]) => (
                 <SelectItem key={value} value={value}>
                   {label}
@@ -118,17 +118,17 @@ export function SurgeonFilters() {
 
         <div className="col-span-2">
           <Label htmlFor="language" className="mb-1.5 block text-xs">
-            Language
+            Idioma
           </Label>
           <Select
             value={searchParams.get("language") ?? ANY}
             onValueChange={(v) => updateParam("language", v)}
           >
             <SelectTrigger id="language" className="w-full">
-              <SelectValue placeholder="Any language" />
+              <SelectValue placeholder="Cualquier idioma" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ANY}>Any language</SelectItem>
+              <SelectItem value={ANY}>Cualquier idioma</SelectItem>
               {LANGUAGE_OPTIONS.map((lang) => (
                 <SelectItem key={lang} value={lang}>
                   {lang}
@@ -142,7 +142,7 @@ export function SurgeonFilters() {
       <div className="space-y-3 border-t border-border pt-3">
         <div className="flex items-center justify-between">
           <Label htmlFor="inPerson" className="text-sm font-normal">
-            In-person consultations
+            Consultas presenciales
           </Label>
           <Switch
             id="inPerson"
@@ -152,7 +152,7 @@ export function SurgeonFilters() {
         </div>
         <div className="flex items-center justify-between">
           <Label htmlFor="telemedicine" className="text-sm font-normal">
-            Telemedicine available
+            Telemedicina disponible
           </Label>
           <Switch
             id="telemedicine"

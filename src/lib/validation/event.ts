@@ -14,43 +14,43 @@ export const EVENT_SOURCE_TYPES = [
 ] as const;
 
 export const EVENT_TOPICS = [
-  "Spinal Surgery",
-  "Neurosurgery",
-  "Orthopedics",
-  "Minimally Invasive Surgery",
-  "Spinal Deformity",
-  "Spinal Trauma",
-  "Degenerative Spine",
-  "Pediatric Spine",
-  "Spine Oncology",
-  "Endoscopic Spine Surgery",
+  "Cirugía de columna",
+  "Neurocirugía",
+  "Ortopedia",
+  "Cirugía mínimamente invasiva",
+  "Deformidad espinal",
+  "Trauma espinal",
+  "Columna degenerativa",
+  "Columna pediátrica",
+  "Oncología de columna",
+  "Cirugía endoscópica de columna",
 ] as const;
 
 export const LATAM_COUNTRIES = [
   "Argentina",
   "Bolivia",
-  "Brazil",
+  "Brasil",
   "Chile",
   "Colombia",
   "Costa Rica",
   "Cuba",
-  "Dominican Republic",
+  "República Dominicana",
   "Ecuador",
   "El Salvador",
   "Guatemala",
   "Honduras",
-  "Mexico",
+  "México",
   "Nicaragua",
-  "Panama",
+  "Panamá",
   "Paraguay",
-  "Peru",
+  "Perú",
   "Uruguay",
   "Venezuela",
 ] as const;
 
-const urlField = z.url({ protocol: /^https?$/, message: "Must be a valid http(s) URL" });
-const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD");
-const isoTime = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Use HH:MM (24h)");
+const urlField = z.url({ protocol: /^https?$/, message: "Debe ser una URL http(s) válida" });
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Usá el formato AAAA-MM-DD");
+const isoTime = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Usá el formato HH:MM (24h)");
 
 export const eventSourceSchema = z.object({
   sourceName: z.string().trim().min(2).max(200),
@@ -61,11 +61,11 @@ export const eventSourceSchema = z.object({
 
 export const eventSchema = z
   .object({
-    title: z.string().trim().min(5, "Title is too short").max(200),
+    title: z.string().trim().min(5, "El título es muy corto").max(200),
     description: z
       .string()
       .trim()
-      .min(30, "Description should be at least 30 characters")
+      .min(30, "La descripción debe tener al menos 30 caracteres")
       .max(5000),
     eventType: z.enum(EVENT_TYPES),
     format: z.enum(EVENT_FORMATS),
@@ -81,15 +81,18 @@ export const eventSchema = z
     city: z.string().trim().max(100).optional().or(z.literal("")),
     venue: z.string().trim().max(200).optional().or(z.literal("")),
     organizer: z.string().trim().min(2).max(200),
-    topics: z.array(z.string().trim().min(1).max(60)).min(1, "Add at least one topic").max(10),
+    topics: z
+      .array(z.string().trim().min(1).max(60))
+      .min(1, "Agregá al menos un tema")
+      .max(10),
     officialUrl: urlField,
     registrationUrl: urlField.optional().or(z.literal("")),
     sourceUrl: urlField,
     lastVerifiedAt: isoDate,
-    sources: z.array(eventSourceSchema).min(1, "Add at least one data source").max(5),
+    sources: z.array(eventSourceSchema).min(1, "Agregá al menos una fuente de datos").max(5),
   })
   .refine((data) => data.endDate >= data.startDate, {
-    message: "End date must be on or after the start date",
+    message: "La fecha de fin debe ser igual o posterior a la de inicio",
     path: ["endDate"],
   });
 

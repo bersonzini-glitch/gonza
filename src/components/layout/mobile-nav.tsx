@@ -23,15 +23,15 @@ export function MobileNav({ profile }: { profile: CurrentProfile | null }) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open menu">
+        <Button variant="ghost" size="icon" className="md:hidden" aria-label="Abrir menú">
           <Menu className="size-5" />
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="w-72">
         <SheetHeader>
-          <SheetTitle>Menu</SheetTitle>
+          <SheetTitle>Menú</SheetTitle>
         </SheetHeader>
-        <nav aria-label="Mobile" className="flex flex-col gap-1 px-4">
+        <nav aria-label="Móvil" className="flex flex-col gap-1 px-4">
           {NAV_LINKS.map((link) => (
             <SheetClose asChild key={link.href}>
               <Link
@@ -52,7 +52,7 @@ export function MobileNav({ profile }: { profile: CurrentProfile | null }) {
                   href="/dashboard"
                   className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-secondary"
                 >
-                  <LayoutDashboard className="size-4" /> My surgeon profile
+                  <LayoutDashboard className="size-4" /> Mi perfil de cirujano
                 </Link>
               </SheetClose>
               {profile.role === "admin" && (
@@ -61,7 +61,7 @@ export function MobileNav({ profile }: { profile: CurrentProfile | null }) {
                     href="/admin"
                     className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-secondary"
                   >
-                    <ShieldCheck className="size-4" /> Admin dashboard
+                    <ShieldCheck className="size-4" /> Panel de administración
                   </Link>
                 </SheetClose>
               )}
@@ -73,12 +73,12 @@ export function MobileNav({ profile }: { profile: CurrentProfile | null }) {
             <div className="flex flex-col gap-2 px-1 pt-1">
               <SheetClose asChild>
                 <Button variant="outline" asChild>
-                  <Link href="/sign-in">Sign in</Link>
+                  <Link href="/sign-in">Iniciar sesión</Link>
                 </Button>
               </SheetClose>
               <SheetClose asChild>
                 <Button asChild>
-                  <Link href="/sign-up">Join as a surgeon</Link>
+                  <Link href="/sign-up">Sumate como cirujano</Link>
                 </Button>
               </SheetClose>
             </div>

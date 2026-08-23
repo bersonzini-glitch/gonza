@@ -32,7 +32,7 @@ export async function generateMetadata({
   const surgeon = await getSurgeonBySlug(slug);
   if (!surgeon || surgeon.status !== "approved") return {};
 
-  const description = `${surgeon.professional_title ?? PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]} specializing in ${PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty].toLowerCase()}.`;
+  const description = `${surgeon.professional_title ?? PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]}, especialista en ${PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty].toLowerCase()}.`;
 
   return {
     title: surgeon.full_name,
@@ -67,6 +67,7 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
           addressCountry: primaryLocation.country,
         }
       : undefined,
+    inLanguage: "es",
   };
 
   return (
@@ -76,9 +77,9 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
+      <nav aria-label="Ruta de navegación" className="text-sm text-muted-foreground">
         <Link href="/surgeons" className="hover:text-foreground">
-          Surgeon directory
+          Directorio de cirujanos
         </Link>
         <span className="mx-1.5">/</span>
         <span className="text-foreground">{surgeon.full_name}</span>
@@ -97,7 +98,7 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
                 {surgeon.full_name}
               </h1>
               {!surgeon.is_demo && (
-                <BadgeCheck className="size-5 text-primary" aria-label="Verified profile" />
+                <BadgeCheck className="size-5 text-primary" aria-label="Perfil verificado" />
               )}
             </div>
             {surgeon.professional_title && (
@@ -108,10 +109,10 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
               <Badge variant="secondary">
                 {PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]}
               </Badge>
-              {surgeon.is_demo && <Badge variant="outline">Sample profile</Badge>}
+              {surgeon.is_demo && <Badge variant="outline">Perfil de muestra</Badge>}
               {surgeon.approved_at && (
                 <Badge variant="outline">
-                  Verified {formatDate(surgeon.approved_at.slice(0, 10))}
+                  Verificado el {formatDate(surgeon.approved_at.slice(0, 10))}
                 </Badge>
               )}
             </div>
@@ -124,22 +125,24 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
 
         {surgeon.is_demo && (
           <div className="mt-6 rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning-foreground">
-            This is a clearly marked <strong>sample profile</strong> used to demonstrate the
-            directory while real, verified surgeon submissions are onboarded. It does not represent
-            a real individual.
+            Este es un <strong>perfil de muestra</strong> claramente identificado, usado para
+            demostrar el directorio mientras se incorporan perfiles reales y verificados de
+            cirujanos. No representa a una persona real.
           </div>
         )}
 
         {surgeon.bio && (
           <div className="prose prose-neutral dark:prose-invert mt-8 max-w-none">
-            <h2 className="font-heading text-xl font-semibold text-foreground">Biography</h2>
+            <h2 className="font-heading text-xl font-semibold text-foreground">Biografía</h2>
             <p className="whitespace-pre-line text-muted-foreground">{surgeon.bio}</p>
           </div>
         )}
 
         {surgeon.surgeon_specialties.length > 0 && (
           <div className="mt-8">
-            <h2 className="text-sm font-semibold text-foreground">Subspecialties & procedures</h2>
+            <h2 className="text-sm font-semibold text-foreground">
+              Subespecialidades y procedimientos
+            </h2>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {surgeon.surgeon_specialties.map((s) => (
                 <Badge key={s.id} variant="secondary">
@@ -166,7 +169,7 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
             <div className="flex gap-2.5">
               <Building2 className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
               <div>
-                <p className="text-xs font-medium text-muted-foreground">Hospital / clinic</p>
+                <p className="text-xs font-medium text-muted-foreground">Hospital / clínica</p>
                 <p className="text-sm text-foreground">{surgeon.hospital_affiliation}</p>
               </div>
             </div>
@@ -176,7 +179,9 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
             <div className="flex gap-2.5">
               <BadgeCheck className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
               <div>
-                <p className="text-xs font-medium text-muted-foreground">Medical registration</p>
+                <p className="text-xs font-medium text-muted-foreground">
+                  Matrícula profesional
+                </p>
                 <p className="text-sm text-foreground">
                   {surgeon.medical_license_number}
                   {surgeon.medical_license_country ? ` (${surgeon.medical_license_country})` : ""}
@@ -189,7 +194,7 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
             <div className="flex gap-2.5">
               <Languages className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
               <div>
-                <p className="text-xs font-medium text-muted-foreground">Languages</p>
+                <p className="text-xs font-medium text-muted-foreground">Idiomas</p>
                 <p className="text-sm text-foreground">{surgeon.languages.join(", ")}</p>
               </div>
             </div>
@@ -198,14 +203,14 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
           <div className="flex gap-2.5">
             <Video className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
             <div>
-              <p className="text-xs font-medium text-muted-foreground">Consultation format</p>
+              <p className="text-xs font-medium text-muted-foreground">Modalidad de consulta</p>
               <p className="text-sm text-foreground">
                 {[
-                  surgeon.in_person_available && "In person",
-                  surgeon.telemedicine_available && "Telemedicine",
+                  surgeon.in_person_available && "Presencial",
+                  surgeon.telemedicine_available && "Telemedicina",
                 ]
                   .filter(Boolean)
-                  .join(" · ") || "Not specified"}
+                  .join(" · ") || "No especificado"}
               </p>
             </div>
           </div>
@@ -221,7 +226,7 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
                 className="flex items-center gap-1.5 text-primary hover:underline"
               >
                 <Globe className="size-4" aria-hidden="true" />
-                Professional website
+                Sitio web profesional
               </a>
             )}
             {surgeon.contact_email && (
@@ -243,10 +248,10 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
         )}
 
         <p className="mt-10 border-t border-border pt-6 text-xs text-muted-foreground">
-          This profile is informational and does not constitute medical advice or an endorsement.
-          Always verify credentials directly with the surgeon or their institution.{" "}
+          Este perfil es solo informativo y no constituye consejo médico ni un aval. Siempre
+          verificá las credenciales directamente con el cirujano o su institución.{" "}
           <Link href="/privacy" className="underline">
-            Read our full disclaimer
+            Leé nuestro aviso legal completo
           </Link>
           .
         </p>

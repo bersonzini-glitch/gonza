@@ -3,24 +3,24 @@ import Link from "next/link";
 
 const FOOTER_LINKS = [
   {
-    heading: "Discover",
+    heading: "Descubrir",
     links: [
-      { href: "/events", label: "Congress search" },
-      { href: "/surgeons", label: "Surgeon directory" },
+      { href: "/events", label: "Buscar congresos" },
+      { href: "/surgeons", label: "Directorio de cirujanos" },
     ],
   },
   {
-    heading: "About",
+    heading: "Sobre nosotros",
     links: [
-      { href: "/about", label: "About & data sources" },
-      { href: "/privacy", label: "Privacy & medical disclaimer" },
+      { href: "/about", label: "Quiénes somos y fuentes" },
+      { href: "/privacy", label: "Privacidad y aviso médico" },
     ],
   },
   {
-    heading: "For surgeons",
+    heading: "Para cirujanos",
     links: [
-      { href: "/sign-up", label: "Create your profile" },
-      { href: "/sign-in", label: "Sign in" },
+      { href: "/sign-up", label: "Creá tu perfil" },
+      { href: "/sign-in", label: "Iniciar sesión" },
     ],
   },
 ];
@@ -38,8 +38,9 @@ export function SiteFooter() {
               </span>
             </div>
             <p className="mt-3 text-sm text-muted-foreground">
-              An independent directory of LATAM spine surgery congresses and verified spine
-              surgeons. Informational only — not a substitute for medical advice.
+              Un directorio independiente de congresos de cirugía de columna y cirujanos
+              verificados en Latinoamérica. Es solo informativo — no reemplaza el consejo médico
+              profesional.
             </p>
           </div>
 
@@ -64,12 +65,13 @@ export function SiteFooter() {
 
         <div className="mt-10 flex flex-col gap-2 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} ColumnaLATAM. All event and surgeon data is sourced or
-            submitted as described on our data sources page.
+            © {new Date().getFullYear()} ColumnaLATAM. Todos los datos de eventos y cirujanos
+            provienen de fuentes verificadas o fueron enviados según se explica en nuestra página
+            de fuentes de datos.
           </p>
           <p>
-            Not for medical emergencies. In an emergency, contact local emergency services
-            immediately.
+            No es un servicio de emergencias médicas. Ante una emergencia, contactá a los
+            servicios de emergencia locales de inmediato.
           </p>
         </div>
       </div>

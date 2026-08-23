@@ -34,15 +34,15 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "ColumnaLATAM — LATAM Spine Congresses & Surgeon Directory",
+    default: "ColumnaLATAM — Congresos de columna y directorio de cirujanos en LATAM",
     template: "%s | ColumnaLATAM",
   },
   description:
-    "Discover upcoming spine surgery congresses, courses, and workshops across Latin America, and find verified spine surgeons by country, specialty, and language.",
+    "Descubrí los próximos congresos, cursos y talleres de cirugía de columna en Latinoamérica, y encontrá cirujanos de columna verificados por país, especialidad e idioma.",
   openGraph: {
     type: "website",
     siteName: "ColumnaLATAM",
-    locale: "en_US",
+    locale: "es_419",
   },
   twitter: {
     card: "summary_large_image",
@@ -65,7 +65,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="es"
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
     >
@@ -74,7 +74,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <TooltipProvider delay={200}>
             <SmoothScrollProvider>
               <a href="#main-content" className="skip-link">
-                Skip to main content
+                Saltar al contenido principal
               </a>
               <SiteHeader />
               <main id="main-content" className="flex-1">

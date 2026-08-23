@@ -10,36 +10,35 @@ import { requireUser } from "@/lib/auth/session";
 import { getOwnSurgeonProfile } from "@/lib/data/surgeons";
 import type { SurgeonProfileFormValues } from "@/lib/validation/surgeon";
 
-export const metadata: Metadata = { title: "My surgeon profile" };
+export const metadata: Metadata = { title: "Mi perfil de cirujano" };
 export const dynamic = "force-dynamic";
 
 const STATUS_META = {
   draft: {
     icon: FileEdit,
-    label: "Draft",
-    description: "This profile is only visible to you. Fill it out and submit it for review.",
+    label: "Borrador",
+    description: "Este perfil solo es visible para vos. Completalo y enviálo a revisión.",
   },
   submitted: {
     icon: Clock,
-    label: "Under review",
+    label: "En revisión",
     description:
-      "An administrator is reviewing your profile. You'll be notified once it's decided.",
+      "Un administrador está revisando tu perfil. Te avisaremos apenas haya una decisión.",
   },
   approved: {
     icon: CheckCircle2,
-    label: "Approved & public",
-    description: "Your profile is live in the directory.",
+    label: "Aprobado y público",
+    description: "Tu perfil ya está publicado en el directorio.",
   },
   rejected: {
     icon: XCircle,
-    label: "Changes requested",
-    description: "An administrator requested changes. Edit your profile below and resubmit.",
+    label: "Se solicitaron cambios",
+    description: "Un administrador pidió cambios. Editá tu perfil abajo y volvé a enviarlo.",
   },
   suspended: {
     icon: ShieldAlert,
-    label: "Suspended",
-    description:
-      "Your profile has been suspended and is not publicly visible. Contact an administrator.",
+    label: "Suspendido",
+    description: "Tu perfil fue suspendido y no es visible públicamente. Contactá a un administrador.",
   },
 } as const;
 
@@ -92,12 +91,14 @@ export default async function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="font-heading text-3xl font-semibold text-foreground">My surgeon profile</h1>
+      <h1 className="font-heading text-3xl font-semibold text-foreground">
+        Mi perfil de cirujano
+      </h1>
       <p className="mt-2 text-muted-foreground">
-        Manage the information shown in the public directory. Nothing is visible to the public until
-        an administrator approves it.{" "}
+        Administrá la información que se muestra en el directorio público. Nada es visible
+        públicamente hasta que un administrador lo apruebe.{" "}
         <Link href="/privacy" className="text-primary hover:underline">
-          Read our disclaimer
+          Leé nuestro aviso legal
         </Link>
         .
       </p>
@@ -110,7 +111,7 @@ export default async function DashboardPage() {
             {statusMeta.description}
             {surgeon?.status === "rejected" && surgeon.rejection_reason && (
               <p className="mt-1 font-medium text-foreground">
-                Reviewer note: {surgeon.rejection_reason}
+                Nota del revisor: {surgeon.rejection_reason}
               </p>
             )}
           </AlertDescription>
@@ -123,7 +124,7 @@ export default async function DashboardPage() {
           className="mt-3 inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
         >
           <Eye className="size-4" />
-          View your public profile
+          Ver tu perfil público
         </Link>
       )}
 
@@ -144,7 +145,7 @@ export default async function DashboardPage() {
             {surgeon && (
               <div className="mt-6 border-t border-border pt-6">
                 <p className="mb-3 text-sm text-muted-foreground">
-                  Ready for review? Save your changes above first, then submit.
+                  ¿Listo para la revisión? Primero guardá tus cambios de arriba y después enviá.
                 </p>
                 <SubmitButton />
               </div>
@@ -152,8 +153,9 @@ export default async function DashboardPage() {
           </>
         ) : (
           <p className="rounded-lg border border-dashed border-border p-6 text-sm text-muted-foreground">
-            Your profile can&rsquo;t be edited while it is {surgeon?.status}. Contact an
-            administrator if you need to make changes.
+            Tu perfil no se puede editar mientras esté en estado &ldquo;
+            {surgeon ? STATUS_META[surgeon.status].label.toLowerCase() : ""}&rdquo;. Contactá a
+            un administrador si necesitás hacer cambios.
           </p>
         )}
       </div>

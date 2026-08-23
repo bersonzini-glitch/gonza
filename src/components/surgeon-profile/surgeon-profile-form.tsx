@@ -33,9 +33,9 @@ import {
 import { LATAM_COUNTRIES } from "@/lib/validation/event";
 
 const CONSULTATION_FORMAT_OPTIONS: Record<(typeof CONSULTATION_FORMATS)[number], string> = {
-  in_person: "In-person only",
-  telemedicine: "Telemedicine only",
-  both: "In-person & telemedicine",
+  in_person: "Solo presencial",
+  telemedicine: "Solo telemedicina",
+  both: "Presencial y telemedicina",
 };
 
 export function SurgeonProfileForm({
@@ -93,7 +93,7 @@ export function SurgeonProfileForm({
       setServerError(result.error);
       return;
     }
-    toast.success("Profile saved");
+    toast.success("Perfil guardado");
     router.refresh();
     onSaved?.();
   }
@@ -101,25 +101,25 @@ export function SurgeonProfileForm({
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8" noValidate>
       <section className="space-y-4">
-        <h2 className="font-heading text-lg font-semibold text-foreground">Basics</h2>
+        <h2 className="font-heading text-lg font-semibold text-foreground">Datos básicos</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <Label htmlFor="fullName">Full name</Label>
+            <Label htmlFor="fullName">Nombre completo</Label>
             <Input id="fullName" {...form.register("fullName")} />
             {form.formState.errors.fullName && (
               <p className="text-xs text-destructive">{form.formState.errors.fullName.message}</p>
             )}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="professionalTitle">Professional title</Label>
+            <Label htmlFor="professionalTitle">Título profesional</Label>
             <Input
               id="professionalTitle"
-              placeholder="e.g. Orthopedic Spine Surgeon, MD"
+              placeholder="ej. Traumatólogo especialista en columna"
               {...form.register("professionalTitle")}
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="primarySpecialty">Primary specialty</Label>
+            <Label htmlFor="primarySpecialty">Especialidad principal</Label>
             <Select
               value={form.watch("primarySpecialty")}
               onValueChange={(v) =>
@@ -133,7 +133,7 @@ export function SurgeonProfileForm({
               }
             >
               <SelectTrigger id="primarySpecialty" className="w-full">
-                <SelectValue placeholder="Select a specialty" />
+                <SelectValue placeholder="Seleccioná una especialidad" />
               </SelectTrigger>
               <SelectContent>
                 {PRIMARY_SPECIALTIES.map((s) => (
@@ -145,7 +145,7 @@ export function SurgeonProfileForm({
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="yearsExperience">Years of experience</Label>
+            <Label htmlFor="yearsExperience">Años de experiencia</Label>
             <Input
               id="yearsExperience"
               type="number"
@@ -157,7 +157,7 @@ export function SurgeonProfileForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="bio">Biography</Label>
+          <Label htmlFor="bio">Biografía</Label>
           <Textarea id="bio" rows={6} {...form.register("bio")} />
           {form.formState.errors.bio && (
             <p className="text-xs text-destructive">{form.formState.errors.bio.message}</p>
@@ -167,26 +167,26 @@ export function SurgeonProfileForm({
 
       <section className="space-y-4">
         <h2 className="font-heading text-lg font-semibold text-foreground">
-          Affiliation & credentials
+          Afiliación y credenciales
         </h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <Label htmlFor="hospitalAffiliation">Hospital / clinic</Label>
+            <Label htmlFor="hospitalAffiliation">Hospital / clínica</Label>
             <Input id="hospitalAffiliation" {...form.register("hospitalAffiliation")} />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="medicalLicenseNumber">Medical registration number</Label>
+            <Label htmlFor="medicalLicenseNumber">Número de matrícula</Label>
             <Input id="medicalLicenseNumber" {...form.register("medicalLicenseNumber")} />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="medicalLicenseCountry">Registration country</Label>
+            <Label htmlFor="medicalLicenseCountry">País de la matrícula</Label>
             <Input id="medicalLicenseCountry" {...form.register("medicalLicenseCountry")} />
           </div>
         </div>
       </section>
 
       <section className="space-y-4">
-        <h2 className="font-heading text-lg font-semibold text-foreground">Subspecialties</h2>
+        <h2 className="font-heading text-lg font-semibold text-foreground">Subespecialidades</h2>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {SUGGESTED_SUBSPECIALTIES.map((tag) => (
             <label key={tag} className="flex items-center gap-2 text-sm">
@@ -200,7 +200,7 @@ export function SurgeonProfileForm({
         </div>
         <div className="flex gap-2">
           <Input
-            placeholder="Add another subspecialty…"
+            placeholder="Agregar otra subespecialidad…"
             value={customTag}
             onChange={(e) => setCustomTag(e.target.value)}
             onKeyDown={(e) => {
@@ -211,7 +211,7 @@ export function SurgeonProfileForm({
             }}
           />
           <Button type="button" variant="outline" onClick={addCustomTag}>
-            <Plus className="size-4" /> Add
+            <Plus className="size-4" /> Agregar
           </Button>
         </div>
         {form.formState.errors.subspecialties && (
@@ -220,7 +220,7 @@ export function SurgeonProfileForm({
       </section>
 
       <section className="space-y-4">
-        <h2 className="font-heading text-lg font-semibold text-foreground">Languages</h2>
+        <h2 className="font-heading text-lg font-semibold text-foreground">Idiomas</h2>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {LANGUAGE_OPTIONS.map((lang) => (
             <label key={lang} className="flex items-center gap-2 text-sm">
@@ -238,7 +238,9 @@ export function SurgeonProfileForm({
       </section>
 
       <section className="space-y-4">
-        <h2 className="font-heading text-lg font-semibold text-foreground">Consultation format</h2>
+        <h2 className="font-heading text-lg font-semibold text-foreground">
+          Modalidad de consulta
+        </h2>
         <Select
           value={form.watch("consultationFormat")}
           onValueChange={(v) =>
@@ -266,14 +268,16 @@ export function SurgeonProfileForm({
 
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-heading text-lg font-semibold text-foreground">Practice locations</h2>
+          <h2 className="font-heading text-lg font-semibold text-foreground">
+            Lugares de atención
+          </h2>
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={() => append({ country: "", city: "", isPrimary: fields.length === 0 })}
           >
-            <Plus className="size-4" /> Add location
+            <Plus className="size-4" /> Agregar lugar
           </Button>
         </div>
 
@@ -283,7 +287,7 @@ export function SurgeonProfileForm({
             className="grid gap-3 rounded-lg border border-border p-4 sm:grid-cols-[1fr_1fr_auto_auto]"
           >
             <div className="space-y-1.5">
-              <Label>Country</Label>
+              <Label>País</Label>
               <Select
                 value={form.watch(`locations.${index}.country`)}
                 onValueChange={(v) =>
@@ -291,7 +295,7 @@ export function SurgeonProfileForm({
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select country" />
+                  <SelectValue placeholder="Seleccioná el país" />
                 </SelectTrigger>
                 <SelectContent>
                   {LATAM_COUNTRIES.map((c) => (
@@ -303,7 +307,7 @@ export function SurgeonProfileForm({
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label>City</Label>
+              <Label>Ciudad</Label>
               <Input {...form.register(`locations.${index}.city`)} />
             </div>
             <label className="flex items-center gap-2 self-end pb-2 text-sm">
@@ -313,7 +317,7 @@ export function SurgeonProfileForm({
                   form.setValue(`locations.${index}.isPrimary`, checked === true)
                 }
               />
-              Primary
+              Principal
             </label>
             <Button
               type="button"
@@ -321,7 +325,7 @@ export function SurgeonProfileForm({
               size="icon"
               className="self-end text-destructive"
               onClick={() => remove(index)}
-              aria-label="Remove location"
+              aria-label="Quitar lugar"
             >
               <Trash2 className="size-4" />
             </Button>
@@ -329,24 +333,26 @@ export function SurgeonProfileForm({
         ))}
         {form.formState.errors.locations && (
           <p className="text-xs text-destructive">
-            {form.formState.errors.locations.message ?? "Check your locations."}
+            {form.formState.errors.locations.message ?? "Revisá tus lugares de atención."}
           </p>
         )}
       </section>
 
       <section className="space-y-4">
-        <h2 className="font-heading text-lg font-semibold text-foreground">Contact & links</h2>
+        <h2 className="font-heading text-lg font-semibold text-foreground">
+          Contacto y enlaces
+        </h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <Label htmlFor="websiteUrl">Professional website</Label>
+            <Label htmlFor="websiteUrl">Sitio web profesional</Label>
             <Input id="websiteUrl" placeholder="https://" {...form.register("websiteUrl")} />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="contactEmail">Public contact email</Label>
+            <Label htmlFor="contactEmail">Email de contacto público</Label>
             <Input id="contactEmail" type="email" {...form.register("contactEmail")} />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="contactPhone">Public contact phone</Label>
+            <Label htmlFor="contactPhone">Teléfono de contacto público</Label>
             <Input id="contactPhone" {...form.register("contactPhone")} />
           </div>
         </div>
@@ -360,7 +366,7 @@ export function SurgeonProfileForm({
       )}
 
       <Button type="submit" disabled={form.formState.isSubmitting} size="lg">
-        {form.formState.isSubmitting ? "Saving…" : "Save profile"}
+        {form.formState.isSubmitting ? "Guardando…" : "Guardar perfil"}
       </Button>
     </form>
   );

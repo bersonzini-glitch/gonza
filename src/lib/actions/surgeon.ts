@@ -24,11 +24,11 @@ export async function saveSurgeonProfileAction(
   input: SurgeonProfileFormValues,
 ): Promise<SurgeonActionResult> {
   const profile = await getCurrentProfile();
-  if (!profile) return { error: "You must be signed in." };
+  if (!profile) return { error: "Tenés que iniciar sesión." };
 
   const parsed = surgeonProfileSchema.safeParse(input);
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
+    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   }
   const data = parsed.data;
   const { inPersonAvailable, telemedicineAvailable } = deriveConsultationAvailability(
@@ -38,7 +38,7 @@ export async function saveSurgeonProfileAction(
   const supabase = await createClient();
 
   const allowed = await checkRateLimit(supabase, profile.id, "surgeon-profile-save", 30, 3600);
-  if (!allowed) return { error: "Too many changes. Please slow down and try again shortly." };
+  if (!allowed) return { error: "Demasiados cambios. Esperá un momento y volvé a intentar." };
 
   const { data: existing } = await supabase
     .from("surgeon_profiles")
@@ -48,7 +48,7 @@ export async function saveSurgeonProfileAction(
 
   if (existing && !["draft", "rejected"].includes(existing.status)) {
     return {
-      error: `Your profile can't be edited while it is ${existing.status}. Contact an administrator if changes are needed.`,
+      error: `Tu perfil no se puede editar mientras esté en estado ${existing.status}. Contactá a un administrador si necesitás hacer cambios.`,
     };
   }
 
@@ -78,7 +78,7 @@ export async function saveSurgeonProfileAction(
       .from("surgeon_profiles")
       .update(baseFields)
       .eq("id", surgeonId);
-    if (error) return { error: `Could not save profile: ${error.message}` };
+    if (error) return { error: `No se pudo guardar el perfil: ${error.message}` };
   } else {
     const slug = `${slugify(data.fullName)}-${randomUUID().slice(0, 6)}`;
     const { data: inserted, error } = await supabase
@@ -86,7 +86,7 @@ export async function saveSurgeonProfileAction(
       .insert({ ...baseFields, user_id: profile.id, slug, status: "draft" })
       .select("id")
       .single();
-    if (error || !inserted) return { error: `Could not create profile: ${error?.message}` };
+    if (error || !inserted) return { error: `No se pudo crear el perfil: ${error?.message}` };
     surgeonId = inserted.id;
   }
 
@@ -125,7 +125,7 @@ export async function saveSurgeonProfileAction(
 
 export async function submitSurgeonProfileAction(): Promise<SurgeonActionResult> {
   const profile = await getCurrentProfile();
-  if (!profile) return { error: "You must be signed in." };
+  if (!profile) return { error: "Tenés que iniciar sesión." };
 
   const supabase = await createClient();
 
@@ -135,18 +135,18 @@ export async function submitSurgeonProfileAction(): Promise<SurgeonActionResult>
     .eq("user_id", profile.id)
     .maybeSingle();
 
-  if (!surgeon) return { error: "Create your profile before submitting it." };
+  if (!surgeon) return { error: "Creá tu perfil antes de enviarlo." };
   if (!["draft", "rejected"].includes(surgeon.status)) {
-    return { error: `Your profile is already ${surgeon.status}.` };
+    return { error: `Tu perfil ya está en estado ${surgeon.status}.` };
   }
   if (!surgeon.bio || surgeon.bio.trim().length < 50) {
-    return { error: "Add a biography of at least 50 characters before submitting." };
+    return { error: "Agregá una biografía de al menos 50 caracteres antes de enviar." };
   }
   if (!surgeon.surgeon_locations || surgeon.surgeon_locations.length === 0) {
-    return { error: "Add at least one practice location before submitting." };
+    return { error: "Agregá al menos un lugar de atención antes de enviar." };
   }
   if (!surgeon.surgeon_specialties || surgeon.surgeon_specialties.length === 0) {
-    return { error: "Add at least one subspecialty before submitting." };
+    return { error: "Agregá al menos una subespecialidad antes de enviar." };
   }
 
   const { error } = await supabase
@@ -165,23 +165,23 @@ const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 
 export async function uploadSurgeonPhotoAction(formData: FormData): Promise<SurgeonActionResult> {
   const profile = await getCurrentProfile();
-  if (!profile) return { error: "You must be signed in." };
+  if (!profile) return { error: "Tenés que iniciar sesión." };
 
   const file = formData.get("photo");
   if (!(file instanceof File) || file.size === 0) {
-    return { error: "Choose an image to upload." };
+    return { error: "Elegí una imagen para subir." };
   }
   if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
-    return { error: "Only JPEG, PNG, or WebP images are allowed." };
+    return { error: "Solo se permiten imágenes JPEG, PNG o WebP." };
   }
   if (file.size > MAX_PHOTO_BYTES) {
-    return { error: "Image must be smaller than 5 MB." };
+    return { error: "La imagen debe pesar menos de 5 MB." };
   }
 
   const supabase = await createClient();
 
   const allowed = await checkRateLimit(supabase, profile.id, "surgeon-photo-upload", 10, 3600);
-  if (!allowed) return { error: "Too many uploads. Please try again shortly." };
+  if (!allowed) return { error: "Demasiadas subidas. Volvé a intentar en un momento." };
 
   const { data: surgeon } = await supabase
     .from("surgeon_profiles")
@@ -189,7 +189,7 @@ export async function uploadSurgeonPhotoAction(formData: FormData): Promise<Surg
     .eq("user_id", profile.id)
     .maybeSingle();
 
-  if (!surgeon) return { error: "Create your profile before uploading a photo." };
+  if (!surgeon) return { error: "Creá tu perfil antes de subir una foto." };
 
   const extension = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
   const path = `${profile.id}/${randomUUID()}.${extension}`;
@@ -198,7 +198,7 @@ export async function uploadSurgeonPhotoAction(formData: FormData): Promise<Surg
     .from(SURGEON_PHOTOS_BUCKET)
     .upload(path, file, { contentType: file.type, upsert: false });
 
-  if (uploadError) return { error: `Upload failed: ${uploadError.message}` };
+  if (uploadError) return { error: `Error al subir: ${uploadError.message}` };
 
   const previousPath = surgeon.photo_path;
 

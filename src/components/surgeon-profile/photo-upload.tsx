@@ -42,11 +42,11 @@ export function PhotoUpload({
     setError(null);
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      setError("Only JPEG, PNG, or WebP images are allowed.");
+      setError("Solo se permiten imágenes JPEG, PNG o WebP.");
       return;
     }
     if (file.size > MAX_BYTES) {
-      setError("Image must be smaller than 5 MB.");
+      setError("La imagen debe pesar menos de 5 MB.");
       return;
     }
 
@@ -60,7 +60,7 @@ export function PhotoUpload({
         return;
       }
       setCacheBust((v) => v + 1);
-      toast.success("Photo updated");
+      toast.success("Foto actualizada");
       router.refresh();
     });
   }
@@ -87,9 +87,9 @@ export function PhotoUpload({
           onClick={() => inputRef.current?.click()}
         >
           <Upload className="size-4" />
-          {isPending ? "Uploading…" : "Upload photo"}
+          {isPending ? "Subiendo…" : "Subir foto"}
         </Button>
-        <p className="mt-1 text-xs text-muted-foreground">JPEG, PNG, or WebP. Max 5 MB.</p>
+        <p className="mt-1 text-xs text-muted-foreground">JPEG, PNG o WebP. Máximo 5 MB.</p>
         {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
       </div>
     </div>

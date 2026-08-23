@@ -26,13 +26,13 @@ export function SubmitButton() {
               setError(result.error);
               return;
             }
-            toast.success("Profile submitted for review");
+            toast.success("Perfil enviado a revisión");
             router.refresh();
           })
         }
       >
         <Send className="size-4" />
-        {isPending ? "Submitting…" : "Submit for review"}
+        {isPending ? "Enviando…" : "Enviar a revisión"}
       </Button>
       {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
     </div>

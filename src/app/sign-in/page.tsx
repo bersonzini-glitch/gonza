@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AuthCard } from "@/components/auth/auth-card";
 import { SignInForm } from "@/components/auth/sign-in-form";
 
-export const metadata: Metadata = { title: "Sign in" };
+export const metadata: Metadata = { title: "Iniciar sesión" };
 
 export default async function SignInPage({
   searchParams,
@@ -15,13 +15,13 @@ export default async function SignInPage({
 
   return (
     <AuthCard
-      title="Sign in"
-      description="Access your surgeon profile and submissions."
+      title="Iniciar sesión"
+      description="Accedé a tu perfil de cirujano y tus envíos."
       footer={
         <>
-          New here?{" "}
+          ¿Sos nuevo acá?{" "}
           <Link href="/sign-up" className="font-medium text-primary hover:underline">
-            Create an account
+            Creá una cuenta
           </Link>
         </>
       }

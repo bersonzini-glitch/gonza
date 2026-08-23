@@ -7,7 +7,7 @@ import { updateEventAction } from "@/lib/actions/admin";
 import { getEventForAdmin } from "@/lib/data/admin";
 import type { EventInput } from "@/lib/validation/event";
 
-export const metadata: Metadata = { title: "Edit event" };
+export const metadata: Metadata = { title: "Editar evento" };
 export const dynamic = "force-dynamic";
 
 export default async function EditEventPage({ params }: { params: Promise<{ id: string }> }) {
@@ -51,7 +51,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="font-heading text-2xl font-semibold text-foreground">Edit event</h2>
+        <h2 className="font-heading text-2xl font-semibold text-foreground">Editar evento</h2>
         <DeleteEventButton eventId={event.id} />
       </div>
       <EventForm

@@ -10,8 +10,16 @@ import { getSurgeonForAdmin } from "@/lib/data/admin";
 import { formatDate, PRIMARY_SPECIALTY_LABELS } from "@/lib/format";
 import type { SurgeonProfileFormValues } from "@/lib/validation/surgeon";
 
-export const metadata: Metadata = { title: "Review surgeon profile" };
+export const metadata: Metadata = { title: "Revisar perfil de cirujano" };
 export const dynamic = "force-dynamic";
+
+const STATUS_LABELS: Record<string, string> = {
+  submitted: "enviado",
+  approved: "aprobado",
+  rejected: "rechazado",
+  suspended: "suspendido",
+  draft: "borrador",
+};
 
 export default async function AdminSurgeonDetailPage({
   params,
@@ -51,17 +59,17 @@ export default async function AdminSurgeonDetailPage({
           href="/admin/surgeons"
           className="text-sm text-muted-foreground hover:text-foreground"
         >
-          ← Back to queue
+          ← Volver a la cola
         </Link>
         <div className="mt-2 flex flex-wrap items-center gap-3">
           <h2 className="font-heading text-2xl font-semibold text-foreground">
             {surgeon.full_name}
           </h2>
-          <Badge>{surgeon.status}</Badge>
-          {surgeon.is_demo && <Badge variant="outline">Demo data</Badge>}
+          <Badge>{STATUS_LABELS[surgeon.status]}</Badge>
+          {surgeon.is_demo && <Badge variant="outline">Dato de muestra</Badge>}
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
-          {PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]} · Created{" "}
+          {PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]} · Creado el{" "}
           {formatDate(surgeon.created_at.slice(0, 10))}
         </p>
       </div>
@@ -69,7 +77,9 @@ export default async function AdminSurgeonDetailPage({
       <SurgeonReviewActions surgeonId={surgeon.id} status={surgeon.status} />
 
       <div className="rounded-xl border border-border bg-card p-6">
-        <h3 className="mb-4 font-heading text-lg font-semibold text-foreground">Edit profile</h3>
+        <h3 className="mb-4 font-heading text-lg font-semibold text-foreground">
+          Editar perfil
+        </h3>
         <SurgeonProfileForm
           defaultValues={defaultValues}
           action={(values) => adminUpdateSurgeonProfileAction(surgeon.id, values)}

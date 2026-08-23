@@ -21,7 +21,7 @@ export function SignOutItem() {
       }}
     >
       <LogOut className="size-4" aria-hidden="true" />
-      {isPending ? "Signing out…" : "Sign out"}
+      {isPending ? "Cerrando sesión…" : "Cerrar sesión"}
     </DropdownMenuItem>
   );
 }

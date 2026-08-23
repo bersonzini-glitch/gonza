@@ -32,12 +32,12 @@ export function ShareButton({ title, url }: { title: string; url: string }) {
       {copied ? (
         <>
           <Check className="size-4" aria-hidden="true" />
-          Link copied
+          Enlace copiado
         </>
       ) : (
         <>
           <Share2 className="size-4" aria-hidden="true" />
-          Share
+          Compartir
         </>
       )}
     </Button>

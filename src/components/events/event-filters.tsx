@@ -18,9 +18,9 @@ import { EVENT_FORMAT_LABELS, EVENT_TYPE_LABELS } from "@/lib/format";
 import { EVENT_TOPICS, LATAM_COUNTRIES } from "@/lib/validation/event";
 
 const SORT_OPTIONS = [
-  { value: "soonest", label: "Soonest" },
-  { value: "recently_added", label: "Most recently added" },
-  { value: "alphabetical", label: "Alphabetical" },
+  { value: "soonest", label: "Más próximos" },
+  { value: "recently_added", label: "Agregados recientemente" },
+  { value: "alphabetical", label: "Alfabético" },
 ] as const;
 
 const ANY = "__any__";
@@ -57,13 +57,13 @@ export function EventFilters() {
   return (
     <form
       onSubmit={handleSubmit}
-      aria-label="Filter congresses"
+      aria-label="Filtrar congresos"
       className="space-y-4 rounded-xl border border-border bg-card p-4 sm:p-5"
     >
       <div className="flex flex-col gap-2 sm:flex-row">
         <div className="flex-1">
           <Label htmlFor="q" className="sr-only">
-            Search
+            Buscar
           </Label>
           <div className="relative">
             <Search
@@ -73,7 +73,7 @@ export function EventFilters() {
             <Input
               id="q"
               type="search"
-              placeholder="Event, organizer, city…"
+              placeholder="Evento, organizador, ciudad…"
               value={q}
               onChange={(e) => setQ(e.target.value)}
               className="pl-9"
@@ -81,24 +81,24 @@ export function EventFilters() {
           </div>
         </div>
         <Button type="submit" disabled={isPending}>
-          Apply
+          Aplicar
         </Button>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <div>
           <Label htmlFor="country" className="mb-1.5 block text-xs">
-            Country
+            País
           </Label>
           <Select
             value={searchParams.get("country") ?? ANY}
             onValueChange={(v) => updateParam("country", v)}
           >
             <SelectTrigger id="country" className="w-full">
-              <SelectValue placeholder="Any country" />
+              <SelectValue placeholder="Cualquier país" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ANY}>Any country</SelectItem>
+              <SelectItem value={ANY}>Cualquier país</SelectItem>
               {LATAM_COUNTRIES.map((c) => (
                 <SelectItem key={c} value={c}>
                   {c}
@@ -110,17 +110,17 @@ export function EventFilters() {
 
         <div>
           <Label htmlFor="eventType" className="mb-1.5 block text-xs">
-            Event type
+            Tipo de evento
           </Label>
           <Select
             value={searchParams.get("eventType") ?? ANY}
             onValueChange={(v) => updateParam("eventType", v)}
           >
             <SelectTrigger id="eventType" className="w-full">
-              <SelectValue placeholder="Any type" />
+              <SelectValue placeholder="Cualquier tipo" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ANY}>Any type</SelectItem>
+              <SelectItem value={ANY}>Cualquier tipo</SelectItem>
               {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
                 <SelectItem key={value} value={value}>
                   {label}
@@ -132,17 +132,17 @@ export function EventFilters() {
 
         <div>
           <Label htmlFor="format" className="mb-1.5 block text-xs">
-            Format
+            Modalidad
           </Label>
           <Select
             value={searchParams.get("format") ?? ANY}
             onValueChange={(v) => updateParam("format", v)}
           >
             <SelectTrigger id="format" className="w-full">
-              <SelectValue placeholder="Any format" />
+              <SelectValue placeholder="Cualquier modalidad" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ANY}>Any format</SelectItem>
+              <SelectItem value={ANY}>Cualquier modalidad</SelectItem>
               {Object.entries(EVENT_FORMAT_LABELS).map(([value, label]) => (
                 <SelectItem key={value} value={value}>
                   {label}
@@ -154,17 +154,17 @@ export function EventFilters() {
 
         <div>
           <Label htmlFor="topic" className="mb-1.5 block text-xs">
-            Topic
+            Tema
           </Label>
           <Select
             value={searchParams.get("topic") ?? ANY}
             onValueChange={(v) => updateParam("topic", v)}
           >
             <SelectTrigger id="topic" className="w-full">
-              <SelectValue placeholder="Any topic" />
+              <SelectValue placeholder="Cualquier tema" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ANY}>Any topic</SelectItem>
+              <SelectItem value={ANY}>Cualquier tema</SelectItem>
               {EVENT_TOPICS.map((topic) => (
                 <SelectItem key={topic} value={topic}>
                   {topic}
@@ -176,7 +176,7 @@ export function EventFilters() {
 
         <div>
           <Label htmlFor="from" className="mb-1.5 block text-xs">
-            From
+            Desde
           </Label>
           <Input
             id="from"
@@ -189,7 +189,7 @@ export function EventFilters() {
 
         <div>
           <Label htmlFor="to" className="mb-1.5 block text-xs">
-            To
+            Hasta
           </Label>
           <Input
             id="to"
@@ -203,7 +203,7 @@ export function EventFilters() {
 
       <div className="flex items-center justify-between gap-3 border-t border-border pt-3">
         <Label htmlFor="sort" className="text-xs text-muted-foreground">
-          Sort by
+          Ordenar por
         </Label>
         <Select
           value={searchParams.get("sort") ?? "soonest"}

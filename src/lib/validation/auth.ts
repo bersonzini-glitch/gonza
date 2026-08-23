@@ -3,22 +3,22 @@ import { z } from "zod";
 const usernameField = z
   .string()
   .trim()
-  .min(3, "Username must be at least 3 characters")
-  .max(32, "Username must be at most 32 characters")
-  .regex(/^[a-zA-Z0-9_.-]+$/, "Only letters, numbers, dots, underscores, and hyphens");
+  .min(3, "El usuario debe tener al menos 3 caracteres")
+  .max(32, "El usuario debe tener como máximo 32 caracteres")
+  .regex(/^[a-zA-Z0-9_.-]+$/, "Solo letras, números, puntos, guiones bajos y guiones");
 
 const passwordField = z
   .string()
-  .min(8, "Password must be at least 8 characters")
+  .min(8, "La contraseña debe tener al menos 8 caracteres")
   .max(128)
-  .regex(/[a-z]/, "Include at least one lowercase letter")
-  .regex(/[A-Z]/, "Include at least one uppercase letter")
-  .regex(/[0-9]/, "Include at least one number");
+  .regex(/[a-z]/, "Incluí al menos una letra minúscula")
+  .regex(/[A-Z]/, "Incluí al menos una letra mayúscula")
+  .regex(/[0-9]/, "Incluí al menos un número");
 
 export const signUpSchema = z.object({
   username: usernameField,
-  fullName: z.string().trim().min(2, "Name is too short").max(150),
-  email: z.email("Enter a valid email address"),
+  fullName: z.string().trim().min(2, "El nombre es muy corto").max(150),
+  email: z.email("Ingresá un email válido"),
   password: passwordField,
 });
 
@@ -28,14 +28,14 @@ export type SignUpInput = z.infer<typeof signUpSchema>;
 // server action resolves a username to its email via the
 // get_email_by_username() RPC before calling signInWithPassword.
 export const signInSchema = z.object({
-  identifier: z.string().trim().min(1, "Enter your username or email"),
-  password: z.string().min(1, "Password is required"),
+  identifier: z.string().trim().min(1, "Ingresá tu usuario o email"),
+  password: z.string().min(1, "La contraseña es obligatoria"),
 });
 
 export type SignInInput = z.infer<typeof signInSchema>;
 
 export const requestPasswordResetSchema = z.object({
-  email: z.email("Enter a valid email address"),
+  email: z.email("Ingresá un email válido"),
 });
 
 export const resetPasswordSchema = z
@@ -44,7 +44,7 @@ export const resetPasswordSchema = z
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+    message: "Las contraseñas no coinciden",
     path: ["confirmPassword"],
   });
 

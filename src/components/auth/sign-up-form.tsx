@@ -18,7 +18,7 @@ export function SignUpForm() {
     return (
       <Alert>
         <CheckCircle2 className="size-4" />
-        <AlertTitle>Check your email</AlertTitle>
+        <AlertTitle>Revisá tu email</AlertTitle>
         <AlertDescription>{state.success}</AlertDescription>
       </Alert>
     );
@@ -27,11 +27,11 @@ export function SignUpForm() {
   return (
     <form action={formAction} className="space-y-4" noValidate>
       <div className="space-y-1.5">
-        <Label htmlFor="username">Username</Label>
+        <Label htmlFor="username">Usuario</Label>
         <Input id="username" name="username" autoComplete="username" required minLength={3} />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="fullName">Full name</Label>
+        <Label htmlFor="fullName">Nombre completo</Label>
         <Input id="fullName" name="fullName" autoComplete="name" required />
       </div>
       <div className="space-y-1.5">
@@ -39,7 +39,7 @@ export function SignUpForm() {
         <Input id="email" name="email" type="email" autoComplete="email" required />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">Contraseña</Label>
         <Input
           id="password"
           name="password"
@@ -49,7 +49,7 @@ export function SignUpForm() {
           minLength={8}
         />
         <p className="text-xs text-muted-foreground">
-          At least 8 characters, with an uppercase letter, a lowercase letter, and a number.
+          Al menos 8 caracteres, con una mayúscula, una minúscula y un número.
         </p>
       </div>
 
@@ -61,7 +61,7 @@ export function SignUpForm() {
       )}
 
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Creating account…" : "Create account"}
+        {isPending ? "Creando cuenta…" : "Crear cuenta"}
       </Button>
     </form>
   );
