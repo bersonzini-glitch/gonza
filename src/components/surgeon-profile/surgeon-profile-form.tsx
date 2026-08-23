@@ -113,7 +113,11 @@ export function SurgeonProfileForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="fullName">Nombre completo</Label>
-            <Input id="fullName" {...form.register("fullName")} />
+            <Input
+              id="fullName"
+              aria-invalid={!!form.formState.errors.fullName}
+              {...form.register("fullName")}
+            />
             {form.formState.errors.fullName && (
               <p className="text-xs text-destructive">{form.formState.errors.fullName.message}</p>
             )}
@@ -123,8 +127,14 @@ export function SurgeonProfileForm({
             <Input
               id="professionalTitle"
               placeholder="ej. Traumatólogo especialista en columna"
+              aria-invalid={!!form.formState.errors.professionalTitle}
               {...form.register("professionalTitle")}
             />
+            {form.formState.errors.professionalTitle && (
+              <p className="text-xs text-destructive">
+                {form.formState.errors.professionalTitle.message}
+              </p>
+            )}
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="primarySpecialty">Especialidad principal</Label>
@@ -140,7 +150,11 @@ export function SurgeonProfileForm({
                 )
               }
             >
-              <SelectTrigger id="primarySpecialty" className="w-full">
+              <SelectTrigger
+                id="primarySpecialty"
+                className="w-full"
+                aria-invalid={!!form.formState.errors.primarySpecialty}
+              >
                 <SelectValue placeholder="Seleccioná una especialidad" />
               </SelectTrigger>
               <SelectContent>
@@ -151,6 +165,11 @@ export function SurgeonProfileForm({
                 ))}
               </SelectContent>
             </Select>
+            {form.formState.errors.primarySpecialty && (
+              <p className="text-xs text-destructive">
+                {form.formState.errors.primarySpecialty.message}
+              </p>
+            )}
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="yearsExperience">Años de experiencia</Label>
@@ -159,14 +178,25 @@ export function SurgeonProfileForm({
               type="number"
               min={0}
               max={70}
+              aria-invalid={!!form.formState.errors.yearsExperience}
               {...form.register("yearsExperience")}
             />
+            {form.formState.errors.yearsExperience && (
+              <p className="text-xs text-destructive">
+                {form.formState.errors.yearsExperience.message}
+              </p>
+            )}
           </div>
         </div>
 
         <div className="space-y-1.5">
           <Label htmlFor="bio">Biografía</Label>
-          <Textarea id="bio" rows={6} {...form.register("bio")} />
+          <Textarea
+            id="bio"
+            rows={6}
+            aria-invalid={!!form.formState.errors.bio}
+            {...form.register("bio")}
+          />
           <p className="text-xs text-muted-foreground">
             {bio?.length ?? 0}/4000 caracteres · mínimo 50
           </p>
@@ -183,15 +213,42 @@ export function SurgeonProfileForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="hospitalAffiliation">Hospital / clínica</Label>
-            <Input id="hospitalAffiliation" {...form.register("hospitalAffiliation")} />
+            <Input
+              id="hospitalAffiliation"
+              aria-invalid={!!form.formState.errors.hospitalAffiliation}
+              {...form.register("hospitalAffiliation")}
+            />
+            {form.formState.errors.hospitalAffiliation && (
+              <p className="text-xs text-destructive">
+                {form.formState.errors.hospitalAffiliation.message}
+              </p>
+            )}
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="medicalLicenseNumber">Número de matrícula</Label>
-            <Input id="medicalLicenseNumber" {...form.register("medicalLicenseNumber")} />
+            <Input
+              id="medicalLicenseNumber"
+              aria-invalid={!!form.formState.errors.medicalLicenseNumber}
+              {...form.register("medicalLicenseNumber")}
+            />
+            {form.formState.errors.medicalLicenseNumber && (
+              <p className="text-xs text-destructive">
+                {form.formState.errors.medicalLicenseNumber.message}
+              </p>
+            )}
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="medicalLicenseCountry">País de la matrícula</Label>
-            <Input id="medicalLicenseCountry" {...form.register("medicalLicenseCountry")} />
+            <Input
+              id="medicalLicenseCountry"
+              aria-invalid={!!form.formState.errors.medicalLicenseCountry}
+              {...form.register("medicalLicenseCountry")}
+            />
+            {form.formState.errors.medicalLicenseCountry && (
+              <p className="text-xs text-destructive">
+                {form.formState.errors.medicalLicenseCountry.message}
+              </p>
+            )}
           </div>
         </div>
       </section>
@@ -264,7 +321,10 @@ export function SurgeonProfileForm({
             )
           }
         >
-          <SelectTrigger className="w-full sm:w-72">
+          <SelectTrigger
+            className="w-full sm:w-72"
+            aria-invalid={!!form.formState.errors.consultationFormat}
+          >
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -275,6 +335,11 @@ export function SurgeonProfileForm({
             ))}
           </SelectContent>
         </Select>
+        {form.formState.errors.consultationFormat && (
+          <p className="text-xs text-destructive">
+            {form.formState.errors.consultationFormat.message}
+          </p>
+        )}
       </section>
 
       <section className="space-y-4">
@@ -305,7 +370,10 @@ export function SurgeonProfileForm({
                   form.setValue(`locations.${index}.country`, v ?? "", { shouldValidate: true })
                 }
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger
+                  className="w-full"
+                  aria-invalid={!!form.formState.errors.locations?.[index]?.country}
+                >
                   <SelectValue placeholder="Seleccioná el país" />
                 </SelectTrigger>
                 <SelectContent>
@@ -316,10 +384,23 @@ export function SurgeonProfileForm({
                   ))}
                 </SelectContent>
               </Select>
+              {form.formState.errors.locations?.[index]?.country && (
+                <p className="text-xs text-destructive">
+                  {form.formState.errors.locations[index]?.country?.message}
+                </p>
+              )}
             </div>
             <div className="space-y-1.5">
               <Label>Ciudad</Label>
-              <Input {...form.register(`locations.${index}.city`)} />
+              <Input
+                aria-invalid={!!form.formState.errors.locations?.[index]?.city}
+                {...form.register(`locations.${index}.city`)}
+              />
+              {form.formState.errors.locations?.[index]?.city && (
+                <p className="text-xs text-destructive">
+                  {form.formState.errors.locations[index]?.city?.message}
+                </p>
+              )}
             </div>
             <label className="flex items-center gap-2 self-end pb-2 text-sm">
               <Checkbox
@@ -356,15 +437,44 @@ export function SurgeonProfileForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="websiteUrl">Sitio web profesional</Label>
-            <Input id="websiteUrl" placeholder="https://" {...form.register("websiteUrl")} />
+            <Input
+              id="websiteUrl"
+              placeholder="https://"
+              aria-invalid={!!form.formState.errors.websiteUrl}
+              {...form.register("websiteUrl")}
+            />
+            {form.formState.errors.websiteUrl && (
+              <p className="text-xs text-destructive">
+                {form.formState.errors.websiteUrl.message}
+              </p>
+            )}
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="contactEmail">Email de contacto público</Label>
-            <Input id="contactEmail" type="email" {...form.register("contactEmail")} />
+            <Input
+              id="contactEmail"
+              type="email"
+              aria-invalid={!!form.formState.errors.contactEmail}
+              {...form.register("contactEmail")}
+            />
+            {form.formState.errors.contactEmail && (
+              <p className="text-xs text-destructive">
+                {form.formState.errors.contactEmail.message}
+              </p>
+            )}
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="contactPhone">Teléfono de contacto público</Label>
-            <Input id="contactPhone" {...form.register("contactPhone")} />
+            <Input
+              id="contactPhone"
+              aria-invalid={!!form.formState.errors.contactPhone}
+              {...form.register("contactPhone")}
+            />
+            {form.formState.errors.contactPhone && (
+              <p className="text-xs text-destructive">
+                {form.formState.errors.contactPhone.message}
+              </p>
+            )}
           </div>
         </div>
       </section>

@@ -68,7 +68,9 @@ export const surgeonProfileSchema = z.object({
       z.literal(""),
     ])
     .optional(),
-  contactEmail: z.union([z.email(), z.literal("")]).optional(),
+  contactEmail: z
+    .union([z.email({ message: "Debe ser un email válido" }), z.literal("")])
+    .optional(),
   contactPhone: z.string().trim().max(40).optional().or(z.literal("")),
   locations: z
     .array(surgeonLocationSchema)
