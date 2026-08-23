@@ -106,6 +106,25 @@ export function SurgeonProfileForm({
     toast.error("Revisá los campos marcados en rojo antes de guardar.");
   }
 
+  // For an array field (e.g. an enum array), RHF/zod reports either one
+  // FieldError with a `.message`, or an array with one entry per item —
+  // in that second shape `.message` is undefined on the array itself, so
+  // this pulls the first real message out of either shape.
+  function arrayFieldErrorMessage(error: unknown, fallback: string): string {
+    if (!error || typeof error !== "object") return fallback;
+    if ("message" in error && typeof error.message === "string" && error.message) {
+      return error.message;
+    }
+    if (Array.isArray(error)) {
+      for (const item of error) {
+        if (item && typeof item === "object" && "message" in item && typeof item.message === "string") {
+          return item.message;
+        }
+      }
+    }
+    return fallback;
+  }
+
   return (
     <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="space-y-8" noValidate>
       <section className="space-y-4">
@@ -283,7 +302,12 @@ export function SurgeonProfileForm({
           </Button>
         </div>
         {form.formState.errors.subspecialties && (
-          <p className="text-xs text-destructive">{form.formState.errors.subspecialties.message}</p>
+          <p className="text-xs text-destructive">
+            {arrayFieldErrorMessage(
+              form.formState.errors.subspecialties,
+              "Revisá las subespecialidades seleccionadas.",
+            )}
+          </p>
         )}
       </section>
 
@@ -301,7 +325,12 @@ export function SurgeonProfileForm({
           ))}
         </div>
         {form.formState.errors.languages && (
-          <p className="text-xs text-destructive">{form.formState.errors.languages.message}</p>
+          <p className="text-xs text-destructive">
+            {arrayFieldErrorMessage(
+              form.formState.errors.languages,
+              "Revisá los idiomas seleccionados: alguno no es una opción válida.",
+            )}
+          </p>
         )}
       </section>
 
