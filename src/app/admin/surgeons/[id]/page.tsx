@@ -82,7 +82,7 @@ export default async function AdminSurgeonDetailPage({
         </h3>
         <SurgeonProfileForm
           defaultValues={defaultValues}
-          action={(values) => adminUpdateSurgeonProfileAction(surgeon.id, values)}
+          action={adminUpdateSurgeonProfileAction.bind(null, surgeon.id)}
         />
       </div>
     </div>
