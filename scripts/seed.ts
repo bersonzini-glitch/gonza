@@ -97,7 +97,6 @@ interface SeedSurgeon {
   username: string;
   email: string;
   fullName: string;
-  professionalTitle: string;
   primarySpecialty: PrimarySpecialty;
   bio: string;
   hospitalAffiliation: string | null;
@@ -226,7 +225,6 @@ async function seedDemoSurgeons(supabase: SupabaseClient<Database>) {
           user_id: userId,
           slug: slugify(surgeon.fullName),
           full_name: surgeon.fullName,
-          professional_title: surgeon.professionalTitle,
           primary_specialty: surgeon.primarySpecialty,
           bio: surgeon.bio,
           hospital_affiliation: surgeon.hospitalAffiliation,

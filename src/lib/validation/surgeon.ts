@@ -60,7 +60,6 @@ export const surgeonProfileSchema = z.object({
       message:
         "Usá solo minúsculas, números y guiones, sin espacios ni acentos (mínimo 3 caracteres)",
     }),
-  professionalTitle: z.string().trim().max(150).optional().or(z.literal("")),
   primarySpecialty: z.enum(PRIMARY_SPECIALTIES),
   subspecialties: z
     .array(z.string().trim().min(2).max(80))

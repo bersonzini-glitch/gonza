@@ -4,7 +4,6 @@ import { deriveConsultationAvailability, surgeonProfileSchema } from "@/lib/vali
 
 const validProfile = {
   fullName: "Ana Martínez",
-  professionalTitle: "Orthopedic Spine Surgeon, MD",
   primarySpecialty: "orthopedic_spine_surgeon" as const,
   subspecialties: ["Spinal Deformity"],
   bio: "A".repeat(60),

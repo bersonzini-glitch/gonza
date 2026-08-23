@@ -173,20 +173,6 @@ export function SurgeonProfileForm({
             </div>
           )}
           <div className="space-y-1.5">
-            <Label htmlFor="professionalTitle">Título profesional</Label>
-            <Input
-              id="professionalTitle"
-              placeholder="ej. Traumatólogo especialista en columna"
-              aria-invalid={!!form.formState.errors.professionalTitle}
-              {...form.register("professionalTitle")}
-            />
-            {form.formState.errors.professionalTitle && (
-              <p className="text-xs text-destructive">
-                {form.formState.errors.professionalTitle.message}
-              </p>
-            )}
-          </div>
-          <div className="space-y-1.5">
             <Label htmlFor="primarySpecialty">Especialidad principal</Label>
             <Select
               items={PRIMARY_SPECIALTY_LABELS}

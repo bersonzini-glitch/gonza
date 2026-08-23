@@ -50,7 +50,6 @@ export default async function DashboardPage() {
     ? {
         fullName: surgeon.full_name,
         slug: surgeon.slug,
-        professionalTitle: surgeon.professional_title ?? "",
         primarySpecialty: surgeon.primary_specialty,
         subspecialties: surgeon.surgeon_specialties.map((s) => s.specialty),
         bio: surgeon.bio ?? "",
@@ -71,7 +70,6 @@ export default async function DashboardPage() {
       }
     : {
         fullName: profile.full_name ?? "",
-        professionalTitle: "",
         primarySpecialty: "orthopedic_spine_surgeon",
         subspecialties: [],
         bio: "",

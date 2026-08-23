@@ -32,7 +32,7 @@ export async function generateMetadata({
   const surgeon = await getSurgeonBySlug(slug);
   if (!surgeon || surgeon.status !== "approved") return {};
 
-  const description = `${surgeon.professional_title ?? PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]}, especialista en ${PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty].toLowerCase()}.`;
+  const description = `${PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]} verificado en el directorio de ColumnaLATAM.`;
 
   return {
     title: surgeon.full_name,
@@ -56,7 +56,6 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
     "@context": "https://schema.org",
     "@type": "Physician",
     name: surgeon.full_name,
-    jobTitle: surgeon.professional_title ?? undefined,
     description: surgeon.bio ?? undefined,
     medicalSpecialty: PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty],
     url: `${SITE_URL}/surgeons/${surgeon.slug}`,
@@ -101,10 +100,6 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/surgeon
                 <BadgeCheck className="size-5 text-primary" aria-label="Perfil verificado" />
               )}
             </div>
-            {surgeon.professional_title && (
-              <p className="mt-1 text-muted-foreground">{surgeon.professional_title}</p>
-            )}
-
             <div className="mt-3 flex flex-wrap gap-1.5">
               <Badge variant="secondary">
                 {PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]}

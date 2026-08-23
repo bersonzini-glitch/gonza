@@ -161,7 +161,6 @@ export async function adminUpdateSurgeonProfileAction(
     .update({
       full_name: data.fullName,
       ...(slugChanged ? { slug: data.slug } : {}),
-      professional_title: data.professionalTitle || null,
       primary_specialty: data.primarySpecialty,
       bio: data.bio,
       hospital_affiliation: data.hospitalAffiliation || null,

@@ -48,7 +48,6 @@ export async function saveSurgeonProfileAction(
 
   const baseFields = {
     full_name: data.fullName,
-    professional_title: data.professionalTitle || null,
     primary_specialty: data.primarySpecialty,
     bio: data.bio,
     hospital_affiliation: data.hospitalAffiliation || null,

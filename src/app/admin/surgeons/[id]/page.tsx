@@ -33,7 +33,6 @@ export default async function AdminSurgeonDetailPage({
   const defaultValues: SurgeonProfileFormValues = {
     fullName: surgeon.full_name,
     slug: surgeon.slug,
-    professionalTitle: surgeon.professional_title ?? "",
     primarySpecialty: surgeon.primary_specialty,
     subspecialties: surgeon.surgeon_specialties.map((s) => s.specialty),
     bio: surgeon.bio ?? "",

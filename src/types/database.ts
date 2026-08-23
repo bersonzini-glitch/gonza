@@ -40,7 +40,6 @@ type SurgeonProfilesRow = {
   user_id: string;
   slug: string;
   full_name: string;
-  professional_title: string | null;
   primary_specialty: PrimarySpecialty;
   bio: string | null;
   hospital_affiliation: string | null;

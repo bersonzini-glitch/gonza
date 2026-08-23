@@ -37,7 +37,7 @@ export function SurgeonCard({ surgeon }: { surgeon: SurgeonWithRelations }) {
             {surgeon.full_name}
           </h3>
           <p className="truncate text-sm text-muted-foreground">
-            {surgeon.professional_title ?? PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]}
+            {PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]}
           </p>
         </div>
         {!surgeon.is_demo && (
