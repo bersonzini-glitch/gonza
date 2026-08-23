@@ -65,14 +65,23 @@ export async function saveSurgeonProfileAction(
   };
 
   let surgeonId: string;
+  let previousSlug: string | null = null;
 
   if (existing) {
     surgeonId = existing.id;
+    const slugChanged = !!data.slug && data.slug !== existing.slug;
+    if (slugChanged) previousSlug = existing.slug;
+    const updateFields = slugChanged ? { ...baseFields, slug: data.slug } : baseFields;
     const { error } = await supabase
       .from("surgeon_profiles")
-      .update(baseFields)
+      .update(updateFields)
       .eq("id", surgeonId);
-    if (error) return { error: `No se pudo guardar el perfil: ${error.message}` };
+    if (error) {
+      if (error.code === "23505") {
+        return { error: "Esa dirección de perfil ya está en uso. Probá con otra." };
+      }
+      return { error: `No se pudo guardar el perfil: ${error.message}` };
+    }
   } else {
     const slug = `${slugify(data.fullName)}-${randomUUID().slice(0, 6)}`;
     const { data: inserted, error } = await supabase
@@ -114,6 +123,10 @@ export async function saveSurgeonProfileAction(
   if (insertLocationsError) return { error: insertLocationsError.message };
 
   revalidatePath("/dashboard");
+  if (previousSlug) {
+    revalidatePath(`/surgeons/${previousSlug}`);
+    revalidatePath(`/surgeons/${data.slug}`);
+  }
   return { success: true };
 }
 

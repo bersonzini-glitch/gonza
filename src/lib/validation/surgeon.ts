@@ -43,8 +43,23 @@ export const surgeonLocationSchema = z.object({
   isPrimary: z.boolean(),
 });
 
+const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+
 export const surgeonProfileSchema = z.object({
   fullName: z.string().trim().min(3, "El nombre completo es muy corto").max(150),
+  // Empty/omitted means "don't change it" — the field is only shown once a
+  // profile (and therefore a public URL) already exists.
+  slug: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .max(100, "La dirección es muy larga")
+    .optional()
+    .or(z.literal(""))
+    .refine((v) => !v || (v.length >= 3 && SLUG_PATTERN.test(v)), {
+      message:
+        "Usá solo minúsculas, números y guiones, sin espacios ni acentos (mínimo 3 caracteres)",
+    }),
   professionalTitle: z.string().trim().max(150).optional().or(z.literal("")),
   primarySpecialty: z.enum(PRIMARY_SPECIALTIES),
   subspecialties: z

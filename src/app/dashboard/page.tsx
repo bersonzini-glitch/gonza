@@ -49,6 +49,7 @@ export default async function DashboardPage() {
   const defaultValues: SurgeonProfileFormValues = surgeon
     ? {
         fullName: surgeon.full_name,
+        slug: surgeon.slug,
         professionalTitle: surgeon.professional_title ?? "",
         primarySpecialty: surgeon.primary_specialty,
         subspecialties: surgeon.surgeon_specialties.map((s) => s.specialty),

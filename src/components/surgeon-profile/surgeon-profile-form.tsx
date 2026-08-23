@@ -38,6 +38,9 @@ const CONSULTATION_FORMAT_OPTIONS: Record<(typeof CONSULTATION_FORMATS)[number],
   both: "Presencial y telemedicina",
 };
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const SITE_HOST = SITE_URL.replace(/^https?:\/\//, "");
+
 // Base UI's <Select.Value> only resolves a label for the current value from
 // an explicit `items` map passed to <Select.Root> — without it, it falls
 // back to showing the raw stored value (e.g. the enum key itself).
@@ -148,6 +151,27 @@ export function SurgeonProfileForm({
               <p className="text-xs text-destructive">{form.formState.errors.fullName.message}</p>
             )}
           </div>
+          {!!defaultValues.slug && (
+            <div className="space-y-1.5 sm:col-span-2">
+              <Label htmlFor="slug">Dirección del perfil (permalink)</Label>
+              <div className="flex items-center gap-1 rounded-lg border border-input bg-transparent pl-2.5 has-[[aria-invalid=true]]:border-destructive has-[[aria-invalid=true]]:ring-3 has-[[aria-invalid=true]]:ring-destructive/20">
+                <span className="shrink-0 text-sm text-muted-foreground">{SITE_HOST}/surgeons/</span>
+                <Input
+                  id="slug"
+                  className="border-0 pl-0 focus-visible:ring-0"
+                  aria-invalid={!!form.formState.errors.slug}
+                  {...form.register("slug")}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Si la cambiás, el enlace anterior deja de funcionar. Usá solo minúsculas, números
+                y guiones.
+              </p>
+              {form.formState.errors.slug && (
+                <p className="text-xs text-destructive">{form.formState.errors.slug.message}</p>
+              )}
+            </div>
+          )}
           <div className="space-y-1.5">
             <Label htmlFor="professionalTitle">Título profesional</Label>
             <Input

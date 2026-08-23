@@ -148,10 +148,19 @@ export async function adminUpdateSurgeonProfileAction(
     data.consultationFormat,
   );
 
+  const { data: current } = await supabase
+    .from("surgeon_profiles")
+    .select("slug")
+    .eq("id", surgeonId)
+    .single();
+
+  const slugChanged = !!data.slug && !!current && data.slug !== current.slug;
+
   const { error } = await supabase
     .from("surgeon_profiles")
     .update({
       full_name: data.fullName,
+      ...(slugChanged ? { slug: data.slug } : {}),
       professional_title: data.professionalTitle || null,
       primary_specialty: data.primarySpecialty,
       bio: data.bio,
@@ -169,7 +178,12 @@ export async function adminUpdateSurgeonProfileAction(
     })
     .eq("id", surgeonId);
 
-  if (error) return { error: error.message };
+  if (error) {
+    if (error.code === "23505") {
+      return { error: "Esa dirección de perfil ya está en uso. Probá con otra." };
+    }
+    return { error: error.message };
+  }
 
   await supabase.from("surgeon_specialties").delete().eq("surgeon_id", surgeonId);
   if (data.subspecialties.length > 0) {
@@ -194,6 +208,10 @@ export async function adminUpdateSurgeonProfileAction(
 
   revalidatePath(`/admin/surgeons/${surgeonId}`);
   revalidatePath("/surgeons");
+  if (slugChanged && current) {
+    revalidatePath(`/surgeons/${current.slug}`);
+    revalidatePath(`/surgeons/${data.slug}`);
+  }
   return { success: true };
 }
 
