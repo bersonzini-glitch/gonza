@@ -32,7 +32,7 @@ create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   desired_username citext;
@@ -109,7 +109,7 @@ returns text
 language sql
 stable
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
   select u.email
   from public.profiles p
@@ -125,7 +125,7 @@ returns boolean
 language sql
 stable
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
   select not exists (
     select 1 from public.profiles where username = check_username
