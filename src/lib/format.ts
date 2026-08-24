@@ -6,6 +6,7 @@ import type {
   EventType,
   PrimarySpecialty,
 } from "@/types/database";
+import { SUGGESTED_SUBSPECIALTIES, type SubspecialtyKey } from "@/lib/validation/surgeon";
 
 // Each *Labels() function takes the translator for its message namespace
 // and returns the same Record<Enum, string> shape the old hardcoded
@@ -39,6 +40,27 @@ export function primarySpecialtyLabels(
     orthopedic_spine_surgeon: t("orthopedicSpineSurgeon"),
     neurosurgeon_spine: t("neurosurgeonSpine"),
   };
+}
+
+const SUBSPECIALTY_KEY_SET: ReadonlySet<string> = new Set(SUGGESTED_SUBSPECIALTIES);
+
+export function subspecialtyLabels(t: Translator<"subspecialties">): Record<SubspecialtyKey, string> {
+  return Object.fromEntries(SUGGESTED_SUBSPECIALTIES.map((key) => [key, t(key)])) as Record<
+    SubspecialtyKey,
+    string
+  >;
+}
+
+/**
+ * A surgeon's stored subspecialty is either one of the coded suggested
+ * keys (translated per locale) or free text they typed themselves (shown
+ * verbatim, in whatever language they wrote it — never translated).
+ */
+export function resolveSubspecialtyLabel(
+  value: string,
+  labels: Record<SubspecialtyKey, string>,
+): string {
+  return SUBSPECIALTY_KEY_SET.has(value) ? labels[value as SubspecialtyKey] : value;
 }
 
 export function consultationFormatLabels(

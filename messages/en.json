@@ -574,5 +574,22 @@
     "suspendDescription": "The profile will be removed from public view immediately.",
     "deleteSurgeonTitle": "Permanently delete this profile",
     "deleteSurgeonDescription": "This action cannot be undone. The reason is logged to the audit trail before deleting."
+  },
+  "subspecialties": {
+    "degenerative_spine": "Degenerative spine",
+    "spinal_deformity": "Spinal deformity",
+    "spinal_trauma": "Spinal trauma",
+    "minimally_invasive_surgery": "Minimally invasive surgery",
+    "spine_tumors_oncology": "Spine tumors / Oncology",
+    "pediatric_spine": "Pediatric spine",
+    "spine_revision_surgery": "Spine revision surgery",
+    "spine_infections": "Spine infections",
+    "sports_spine": "Sports spine",
+    "pain_management": "Pain management",
+    "robotics_navigation": "Robotics & navigation",
+    "endoscopic_spine_surgery": "Endoscopic spine surgery",
+    "cervical_spine": "Cervical spine",
+    "lumbar_spine": "Lumbar spine",
+    "scoliosis": "Scoliosis"
   }
 }

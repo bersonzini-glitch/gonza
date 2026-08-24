@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { consultationFormatLabels, primarySpecialtyLabels } from "@/lib/format";
+import { consultationFormatLabels, primarySpecialtyLabels, subspecialtyLabels } from "@/lib/format";
 import {
   CONSULTATION_FORMATS,
   LANGUAGE_OPTIONS,
@@ -58,8 +58,10 @@ export function SurgeonProfileForm({
   const tValidation = useTranslations("surgeonValidation");
   const tSpecialties = useTranslations("specialties");
   const tConsultationFormats = useTranslations("consultationFormats");
+  const tSubspecialties = useTranslations("subspecialties");
   const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
   const CONSULTATION_FORMAT_OPTIONS = consultationFormatLabels(tConsultationFormats);
+  const SUBSPECIALTY_LABELS = subspecialtyLabels(tSubspecialties);
 
   const form = useForm<SurgeonProfileFormValues>({
     resolver: zodResolver(makeSurgeonProfileSchema(tValidation)) as Resolver<SurgeonProfileFormValues>,
@@ -350,13 +352,13 @@ export function SurgeonProfileForm({
           {t("subspecialtiesHeading")}
         </h2>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
-          {SUGGESTED_SUBSPECIALTIES.map((tag) => (
-            <label key={tag} className="flex items-center gap-2 text-sm">
+          {SUGGESTED_SUBSPECIALTIES.map((key) => (
+            <label key={key} className="flex items-center gap-2 text-sm">
               <Checkbox
-                checked={subspecialties.includes(tag)}
-                onCheckedChange={(checked) => toggleSubspecialty(tag, checked === true)}
+                checked={subspecialties.includes(key)}
+                onCheckedChange={(checked) => toggleSubspecialty(key, checked === true)}
               />
-              {tag}
+              {SUBSPECIALTY_LABELS[key]}
             </label>
           ))}
         </div>

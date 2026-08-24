@@ -11,23 +11,32 @@ export const CONSULTATION_FORMATS = ["in_person", "telemedicine", "both"] as con
 // canonical suggested list surfaced in the registration form and the
 // directory filter — surgeons aren't limited to it, but it keeps the
 // common cases consistent.
+//
+// Stored as stable snake_case keys (not display text) so the same profile
+// shows a translated label in each locale instead of whatever language it
+// happened to be picked in — see subspecialtyLabels() in lib/format.ts.
+// Anything a surgeon types into the free-text "add another" field isn't one
+// of these keys and is stored/shown verbatim, unlocalized, in whatever
+// language they wrote it.
 export const SUGGESTED_SUBSPECIALTIES = [
-  "Columna degenerativa",
-  "Deformidad espinal",
-  "Trauma espinal",
-  "Cirugía mínimamente invasiva",
-  "Tumores de columna / Oncología",
-  "Columna pediátrica",
-  "Cirugía de revisión de columna",
-  "Infecciones de columna",
-  "Columna deportiva",
-  "Manejo del dolor",
-  "Robótica y navegación",
-  "Cirugía endoscópica de columna",
-  "Columna cervical",
-  "Columna lumbar",
-  "Escoliosis",
+  "degenerative_spine",
+  "spinal_deformity",
+  "spinal_trauma",
+  "minimally_invasive_surgery",
+  "spine_tumors_oncology",
+  "pediatric_spine",
+  "spine_revision_surgery",
+  "spine_infections",
+  "sports_spine",
+  "pain_management",
+  "robotics_navigation",
+  "endoscopic_spine_surgery",
+  "cervical_spine",
+  "lumbar_spine",
+  "scoliosis",
 ] as const;
+
+export type SubspecialtyKey = (typeof SUGGESTED_SUBSPECIALTIES)[number];
 
 export const LANGUAGE_OPTIONS = [
   "Español",

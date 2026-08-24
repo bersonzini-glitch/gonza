@@ -19,7 +19,12 @@ import { FadeIn } from "@/components/shared/fade-in";
 import { ShareButton } from "@/components/shared/share-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { formatDate, primarySpecialtyLabels } from "@/lib/format";
+import {
+  formatDate,
+  primarySpecialtyLabels,
+  resolveSubspecialtyLabel,
+  subspecialtyLabels,
+} from "@/lib/format";
 import { getSurgeonBySlug } from "@/lib/data/surgeons";
 import { surgeonPhotoUrl } from "@/lib/supabase/storage";
 
@@ -70,12 +75,14 @@ export default async function SurgeonProfilePage({
 
   if (!surgeon || surgeon.status !== "approved") notFound();
 
-  const [t, tNav, tSpecialties] = await Promise.all([
+  const [t, tNav, tSpecialties, tSubspecialties] = await Promise.all([
     getTranslations("surgeonProfile"),
     getTranslations("nav"),
     getTranslations("specialties"),
+    getTranslations("subspecialties"),
   ]);
   const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
+  const SUBSPECIALTY_LABELS = subspecialtyLabels(tSubspecialties);
 
   const photoUrl = surgeonPhotoUrl(surgeon.id, Boolean(surgeon.photo_path));
   const primaryLocation =
@@ -170,7 +177,7 @@ export default async function SurgeonProfilePage({
             <div className="mt-2 flex flex-wrap gap-1.5">
               {surgeon.surgeon_specialties.map((s) => (
                 <Badge key={s.id} variant="secondary">
-                  {s.specialty}
+                  {resolveSubspecialtyLabel(s.specialty, SUBSPECIALTY_LABELS)}
                 </Badge>
               ))}
             </div>

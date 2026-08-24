@@ -574,5 +574,22 @@
     "suspendDescription": "El perfil se quitará de la vista pública inmediatamente.",
     "deleteSurgeonTitle": "Eliminar este perfil permanentemente",
     "deleteSurgeonDescription": "Esta acción no se puede deshacer. El motivo se registra en el historial de auditoría antes de eliminar."
+  },
+  "subspecialties": {
+    "degenerative_spine": "Columna degenerativa",
+    "spinal_deformity": "Deformidad espinal",
+    "spinal_trauma": "Trauma espinal",
+    "minimally_invasive_surgery": "Cirugía mínimamente invasiva",
+    "spine_tumors_oncology": "Tumores de columna / Oncología",
+    "pediatric_spine": "Columna pediátrica",
+    "spine_revision_surgery": "Cirugía de revisión de columna",
+    "spine_infections": "Infecciones de columna",
+    "sports_spine": "Columna deportiva",
+    "pain_management": "Manejo del dolor",
+    "robotics_navigation": "Robótica y navegación",
+    "endoscopic_spine_surgery": "Cirugía endoscópica de columna",
+    "cervical_spine": "Columna cervical",
+    "lumbar_spine": "Columna lumbar",
+    "scoliosis": "Escoliosis"
   }
 }
