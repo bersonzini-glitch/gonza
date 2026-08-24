@@ -33,6 +33,7 @@ export default async function EventsPage({
     from: rawParams.from,
     to: rawParams.to,
     sort: rawParams.sort,
+    includePast: rawParams.includePast,
     page: rawParams.page,
   });
 

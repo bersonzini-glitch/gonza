@@ -39,6 +39,15 @@ export async function searchEvents(filters: EventSearchInput): Promise<EventSear
   if (filters.topic) query = query.contains("topics", [filters.topic]);
   if (filters.from) query = query.gte("start_date", filters.from);
   if (filters.to) query = query.lte("start_date", filters.to);
+  // Past congresses stay out of the default feed — "soonest first" should
+  // actually mean the nearest one still ahead, not the oldest one behind.
+  // Combines with an explicit `from` via AND, so a future `from` still
+  // narrows further and a past `from` typed without opting into past
+  // events just yields no results instead of surfacing old ones.
+  if (!filters.includePast) {
+    const today = new Date().toISOString().slice(0, 10);
+    query = query.gte("start_date", today);
+  }
 
   switch (filters.sort) {
     case "alphabetical":

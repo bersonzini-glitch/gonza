@@ -114,7 +114,8 @@
     "sortSoonest": "Soonest",
     "sortRecentlyAdded": "Recently added",
     "sortAlphabetical": "Alphabetical",
-    "formAriaLabel": "Filter conferences"
+    "formAriaLabel": "Filter conferences",
+    "includePastLabel": "Show past events"
   },
   "surgeonFilters": {
     "searchLabel": "Search by name",

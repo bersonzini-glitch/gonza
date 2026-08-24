@@ -111,6 +111,7 @@ export const eventSearchSchema = z.object({
     .regex(/^\d{4}-\d{2}-\d{2}$/)
     .optional(),
   sort: z.enum(["soonest", "recently_added", "alphabetical"]).default("soonest"),
+  includePast: z.coerce.boolean().optional(),
   page: z.coerce.number().int().min(1).default(1),
 });
 

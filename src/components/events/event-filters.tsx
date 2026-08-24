@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { eventFormatLabels, eventTypeLabels } from "@/lib/format";
 import { EVENT_TOPICS, LATAM_COUNTRIES } from "@/lib/validation/event";
 
@@ -71,6 +72,10 @@ export function EventFilters() {
     else params.delete(key);
     params.delete("page");
     startTransition(() => router.push(`/events?${params.toString()}`));
+  }
+
+  function toggleParam(key: string, checked: boolean) {
+    updateParam(key, checked ? "true" : null);
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -235,6 +240,17 @@ export function EventFilters() {
             onBlur={handleSubmit}
           />
         </div>
+      </div>
+
+      <div className="flex items-center justify-between border-t border-border pt-3">
+        <Label htmlFor="includePast" className="text-sm font-normal">
+          {t("includePastLabel")}
+        </Label>
+        <Switch
+          id="includePast"
+          checked={searchParams.get("includePast") === "true"}
+          onCheckedChange={(checked) => toggleParam("includePast", checked)}
+        />
       </div>
 
       <div className="flex items-center justify-between gap-3 border-t border-border pt-3">

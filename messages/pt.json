@@ -114,7 +114,8 @@
     "sortSoonest": "Mais próximos",
     "sortRecentlyAdded": "Adicionados recentemente",
     "sortAlphabetical": "Alfabético",
-    "formAriaLabel": "Filtrar congressos"
+    "formAriaLabel": "Filtrar congressos",
+    "includePastLabel": "Mostrar eventos passados"
   },
   "surgeonFilters": {
     "searchLabel": "Buscar por nome",
