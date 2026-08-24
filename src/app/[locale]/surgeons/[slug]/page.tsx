@@ -26,6 +26,7 @@ import {
   subspecialtyLabels,
 } from "@/lib/format";
 import { getSurgeonBySlug } from "@/lib/data/surgeons";
+import { languageAlternates, localizedPath } from "@/lib/hreflang";
 import { surgeonPhotoUrl } from "@/lib/supabase/storage";
 
 export const revalidate = 120;
@@ -45,7 +46,7 @@ function initials(name: string) {
 export async function generateMetadata({
   params,
 }: PageProps<"/[locale]/surgeons/[slug]">): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const surgeon = await getSurgeonBySlug(slug);
   if (!surgeon || surgeon.status !== "approved") return {};
 
@@ -61,7 +62,10 @@ export async function generateMetadata({
   return {
     title: surgeon.full_name,
     description,
-    alternates: { canonical: `/surgeons/${surgeon.slug}` },
+    alternates: {
+      canonical: localizedPath(`/surgeons/${surgeon.slug}`, locale),
+      languages: languageAlternates(`/surgeons/${surgeon.slug}`),
+    },
     openGraph: { title: surgeon.full_name, description, type: "profile" },
   };
 }

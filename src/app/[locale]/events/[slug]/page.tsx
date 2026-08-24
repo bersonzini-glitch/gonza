@@ -25,6 +25,7 @@ import {
   formatTimeRange,
 } from "@/lib/format";
 import { getEventBySlug, getEventSources, getRelatedEvents } from "@/lib/data/events";
+import { languageAlternates, localizedPath } from "@/lib/hreflang";
 
 export const revalidate = 120;
 
@@ -33,7 +34,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 export async function generateMetadata({
   params,
 }: PageProps<"/[locale]/events/[slug]">): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const event = await getEventBySlug(slug);
   if (!event) return {};
 
@@ -42,7 +43,10 @@ export async function generateMetadata({
   return {
     title: event.title,
     description,
-    alternates: { canonical: `/events/${event.slug}` },
+    alternates: {
+      canonical: localizedPath(`/events/${event.slug}`, locale),
+      languages: languageAlternates(`/events/${event.slug}`),
+    },
     openGraph: {
       title: event.title,
       description,

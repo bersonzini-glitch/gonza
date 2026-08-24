@@ -14,10 +14,14 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Run on every request except static assets and image optimization
-     * files, so the auth cookie is refreshed on normal navigations without
-     * doing unnecessary work on Next.js internals.
+     * Run on every request except static assets, image optimization files,
+     * and the handful of root-level routes that intentionally live outside
+     * [locale] (metadata files, the Supabase auth callback, the photo
+     * proxy) — next-intl's middleware doesn't know these aren't
+     * locale-prefixable pages and would otherwise rewrite them to a
+     * non-existent /es/... route, 404ing them. Everything else still runs
+     * through so the auth cookie is refreshed on normal navigations.
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|webp|ico)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|api/|auth/|.*\\.(?:svg|png|jpg|jpeg|webp|ico)$).*)",
   ],
 };

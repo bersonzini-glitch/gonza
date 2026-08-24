@@ -1,8 +1,31 @@
 import type { MetadataRoute } from "next";
 
+import { routing } from "@/i18n/routing";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
+// Spanish (the default locale) has no URL prefix — see localePrefix:
+// "as-needed" in src/i18n/routing.ts — so its canonical URL is the bare
+// path, while English/Portuguese get a /en or /pt prefix.
+function localizedUrl(path: string, locale: string): string {
+  const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
+  return `${SITE_URL}${prefix}${path}`;
+}
+
+function entry(
+  path: string,
+  options: Pick<MetadataRoute.Sitemap[number], "changeFrequency" | "priority" | "lastModified">,
+): MetadataRoute.Sitemap[number] {
+  const languages = Object.fromEntries(
+    routing.locales.map((locale) => [locale, localizedUrl(path, locale)]),
+  );
+  return {
+    url: localizedUrl(path, routing.defaultLocale),
+    alternates: { languages: { ...languages, "x-default": localizedUrl(path, routing.defaultLocale) } },
+    ...options,
+  };
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const admin = createAdminClient();
@@ -13,28 +36,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]);
 
   const staticPages: MetadataRoute.Sitemap = [
-    { url: `${SITE_URL}/`, changeFrequency: "daily", priority: 1 },
-    { url: `${SITE_URL}/events`, changeFrequency: "hourly", priority: 0.9 },
-    { url: `${SITE_URL}/surgeons`, changeFrequency: "daily", priority: 0.9 },
-    { url: `${SITE_URL}/about`, changeFrequency: "monthly", priority: 0.4 },
-    { url: `${SITE_URL}/privacy`, changeFrequency: "yearly", priority: 0.2 },
-    { url: `${SITE_URL}/sign-in`, changeFrequency: "yearly", priority: 0.1 },
-    { url: `${SITE_URL}/sign-up`, changeFrequency: "yearly", priority: 0.1 },
+    entry("/", { changeFrequency: "daily", priority: 1 }),
+    entry("/events", { changeFrequency: "hourly", priority: 0.9 }),
+    entry("/surgeons", { changeFrequency: "daily", priority: 0.9 }),
+    entry("/about", { changeFrequency: "monthly", priority: 0.4 }),
+    entry("/privacy", { changeFrequency: "yearly", priority: 0.2 }),
+    entry("/sign-in", { changeFrequency: "yearly", priority: 0.1 }),
+    entry("/sign-up", { changeFrequency: "yearly", priority: 0.1 }),
   ];
 
-  const eventPages: MetadataRoute.Sitemap = (events ?? []).map((e) => ({
-    url: `${SITE_URL}/events/${e.slug}`,
-    lastModified: e.updated_at,
-    changeFrequency: "weekly",
-    priority: 0.7,
-  }));
+  const eventPages: MetadataRoute.Sitemap = (events ?? []).map((e) =>
+    entry(`/events/${e.slug}`, {
+      lastModified: e.updated_at,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }),
+  );
 
-  const surgeonPages: MetadataRoute.Sitemap = (surgeons ?? []).map((s) => ({
-    url: `${SITE_URL}/surgeons/${s.slug}`,
-    lastModified: s.updated_at,
-    changeFrequency: "monthly",
-    priority: 0.6,
-  }));
+  const surgeonPages: MetadataRoute.Sitemap = (surgeons ?? []).map((s) =>
+    entry(`/surgeons/${s.slug}`, {
+      lastModified: s.updated_at,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    }),
+  );
 
   return [...staticPages, ...eventPages, ...surgeonPages];
 }
