@@ -13,6 +13,8 @@ import { SURGEON_PHOTOS_BUCKET } from "@/lib/supabase/storage";
 import {
   deriveConsultationAvailability,
   makeSurgeonProfileSchema,
+  PHOTO_ALLOWED_TYPES,
+  PHOTO_MAX_BYTES,
   type SurgeonProfileFormValues,
 } from "@/lib/validation/surgeon";
 
@@ -180,9 +182,6 @@ export async function submitSurgeonProfileAction(locale: string): Promise<Surgeo
   return { success: true };
 }
 
-const ALLOWED_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
-
 export async function uploadSurgeonPhotoAction(
   locale: string,
   formData: FormData,
@@ -196,10 +195,10 @@ export async function uploadSurgeonPhotoAction(
   if (!(file instanceof File) || file.size === 0) {
     return { error: tErrors("selectImageToUpload") };
   }
-  if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
+  if (!PHOTO_ALLOWED_TYPES.includes(file.type as (typeof PHOTO_ALLOWED_TYPES)[number])) {
     return { error: tErrors("onlyImageTypes") };
   }
-  if (file.size > MAX_PHOTO_BYTES) {
+  if (file.size > PHOTO_MAX_BYTES) {
     return { error: tErrors("imageTooLarge") };
   }
 

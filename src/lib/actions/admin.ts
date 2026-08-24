@@ -8,12 +8,15 @@ import { getTranslations } from "next-intl/server";
 import { logAdminAction } from "@/lib/audit";
 import { requireAdmin } from "@/lib/auth/session";
 import { slugify } from "@/lib/slug";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { SURGEON_PHOTOS_BUCKET } from "@/lib/supabase/storage";
 import { makeEventSchema, type EventInput } from "@/lib/validation/event";
 import {
   deriveConsultationAvailability,
   makeSurgeonProfileSchema,
+  PHOTO_ALLOWED_TYPES,
+  PHOTO_MAX_BYTES,
   type SurgeonProfileFormValues,
 } from "@/lib/validation/surgeon";
 
@@ -229,6 +232,85 @@ export async function adminUpdateSurgeonProfileAction(
     revalidatePath(`/surgeons/${data.slug}`);
   }
   return { success: true };
+}
+
+export async function adminUploadSurgeonPhotoAction(
+  locale: string,
+  surgeonId: string,
+  formData: FormData,
+): Promise<AdminActionResult> {
+  const { admin, supabase } = await requireAdminClient();
+  const tErrors = await getTranslations({ locale, namespace: "surgeonActions" });
+
+  const file = formData.get("photo");
+  if (!(file instanceof File) || file.size === 0) {
+    return { error: tErrors("selectImageToUpload") };
+  }
+  if (!PHOTO_ALLOWED_TYPES.includes(file.type as (typeof PHOTO_ALLOWED_TYPES)[number])) {
+    return { error: tErrors("onlyImageTypes") };
+  }
+  if (file.size > PHOTO_MAX_BYTES) {
+    return { error: tErrors("imageTooLarge") };
+  }
+
+  try {
+    const { data: surgeon } = await supabase
+      .from("surgeon_profiles")
+      .select("id, user_id, slug, photo_path")
+      .eq("id", surgeonId)
+      .maybeSingle();
+
+    if (!surgeon) return { error: tErrors("createProfileBeforePhoto") };
+
+    const extension =
+      file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+    const path = `${surgeon.user_id}/${randomUUID()}.${extension}`;
+
+    // The storage bucket's insert policy only allows uploads into the
+    // caller's own `${auth.uid()}/...` folder (see
+    // supabase/migrations/20260822001000_storage.sql) — unlike select/
+    // update/delete, it has no admin bypass, so an admin uploading into a
+    // surgeon's folder needs the service-role client to get past RLS here.
+    // The admin check already happened in requireAdminClient() above.
+    const adminStorage = createAdminClient();
+
+    const { error: uploadError } = await adminStorage.storage
+      .from(SURGEON_PHOTOS_BUCKET)
+      .upload(path, file, { contentType: file.type, upsert: false });
+
+    if (uploadError) return { error: tErrors("uploadError", { message: uploadError.message }) };
+
+    const previousPath = surgeon.photo_path;
+
+    const { error: updateError } = await supabase
+      .from("surgeon_profiles")
+      .update({ photo_path: path })
+      .eq("id", surgeon.id);
+
+    if (updateError) {
+      await adminStorage.storage.from(SURGEON_PHOTOS_BUCKET).remove([path]);
+      return { error: updateError.message };
+    }
+
+    if (previousPath) {
+      await adminStorage.storage.from(SURGEON_PHOTOS_BUCKET).remove([previousPath]);
+    }
+
+    await logAdminAction(supabase, "update_surgeon_photo", "surgeon_profiles", surgeonId, {
+      admin: admin.username,
+    });
+
+    revalidatePath(`/admin/surgeons/${surgeonId}`);
+    revalidatePath(`/surgeons/${surgeon.slug}`);
+    return { success: true };
+  } catch (err) {
+    // A server misconfiguration (e.g. a missing env var) throws instead of
+    // returning a Supabase {error} — without this, that throw would escape
+    // the transition on the client and trigger the app's full-page error
+    // boundary instead of the inline message the form already renders.
+    console.error("adminUploadSurgeonPhotoAction failed unexpectedly:", err);
+    return { error: tErrors("uploadFailedUnexpected") };
+  }
 }
 
 // ---------------------------------------------------------------------------

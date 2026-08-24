@@ -9,18 +9,24 @@ import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { uploadSurgeonPhotoAction } from "@/lib/actions/surgeon";
-
-const MAX_BYTES = 5 * 1024 * 1024;
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+import { PHOTO_ALLOWED_TYPES, PHOTO_MAX_BYTES } from "@/lib/validation/surgeon";
 
 export function PhotoUpload({
   surgeonId,
   hasPhoto,
   fullName,
+  action,
 }: {
   surgeonId: string;
   hasPhoto: boolean;
   fullName: string;
+  /**
+   * Defaults to the surgeon uploading their own photo. The admin edit page
+   * passes adminUploadSurgeonPhotoAction.bind(null, locale, surgeon.id)
+   * instead, since the default action always targets the signed-in user's
+   * own profile — not whichever surgeon an admin happens to be editing.
+   */
+  action?: (formData: FormData) => Promise<{ error?: string; success?: boolean }>;
 }) {
   const router = useRouter();
   const locale = useLocale();
@@ -30,6 +36,8 @@ export function PhotoUpload({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [cacheBust, setCacheBust] = useState(0);
+
+  const uploadAction = action ?? ((formData: FormData) => uploadSurgeonPhotoAction(locale, formData));
 
   const photoUrl = hasPhoto ? `/api/surgeon-photo/${surgeonId}?v=${cacheBust}` : undefined;
   const initials = fullName
@@ -45,11 +53,11 @@ export function PhotoUpload({
     if (!file) return;
     setError(null);
 
-    if (!ALLOWED_TYPES.includes(file.type)) {
+    if (!PHOTO_ALLOWED_TYPES.includes(file.type as (typeof PHOTO_ALLOWED_TYPES)[number])) {
       setError(tActions("onlyImageTypes"));
       return;
     }
-    if (file.size > MAX_BYTES) {
+    if (file.size > PHOTO_MAX_BYTES) {
       setError(tActions("imageTooLarge"));
       return;
     }
@@ -58,7 +66,7 @@ export function PhotoUpload({
     formData.set("photo", file);
 
     startTransition(async () => {
-      const result = await uploadSurgeonPhotoAction(locale, formData);
+      const result = await uploadAction(formData);
       if (result.error) {
         setError(result.error);
         return;
@@ -79,7 +87,7 @@ export function PhotoUpload({
         <input
           ref={inputRef}
           type="file"
-          accept={ALLOWED_TYPES.join(",")}
+          accept={PHOTO_ALLOWED_TYPES.join(",")}
           className="sr-only"
           onChange={handleFileChange}
         />

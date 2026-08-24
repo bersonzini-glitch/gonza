@@ -1,12 +1,14 @@
+import { Eye } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 
 import { SurgeonReviewActions } from "@/components/admin/surgeon-review-actions";
+import { PhotoUpload } from "@/components/surgeon-profile/photo-upload";
 import { SurgeonProfileForm } from "@/components/surgeon-profile/surgeon-profile-form";
 import { Badge } from "@/components/ui/badge";
-import { adminUpdateSurgeonProfileAction } from "@/lib/actions/admin";
+import { adminUpdateSurgeonProfileAction, adminUploadSurgeonPhotoAction } from "@/lib/actions/admin";
 import { getSurgeonForAdmin } from "@/lib/data/admin";
 import { formatDate, primarySpecialtyLabels } from "@/lib/format";
 import type { SurgeonProfileFormValues } from "@/lib/validation/surgeon";
@@ -80,10 +82,28 @@ export default async function AdminSurgeonDetailPage({
           {PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]} ·{" "}
           {t("createdOn", { date: formatDate(surgeon.created_at.slice(0, 10), locale) })}
         </p>
+        {surgeon.status === "approved" && (
+          <Link
+            href={`/surgeons/${surgeon.slug}`}
+            className="mt-3 inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+          >
+            <Eye className="size-4" />
+            {t("viewPublicProfile")}
+          </Link>
+        )}
       </div>
 
       <div className="surface-flat p-4">
         <SurgeonReviewActions surgeonId={surgeon.id} status={surgeon.status} />
+      </div>
+
+      <div className="surface-flat p-6">
+        <PhotoUpload
+          surgeonId={surgeon.id}
+          hasPhoto={Boolean(surgeon.photo_path)}
+          fullName={surgeon.full_name}
+          action={adminUploadSurgeonPhotoAction.bind(null, locale, surgeon.id)}
+        />
       </div>
 
       <div className="surface-flat p-6">

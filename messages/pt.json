@@ -468,7 +468,8 @@
     "backToQueue": "← Voltar à fila",
     "sampleProfile": "Dado de exemplo",
     "createdOn": "Criado em {date}",
-    "editHeading": "Editar perfil"
+    "editHeading": "Editar perfil",
+    "viewPublicProfile": "Ver perfil público"
   },
   "adminEventStatus": {
     "pending": "pendente",

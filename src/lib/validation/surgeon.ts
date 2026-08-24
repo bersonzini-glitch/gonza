@@ -47,6 +47,12 @@ export const LANGUAGE_OPTIONS = [
   "Alemán",
 ] as const;
 
+// Shared between the surgeon's own upload action, the admin upload action,
+// and the client-side PhotoUpload component so the limit only lives in one
+// place.
+export const PHOTO_ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
+export const PHOTO_MAX_BYTES = 5 * 1024 * 1024;
+
 type Translator = ReturnType<typeof useTranslations<"surgeonValidation">>;
 
 export function makeSurgeonLocationSchema(t: Translator) {

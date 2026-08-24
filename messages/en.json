@@ -468,7 +468,8 @@
     "backToQueue": "← Back to queue",
     "sampleProfile": "Sample data",
     "createdOn": "Created on {date}",
-    "editHeading": "Edit profile"
+    "editHeading": "Edit profile",
+    "viewPublicProfile": "View public profile"
   },
   "adminEventStatus": {
     "pending": "pending",
