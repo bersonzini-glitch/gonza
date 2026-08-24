@@ -113,3 +113,36 @@ export async function listAuditLogs(limit = 100) {
     .limit(limit);
   return data ?? [];
 }
+
+export interface LatestAiEventSearchRun {
+  status: "started" | "completed" | "failed";
+  createdAt: string;
+  metadata: Record<string, unknown>;
+}
+
+/**
+ * Reads only the single most recent AI-event-search audit entry, used to
+ * show a status banner ("búsqueda en curso" / "se agregaron N eventos" /
+ * "falló") on the admin events page. The three actions
+ * (ai_event_search_started/completed/failed) are logged by
+ * triggerAiEventSearchAction() in lib/actions/admin.ts — whichever is
+ * newest tells us the state of the last run.
+ */
+export async function getLatestAiEventSearchRun(): Promise<LatestAiEventSearchRun | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("admin_audit_logs")
+    .select("action, created_at, metadata")
+    .in("action", ["ai_event_search_started", "ai_event_search_completed", "ai_event_search_failed"])
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!data) return null;
+
+  return {
+    status: data.action.replace("ai_event_search_", "") as LatestAiEventSearchRun["status"],
+    createdAt: data.created_at,
+    metadata: data.metadata,
+  };
+}

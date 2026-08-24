@@ -487,7 +487,18 @@
     "countryHeader": "Country",
     "statusHeader": "Status",
     "featuredTag": "★ featured",
-    "emptyState": "No events yet."
+    "emptyState": "No events yet.",
+    "aiSearchButton": "Search events with AI",
+    "aiSearchStarting": "Starting...",
+    "aiSearchStartedToast": "Search started. Events it finds will show up here for review in a few minutes.",
+    "aiSearchStatus": {
+      "started": "Search in progress",
+      "completed": "Last search completed",
+      "failed": "Last search failed"
+    },
+    "aiSearchLastRunStarted": "Started on {date}. This can take a few minutes — refresh the page later.",
+    "aiSearchLastRunCompleted": "On {date}, {inserted, plural, one {# event} other {# events}} were added pending review.",
+    "aiSearchLastRunFailed": "The search on {date} couldn't complete. You can try again."
   },
   "eventForm": {
     "metaTitleNew": "New event",
@@ -576,7 +587,12 @@
     "suspendTitle": "Suspend this profile",
     "suspendDescription": "The profile will be removed from public view immediately.",
     "deleteSurgeonTitle": "Permanently delete this profile",
-    "deleteSurgeonDescription": "This action cannot be undone. The reason is logged to the audit trail before deleting."
+    "deleteSurgeonDescription": "This action cannot be undone. The reason is logged to the audit trail before deleting.",
+    "rejectFailed": "Couldn't reject.",
+    "eventApprovedToast": "Event approved.",
+    "eventRejectedToast": "Event rejected.",
+    "aiSearchFailedToStart": "Couldn't start the search: {message}",
+    "aiSearchNotConfigured": "ANTHROPIC_API_KEY isn't configured, so AI search can't run."
   },
   "subspecialties": {
     "degenerative_spine": "Degenerative spine",

@@ -487,7 +487,18 @@
     "countryHeader": "País",
     "statusHeader": "Estado",
     "featuredTag": "★ destacado",
-    "emptyState": "Todavía no hay eventos."
+    "emptyState": "Todavía no hay eventos.",
+    "aiSearchButton": "Buscar eventos con IA",
+    "aiSearchStarting": "Iniciando...",
+    "aiSearchStartedToast": "Búsqueda iniciada. Los eventos que encuentre van a aparecer acá para revisión en unos minutos.",
+    "aiSearchStatus": {
+      "started": "Búsqueda en curso",
+      "completed": "Última búsqueda completada",
+      "failed": "Última búsqueda falló"
+    },
+    "aiSearchLastRunStarted": "Iniciada el {date}. Esto puede tardar unos minutos — actualizá la página más tarde.",
+    "aiSearchLastRunCompleted": "El {date} se agregaron {inserted, plural, one {# evento} other {# eventos}} pendientes de revisión.",
+    "aiSearchLastRunFailed": "La búsqueda del {date} no se pudo completar. Podés intentar de nuevo."
   },
   "eventForm": {
     "metaTitleNew": "Nuevo evento",
@@ -576,7 +587,12 @@
     "suspendTitle": "Suspender este perfil",
     "suspendDescription": "El perfil se quitará de la vista pública inmediatamente.",
     "deleteSurgeonTitle": "Eliminar este perfil permanentemente",
-    "deleteSurgeonDescription": "Esta acción no se puede deshacer. El motivo se registra en el historial de auditoría antes de eliminar."
+    "deleteSurgeonDescription": "Esta acción no se puede deshacer. El motivo se registra en el historial de auditoría antes de eliminar.",
+    "rejectFailed": "No se pudo rechazar.",
+    "eventApprovedToast": "Evento aprobado.",
+    "eventRejectedToast": "Evento rechazado.",
+    "aiSearchFailedToStart": "No se pudo iniciar la búsqueda: {message}",
+    "aiSearchNotConfigured": "Falta configurar ANTHROPIC_API_KEY para poder buscar con IA."
   },
   "subspecialties": {
     "degenerative_spine": "Columna degenerativa",

@@ -3,8 +3,10 @@
 import { randomUUID } from "node:crypto";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { getTranslations } from "next-intl/server";
 
+import { searchUpcomingEvents, type KnownEvent } from "@/lib/ai/event-search";
 import { logAdminAction } from "@/lib/audit";
 import { requireAdmin } from "@/lib/auth/session";
 import { slugify } from "@/lib/slug";
@@ -440,5 +442,188 @@ export async function deleteEventAction(eventId: string): Promise<AdminActionRes
 
   revalidatePath("/admin/events");
   revalidatePath("/events");
+  return { success: true };
+}
+
+export async function approveEventAction(
+  locale: string,
+  eventId: string,
+): Promise<AdminActionResult> {
+  const tErrors = await getTranslations({ locale, namespace: "adminActions" });
+  const { admin, supabase } = await requireAdminClient();
+
+  const { data: event, error } = await supabase
+    .from("events")
+    .update({
+      status: "approved",
+      last_verified_at: new Date().toISOString().slice(0, 10),
+    })
+    .eq("id", eventId)
+    .select("slug")
+    .single();
+
+  if (error || !event) return { error: error?.message ?? tErrors("approveFailed") };
+
+  await logAdminAction(supabase, "approve_event", "events", eventId, { admin: admin.username });
+
+  revalidatePath("/admin/events");
+  revalidatePath("/events");
+  revalidatePath(`/events/${event.slug}`);
+  return { success: true };
+}
+
+export async function rejectEventAction(
+  locale: string,
+  eventId: string,
+): Promise<AdminActionResult> {
+  const tErrors = await getTranslations({ locale, namespace: "adminActions" });
+  const { admin, supabase } = await requireAdminClient();
+
+  const { error } = await supabase.from("events").update({ status: "rejected" }).eq("id", eventId);
+  if (error) return { error: error?.message ?? tErrors("rejectFailed") };
+
+  await logAdminAction(supabase, "reject_event", "events", eventId, { admin: admin.username });
+
+  revalidatePath("/admin/events");
+  return { success: true };
+}
+
+// ---------------------------------------------------------------------------
+// AI event search
+// ---------------------------------------------------------------------------
+
+// User-chosen cap ("Hasta 10 (Recomendado)") — kept as a plain constant
+// rather than an admin-configurable option, matching the "botón simple,
+// alcance fijo" search scope the user picked over a per-search config form.
+const AI_EVENT_SEARCH_MAX_EVENTS = 10;
+
+/**
+ * Fires an AI-assisted web search for upcoming LATAM spine-surgery events
+ * and inserts whatever it finds as `status: 'pending'` events for an admin
+ * to review later — the user explicitly asked for "se dispara y avisa
+ * después" (fire-and-forget) rather than a blocking request, since the
+ * underlying Anthropic call (agentic web search + structured extraction)
+ * can take well over a minute.
+ *
+ * The actual search + inserts run in `after()`, once the response admins
+ * see (the toast confirming the search started) has already been sent.
+ * Everything the background task needs — the authenticated Supabase
+ * client, translations, the known-events list — is resolved *before*
+ * `after()` is called, since only Server Actions (not this callback) are
+ * guaranteed access to request-time APIs like the cookie store that
+ * `supabase` was built from.
+ */
+export async function triggerAiEventSearchAction(locale: string): Promise<AdminActionResult> {
+  const { admin, supabase } = await requireAdminClient();
+  const [tValidation, tErrors] = await Promise.all([
+    getTranslations({ locale, namespace: "eventValidation" }),
+    getTranslations({ locale, namespace: "adminActions" }),
+  ]);
+
+  // Checked up front so a missing key fails the button click immediately
+  // instead of silently failing inside after() once the response is
+  // already gone, which admins would only notice on the next page refresh.
+  if (!process.env.ANTHROPIC_API_KEY) return { error: tErrors("aiSearchNotConfigured") };
+
+  const { data: existingEvents, error: existingError } = await supabase
+    .from("events")
+    .select("title, official_url, start_date")
+    .order("start_date", { ascending: false })
+    .limit(300);
+
+  if (existingError) return { error: tErrors("aiSearchFailedToStart", { message: existingError.message }) };
+
+  const knownEvents: KnownEvent[] = (existingEvents ?? []).map((e) => ({
+    title: e.title,
+    officialUrl: e.official_url,
+    startDate: e.start_date,
+  }));
+
+  await logAdminAction(supabase, "ai_event_search_started", "events", null, {
+    admin: admin.username,
+  });
+
+  after(async () => {
+    try {
+      const result = await searchUpcomingEvents({
+        knownEvents,
+        maxEvents: AI_EVENT_SEARCH_MAX_EVENTS,
+      });
+
+      let inserted = 0;
+      const insertErrors: string[] = [];
+
+      for (const candidate of result.candidates) {
+        const parsed = makeEventSchema(tValidation).safeParse({
+          ...candidate,
+          isFeatured: false,
+          lastVerifiedAt: new Date().toISOString().slice(0, 10),
+        });
+
+        const candidateLabel =
+          typeof candidate.title === "string" ? candidate.title : "(sin título)";
+
+        if (!parsed.success) {
+          insertErrors.push(`${candidateLabel}: ${parsed.error.issues[0]?.message ?? "inválido"}`);
+          continue;
+        }
+
+        const data = parsed.data;
+        const slug = `${slugify(data.title)}-${randomUUID().slice(0, 6)}`;
+
+        const { data: event, error } = await supabase
+          .from("events")
+          .insert({
+            ...eventFieldsFromInput(data),
+            // Forced regardless of what the model/schema default produced —
+            // AI-found events always land as pending, never live directly.
+            status: "pending",
+            slug,
+            created_by: admin.id,
+          })
+          .select("id")
+          .single();
+
+        if (error || !event) {
+          insertErrors.push(`${candidateLabel}: ${error?.message ?? "no se pudo crear"}`);
+          continue;
+        }
+
+        const { error: sourcesError } = await supabase.from("event_sources").insert(
+          data.sources.map((s) => ({
+            event_id: event.id,
+            source_name: s.sourceName,
+            source_url: s.sourceUrl,
+            source_type: s.sourceType,
+            notes: s.notes || null,
+          })),
+        );
+
+        if (sourcesError) {
+          insertErrors.push(`${candidateLabel}: ${sourcesError.message}`);
+          continue;
+        }
+
+        inserted += 1;
+      }
+
+      await logAdminAction(supabase, "ai_event_search_completed", "events", null, {
+        admin: admin.username,
+        found: result.candidates.length,
+        inserted,
+        webSearchesUsed: result.webSearchesUsed,
+        errors: insertErrors,
+      });
+    } catch (err) {
+      console.error("triggerAiEventSearchAction background task failed:", err);
+      await logAdminAction(supabase, "ai_event_search_failed", "events", null, {
+        admin: admin.username,
+        error: err instanceof Error ? err.message : String(err),
+      }).catch((logErr) => console.error("Failed to log ai_event_search_failed:", logErr));
+    }
+
+    revalidatePath("/admin/events");
+  });
+
   return { success: true };
 }
