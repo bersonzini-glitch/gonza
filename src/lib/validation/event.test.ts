@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { eventSchema, eventSearchSchema } from "@/lib/validation/event";
+import { eventSearchSchema, makeEventSchema } from "@/lib/validation/event";
+
+// Tests exercise validation logic, not translated copy, so a translator
+// that echoes the key back is enough to build the schema.
+const identityT = ((key: string) => key) as Parameters<typeof makeEventSchema>[0];
+const eventSchema = makeEventSchema(identityT);
 
 const validEvent = {
   title: "Congreso Latinoamericano de Columna",

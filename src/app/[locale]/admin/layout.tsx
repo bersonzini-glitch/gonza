@@ -1,4 +1,5 @@
 import { CalendarRange, LayoutDashboard, ScrollText, Users } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
 import { NavLink } from "@/components/shared/nav-link";
@@ -6,30 +7,29 @@ import { requireAdmin } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
 
-const ADMIN_NAV = [
-  { href: "/admin", label: "Resumen", icon: LayoutDashboard, exact: true },
-  { href: "/admin/surgeons", label: "Cola de cirujanos", icon: Users, exact: false },
-  { href: "/admin/events", label: "Eventos", icon: CalendarRange, exact: false },
-  { href: "/admin/audit-log", label: "Historial de auditoría", icon: ScrollText, exact: false },
-] as const;
-
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const admin = await requireAdmin("/admin");
+  const t = await getTranslations("adminLayout");
+
+  const ADMIN_NAV = [
+    { href: "/admin", label: t("navOverview"), icon: LayoutDashboard, exact: true },
+    { href: "/admin/surgeons", label: t("navSurgeonQueue"), icon: Users, exact: false },
+    { href: "/admin/events", label: t("navEvents"), icon: CalendarRange, exact: false },
+    { href: "/admin/audit-log", label: t("navAuditLog"), icon: ScrollText, exact: false },
+  ] as const;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="flex items-center gap-3">
-        <h1 className="font-heading text-3xl font-semibold text-foreground">
-          Panel de administración
-        </h1>
+        <h1 className="font-heading text-3xl font-semibold text-foreground">{t("title")}</h1>
       </div>
       <p className="mt-1.5 text-sm text-muted-foreground">
-        Conectado como <span className="font-medium text-foreground">{admin.username}</span>
+        {t("connectedAs")} <span className="font-medium text-foreground">{admin.username}</span>
       </p>
 
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[240px_1fr] lg:gap-8">
         <nav
-          aria-label="Administración"
+          aria-label={t("navLabel")}
           className="flex gap-1 overflow-x-auto rounded-xl border border-border bg-card p-2 lg:flex-col lg:self-start"
         >
           {ADMIN_NAV.map((item) => (

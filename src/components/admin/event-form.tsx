@@ -29,25 +29,9 @@ import {
   EVENT_TOPICS,
   EVENT_TYPES,
   LATAM_COUNTRIES,
-  eventSchema,
+  makeEventSchema,
   type EventInput,
 } from "@/lib/validation/event";
-
-const SOURCE_TYPE_LABELS: Record<(typeof EVENT_SOURCE_TYPES)[number], string> = {
-  official_society: "Sociedad oficial",
-  hospital: "Hospital",
-  university: "Universidad",
-  organizer: "Organizador del evento",
-  rss: "Feed RSS público",
-  public_api: "API abierta/pública",
-  other: "Otro",
-};
-
-const EVENT_STATUS_LABELS: Record<(typeof EVENT_STATUSES)[number], string> = {
-  pending: "Pendiente",
-  approved: "Aprobado",
-  rejected: "Rechazado",
-};
 
 // Base UI's <Select.Value> only resolves a label for the current value from
 // an explicit `items` map passed to <Select.Root> — without it, it falls
@@ -66,13 +50,31 @@ export function EventForm({
   const router = useRouter();
   const [customTopic, setCustomTopic] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
+  const t = useTranslations("eventForm");
+  const tValidation = useTranslations("eventValidation");
   const tEventTypes = useTranslations("eventTypes");
   const tEventFormats = useTranslations("eventFormats");
+  const tEventStatus = useTranslations("adminEventStatus");
+
   const EVENT_TYPE_LABELS = eventTypeLabels(tEventTypes);
   const EVENT_FORMAT_LABELS = eventFormatLabels(tEventFormats);
+  const SOURCE_TYPE_LABELS: Record<(typeof EVENT_SOURCE_TYPES)[number], string> = {
+    official_society: t("sourceTypeOfficialSociety"),
+    hospital: t("sourceTypeHospital"),
+    university: t("sourceTypeUniversity"),
+    organizer: t("sourceTypeOrganizer"),
+    rss: t("sourceTypeRss"),
+    public_api: t("sourceTypePublicApi"),
+    other: t("sourceTypeOther"),
+  };
+  const EVENT_STATUS_LABELS: Record<(typeof EVENT_STATUSES)[number], string> = {
+    pending: tEventStatus("pending"),
+    approved: tEventStatus("approved"),
+    rejected: tEventStatus("rejected"),
+  };
 
   const form = useForm<EventInput>({
-    resolver: zodResolver(eventSchema) as Resolver<EventInput>,
+    resolver: zodResolver(makeEventSchema(tValidation)) as Resolver<EventInput>,
     defaultValues,
   });
   const { fields, append, remove } = useFieldArray({ control: form.control, name: "sources" });
@@ -80,7 +82,7 @@ export function EventForm({
 
   function toggleTopic(topic: string, checked: boolean) {
     const current = form.getValues("topics");
-    form.setValue("topics", checked ? [...current, topic] : current.filter((t) => t !== topic), {
+    form.setValue("topics", checked ? [...current, topic] : current.filter((tp) => tp !== topic), {
       shouldValidate: true,
     });
   }
@@ -102,7 +104,7 @@ export function EventForm({
       setServerError(result.error);
       return;
     }
-    toast.success("Guardado");
+    toast.success(t("savedToast"));
     router.push("/admin/events");
     router.refresh();
   }
@@ -111,25 +113,25 @@ export function EventForm({
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8" noValidate>
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5 sm:col-span-2">
-          <Label htmlFor="title">Título</Label>
+          <Label htmlFor="title">{t("titleLabel")}</Label>
           <Input id="title" {...form.register("title")} />
           {form.formState.errors.title && (
             <p className="text-xs text-destructive">{form.formState.errors.title.message}</p>
           )}
         </div>
         <div className="space-y-1.5 sm:col-span-2">
-          <Label htmlFor="description">Descripción</Label>
+          <Label htmlFor="description">{t("descriptionLabel")}</Label>
           <Textarea id="description" rows={5} {...form.register("description")} />
           {form.formState.errors.description && (
             <p className="text-xs text-destructive">{form.formState.errors.description.message}</p>
           )}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="organizer">Organizador</Label>
+          <Label htmlFor="organizer">{t("organizerLabel")}</Label>
           <Input id="organizer" {...form.register("organizer")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="eventType">Tipo de evento</Label>
+          <Label htmlFor="eventType">{t("eventTypeLabel")}</Label>
           <Select
             items={EVENT_TYPE_LABELS}
             value={form.watch("eventType")}
@@ -141,16 +143,16 @@ export function EventForm({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {EVENT_TYPES.map((t) => (
-                <SelectItem key={t} value={t}>
-                  {EVENT_TYPE_LABELS[t]}
+              {EVENT_TYPES.map((et) => (
+                <SelectItem key={et} value={et}>
+                  {EVENT_TYPE_LABELS[et]}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="format">Modalidad</Label>
+          <Label htmlFor="format">{t("formatLabel")}</Label>
           <Select
             items={EVENT_FORMAT_LABELS}
             value={form.watch("format")}
@@ -171,7 +173,7 @@ export function EventForm({
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="status">Estado</Label>
+          <Label htmlFor="status">{t("statusLabel")}</Label>
           <Select
             items={EVENT_STATUS_LABELS}
             value={form.watch("status")}
@@ -196,54 +198,50 @@ export function EventForm({
             checked={form.watch("isFeatured")}
             onCheckedChange={(checked) => form.setValue("isFeatured", checked === true)}
           />
-          Destacado en la página de inicio
+          {t("featuredLabel")}
         </label>
       </section>
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">
-          <Label htmlFor="startDate">Fecha de inicio</Label>
+          <Label htmlFor="startDate">{t("startDateLabel")}</Label>
           <Input id="startDate" type="date" {...form.register("startDate")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="endDate">Fecha de fin</Label>
+          <Label htmlFor="endDate">{t("endDateLabel")}</Label>
           <Input id="endDate" type="date" {...form.register("endDate")} />
           {form.formState.errors.endDate && (
             <p className="text-xs text-destructive">{form.formState.errors.endDate.message}</p>
           )}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="timezone">Zona horaria</Label>
+          <Label htmlFor="timezone">{t("timezoneLabel")}</Label>
           <Input id="timezone" placeholder="America/Sao_Paulo" {...form.register("timezone")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="startTime">Hora de inicio (opcional)</Label>
+          <Label htmlFor="startTime">{t("startTimeLabel")}</Label>
           <Input id="startTime" type="time" {...form.register("startTime")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="endTime">Hora de fin (opcional)</Label>
+          <Label htmlFor="endTime">{t("endTimeLabel")}</Label>
           <Input id="endTime" type="time" {...form.register("endTime")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="dateNote">Nota de fecha (opcional)</Label>
-          <Input
-            id="dateNote"
-            placeholder="Curso anual, fechas exactas por confirmar"
-            {...form.register("dateNote")}
-          />
+          <Label htmlFor="dateNote">{t("dateNoteLabel")}</Label>
+          <Input id="dateNote" placeholder={t("dateNotePlaceholder")} {...form.register("dateNote")} />
         </div>
       </section>
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">
-          <Label htmlFor="country">País</Label>
+          <Label htmlFor="country">{t("countryLabel")}</Label>
           <Select
             items={COUNTRY_ITEMS}
             value={form.watch("country")}
             onValueChange={(v) => form.setValue("country", v ?? "", { shouldValidate: true })}
           >
             <SelectTrigger id="country" className="w-full">
-              <SelectValue placeholder="Seleccioná el país" />
+              <SelectValue placeholder={t("selectCountry")} />
             </SelectTrigger>
             <SelectContent>
               {LATAM_COUNTRIES.map((c) => (
@@ -255,17 +253,17 @@ export function EventForm({
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="city">Ciudad</Label>
+          <Label htmlFor="city">{t("cityLabel")}</Label>
           <Input id="city" {...form.register("city")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="venue">Sede</Label>
+          <Label htmlFor="venue">{t("venueLabel")}</Label>
           <Input id="venue" {...form.register("venue")} />
         </div>
       </section>
 
       <section className="space-y-3">
-        <Label>Temas</Label>
+        <Label>{t("topicsLabel")}</Label>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {EVENT_TOPICS.map((topic) => (
             <label key={topic} className="flex items-center gap-2 text-sm">
@@ -279,7 +277,7 @@ export function EventForm({
         </div>
         <div className="flex gap-2">
           <Input
-            placeholder="Agregar otro tema…"
+            placeholder={t("addTopicPlaceholder")}
             value={customTopic}
             onChange={(e) => setCustomTopic(e.target.value)}
             onKeyDown={(e) => {
@@ -290,7 +288,7 @@ export function EventForm({
             }}
           />
           <Button type="button" variant="outline" onClick={addCustomTopic}>
-            <Plus className="size-4" /> Agregar
+            <Plus className="size-4" /> {t("add")}
           </Button>
         </div>
         {form.formState.errors.topics && (
@@ -300,14 +298,14 @@ export function EventForm({
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="officialUrl">URL del sitio oficial</Label>
+          <Label htmlFor="officialUrl">{t("officialUrlLabel")}</Label>
           <Input id="officialUrl" placeholder="https://" {...form.register("officialUrl")} />
           {form.formState.errors.officialUrl && (
             <p className="text-xs text-destructive">{form.formState.errors.officialUrl.message}</p>
           )}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="registrationUrl">URL de inscripción (opcional)</Label>
+          <Label htmlFor="registrationUrl">{t("registrationUrlLabel")}</Label>
           <Input
             id="registrationUrl"
             placeholder="https://"
@@ -315,18 +313,18 @@ export function EventForm({
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="sourceUrl">URL de la fuente principal</Label>
+          <Label htmlFor="sourceUrl">{t("sourceUrlLabel")}</Label>
           <Input id="sourceUrl" placeholder="https://" {...form.register("sourceUrl")} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="lastVerifiedAt">Última verificación</Label>
+          <Label htmlFor="lastVerifiedAt">{t("lastVerifiedLabel")}</Label>
           <Input id="lastVerifiedAt" type="date" {...form.register("lastVerifiedAt")} />
         </div>
       </section>
 
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <Label>Fuentes de datos</Label>
+          <Label>{t("sourcesLabel")}</Label>
           <Button
             type="button"
             variant="outline"
@@ -335,7 +333,7 @@ export function EventForm({
               append({ sourceName: "", sourceUrl: "", sourceType: "official_society", notes: "" })
             }
           >
-            <Plus className="size-4" /> Agregar fuente
+            <Plus className="size-4" /> {t("addSource")}
           </Button>
         </div>
         {fields.map((field, index) => (
@@ -344,15 +342,15 @@ export function EventForm({
             className="grid grid-cols-1 gap-3 rounded-lg border border-border p-4 sm:grid-cols-[1fr_1fr_1fr_auto]"
           >
             <div className="space-y-1.5">
-              <Label>Nombre de la fuente</Label>
+              <Label>{t("sourceNameLabel")}</Label>
               <Input {...form.register(`sources.${index}.sourceName`)} />
             </div>
             <div className="space-y-1.5">
-              <Label>URL de la fuente</Label>
+              <Label>{t("sourceUrlFieldLabel")}</Label>
               <Input {...form.register(`sources.${index}.sourceUrl`)} />
             </div>
             <div className="space-y-1.5">
-              <Label>Tipo</Label>
+              <Label>{t("sourceTypeLabel")}</Label>
               <Select
                 items={SOURCE_TYPE_LABELS}
                 value={form.watch(`sources.${index}.sourceType`)}
@@ -367,9 +365,9 @@ export function EventForm({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {EVENT_SOURCE_TYPES.map((t) => (
-                    <SelectItem key={t} value={t}>
-                      {SOURCE_TYPE_LABELS[t]}
+                  {EVENT_SOURCE_TYPES.map((st) => (
+                    <SelectItem key={st} value={st}>
+                      {SOURCE_TYPE_LABELS[st]}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -381,7 +379,7 @@ export function EventForm({
               size="icon"
               className="self-end text-destructive"
               onClick={() => remove(index)}
-              aria-label="Quitar fuente"
+              aria-label={t("removeSource")}
             >
               <Trash2 className="size-4" />
             </Button>
@@ -389,7 +387,7 @@ export function EventForm({
         ))}
         {form.formState.errors.sources && (
           <p className="text-xs text-destructive">
-            {form.formState.errors.sources.message ?? "Revisá tus fuentes de datos."}
+            {form.formState.errors.sources.message ?? t("sourcesFallbackError")}
           </p>
         )}
       </section>
@@ -402,7 +400,7 @@ export function EventForm({
       )}
 
       <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
-        {form.formState.isSubmitting ? "Guardando…" : "Guardar evento"}
+        {form.formState.isSubmitting ? t("saving") : t("saveEvent")}
       </Button>
     </form>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Trash2, X, ShieldAlert } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -39,6 +40,7 @@ function ReasonDialog({
   redirectTo?: string;
 }) {
   const router = useRouter();
+  const t = useTranslations("adminActions");
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +55,7 @@ function ReasonDialog({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <div className="space-y-1.5">
-          <Label htmlFor="reason">Motivo</Label>
+          <Label htmlFor="reason">{t("reasonLabel")}</Label>
           <Textarea
             id="reason"
             value={reason}
@@ -73,13 +75,13 @@ function ReasonDialog({
                   return;
                 }
                 setOpen(false);
-                toast.success("Listo");
+                toast.success(t("done"));
                 if (redirectTo) router.push(redirectTo);
                 else router.refresh();
               })
             }
           >
-            {isPending ? "Enviando…" : "Confirmar"}
+            {isPending ? t("sending") : t("confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -95,6 +97,8 @@ export function SurgeonReviewActions({
   status: SurgeonStatus;
 }) {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations("adminActions");
   const [isPending, startTransition] = useTransition();
 
   return (
@@ -104,16 +108,16 @@ export function SurgeonReviewActions({
           disabled={isPending}
           onClick={() =>
             startTransition(async () => {
-              const result = await approveSurgeonAction(surgeonId);
+              const result = await approveSurgeonAction(locale, surgeonId);
               if (result.error) toast.error(result.error);
               else {
-                toast.success("Perfil aprobado");
+                toast.success(t("profileApprovedToast"));
                 router.refresh();
               }
             })
           }
         >
-          <Check className="size-4" /> Aprobar
+          <Check className="size-4" /> {t("approve")}
         </Button>
       )}
 
@@ -121,12 +125,12 @@ export function SurgeonReviewActions({
         <ReasonDialog
           trigger={
             <Button variant="outline">
-              <X className="size-4" /> Rechazar
+              <X className="size-4" /> {t("reject")}
             </Button>
           }
-          title="Rechazar este perfil"
-          description="Explicá qué necesita cambiar el cirujano. Verá esta nota en su panel."
-          onConfirm={(reason) => rejectSurgeonAction(surgeonId, reason)}
+          title={t("rejectTitle")}
+          description={t("rejectDescription")}
+          onConfirm={(reason) => rejectSurgeonAction(locale, surgeonId, reason)}
         />
       )}
 
@@ -134,23 +138,23 @@ export function SurgeonReviewActions({
         <ReasonDialog
           trigger={
             <Button variant="outline">
-              <ShieldAlert className="size-4" /> Suspender
+              <ShieldAlert className="size-4" /> {t("suspend")}
             </Button>
           }
-          title="Suspender este perfil"
-          description="El perfil se quitará de la vista pública inmediatamente."
-          onConfirm={(reason) => suspendSurgeonAction(surgeonId, reason)}
+          title={t("suspendTitle")}
+          description={t("suspendDescription")}
+          onConfirm={(reason) => suspendSurgeonAction(locale, surgeonId, reason)}
         />
       )}
 
       <ReasonDialog
         trigger={
           <Button variant="destructive">
-            <Trash2 className="size-4" /> Eliminar
+            <Trash2 className="size-4" /> {t("delete")}
           </Button>
         }
-        title="Eliminar este perfil permanentemente"
-        description="Esta acción no se puede deshacer. El motivo se registra en el historial de auditoría antes de eliminar."
+        title={t("deleteSurgeonTitle")}
+        description={t("deleteSurgeonDescription")}
         onConfirm={async () => deleteSurgeonAction(surgeonId)}
         redirectTo="/admin/surgeons"
       />

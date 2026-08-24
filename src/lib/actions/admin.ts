@@ -3,7 +3,6 @@
 import { randomUUID } from "node:crypto";
 
 import { revalidatePath } from "next/cache";
-
 import { getTranslations } from "next-intl/server";
 
 import { logAdminAction } from "@/lib/audit";
@@ -11,7 +10,7 @@ import { requireAdmin } from "@/lib/auth/session";
 import { slugify } from "@/lib/slug";
 import { createClient } from "@/lib/supabase/server";
 import { SURGEON_PHOTOS_BUCKET } from "@/lib/supabase/storage";
-import { eventSchema, type EventInput } from "@/lib/validation/event";
+import { makeEventSchema, type EventInput } from "@/lib/validation/event";
 import {
   deriveConsultationAvailability,
   makeSurgeonProfileSchema,
@@ -33,7 +32,11 @@ async function requireAdminClient() {
 // Surgeon moderation
 // ---------------------------------------------------------------------------
 
-export async function approveSurgeonAction(surgeonId: string): Promise<AdminActionResult> {
+export async function approveSurgeonAction(
+  locale: string,
+  surgeonId: string,
+): Promise<AdminActionResult> {
+  const tErrors = await getTranslations({ locale, namespace: "adminActions" });
   const { admin, supabase } = await requireAdminClient();
 
   const { data: surgeon, error } = await supabase
@@ -47,7 +50,7 @@ export async function approveSurgeonAction(surgeonId: string): Promise<AdminActi
     .select("slug")
     .single();
 
-  if (error || !surgeon) return { error: error?.message ?? "No se pudo aprobar el perfil." };
+  if (error || !surgeon) return { error: error?.message ?? tErrors("approveFailed") };
 
   await logAdminAction(supabase, "approve_surgeon_profile", "surgeon_profiles", surgeonId, {
     admin: admin.username,
@@ -60,10 +63,12 @@ export async function approveSurgeonAction(surgeonId: string): Promise<AdminActi
 }
 
 export async function rejectSurgeonAction(
+  locale: string,
   surgeonId: string,
   reason: string,
 ): Promise<AdminActionResult> {
-  if (!reason.trim()) return { error: "El motivo es obligatorio para que el cirujano sepa qué corregir." };
+  const tErrors = await getTranslations({ locale, namespace: "adminActions" });
+  if (!reason.trim()) return { error: tErrors("reasonRequiredReject") };
   const { admin, supabase } = await requireAdminClient();
 
   const { error } = await supabase
@@ -83,10 +88,12 @@ export async function rejectSurgeonAction(
 }
 
 export async function suspendSurgeonAction(
+  locale: string,
   surgeonId: string,
   reason: string,
 ): Promise<AdminActionResult> {
-  if (!reason.trim()) return { error: "El motivo es obligatorio para el historial de auditoría." };
+  const tErrors = await getTranslations({ locale, namespace: "adminActions" });
+  if (!reason.trim()) return { error: tErrors("reasonRequiredSuspend") };
   const { admin, supabase } = await requireAdminClient();
 
   const { data: surgeon, error } = await supabase
@@ -96,7 +103,7 @@ export async function suspendSurgeonAction(
     .select("slug")
     .single();
 
-  if (error || !surgeon) return { error: error?.message ?? "No se pudo suspender el perfil." };
+  if (error || !surgeon) return { error: error?.message ?? tErrors("suspendFailed") };
 
   await logAdminAction(supabase, "suspend_surgeon_profile", "surgeon_profiles", surgeonId, {
     admin: admin.username,
@@ -143,10 +150,13 @@ export async function adminUpdateSurgeonProfileAction(
   input: SurgeonProfileFormValues,
 ): Promise<AdminActionResult> {
   const { admin, supabase } = await requireAdminClient();
-  const tValidation = await getTranslations({ locale, namespace: "surgeonValidation" });
+  const [tValidation, tErrors] = await Promise.all([
+    getTranslations({ locale, namespace: "surgeonValidation" }),
+    getTranslations({ locale, namespace: "adminActions" }),
+  ]);
 
   const parsed = makeSurgeonProfileSchema(tValidation).safeParse(input);
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
   const data = parsed.data;
   const { inPersonAvailable, telemedicineAvailable } = deriveConsultationAvailability(
     data.consultationFormat,
@@ -186,7 +196,7 @@ export async function adminUpdateSurgeonProfileAction(
 
   if (error) {
     if (error.code === "23505") {
-      return { error: "Esa dirección de perfil ya está en uso. Probá con otra." };
+      return { error: tErrors("slugTaken") };
     }
     return { error: error.message };
   }
@@ -251,11 +261,18 @@ function eventFieldsFromInput(input: EventInput) {
   };
 }
 
-export async function createEventAction(input: EventInput): Promise<AdminActionResult> {
+export async function createEventAction(
+  locale: string,
+  input: EventInput,
+): Promise<AdminActionResult> {
   const { admin, supabase } = await requireAdminClient();
+  const [tValidation, tErrors] = await Promise.all([
+    getTranslations({ locale, namespace: "eventValidation" }),
+    getTranslations({ locale, namespace: "adminActions" }),
+  ]);
 
-  const parsed = eventSchema.safeParse(input);
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+  const parsed = makeEventSchema(tValidation).safeParse(input);
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
   const data = parsed.data;
 
   const slug = `${slugify(data.title)}-${randomUUID().slice(0, 6)}`;
@@ -266,7 +283,7 @@ export async function createEventAction(input: EventInput): Promise<AdminActionR
     .select("id, slug")
     .single();
 
-  if (error || !event) return { error: error?.message ?? "No se pudo crear el evento." };
+  if (error || !event) return { error: error?.message ?? tErrors("createEventFailed") };
 
   const { error: sourcesError } = await supabase.from("event_sources").insert(
     data.sources.map((s) => ({
@@ -288,13 +305,18 @@ export async function createEventAction(input: EventInput): Promise<AdminActionR
 }
 
 export async function updateEventAction(
+  locale: string,
   eventId: string,
   input: EventInput,
 ): Promise<AdminActionResult> {
   const { admin, supabase } = await requireAdminClient();
+  const [tValidation, tErrors] = await Promise.all([
+    getTranslations({ locale, namespace: "eventValidation" }),
+    getTranslations({ locale, namespace: "adminActions" }),
+  ]);
 
-  const parsed = eventSchema.safeParse(input);
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+  const parsed = makeEventSchema(tValidation).safeParse(input);
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
   const data = parsed.data;
 
   const { data: event, error } = await supabase
@@ -304,7 +326,7 @@ export async function updateEventAction(
     .select("slug")
     .single();
 
-  if (error || !event) return { error: error?.message ?? "No se pudo actualizar el evento." };
+  if (error || !event) return { error: error?.message ?? tErrors("updateEventFailed") };
 
   await supabase.from("event_sources").delete().eq("event_id", eventId);
   const { error: sourcesError } = await supabase.from("event_sources").insert(

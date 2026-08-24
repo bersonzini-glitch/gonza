@@ -1,3 +1,4 @@
+import type { useTranslations } from "next-intl";
 import { z } from "zod";
 
 export const EVENT_TYPES = ["congress", "conference", "course", "workshop", "webinar"] as const;
@@ -48,55 +49,52 @@ export const LATAM_COUNTRIES = [
   "Venezuela",
 ] as const;
 
-const urlField = z.url({ protocol: /^https?$/, message: "Debe ser una URL http(s) válida" });
-const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Usá el formato AAAA-MM-DD");
-const isoTime = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Usá el formato HH:MM (24h)");
+type Translator = ReturnType<typeof useTranslations<"eventValidation">>;
 
-export const eventSourceSchema = z.object({
-  sourceName: z.string().trim().min(2).max(200),
-  sourceUrl: urlField,
-  sourceType: z.enum(EVENT_SOURCE_TYPES),
-  notes: z.string().trim().max(500).optional().or(z.literal("")),
-});
+export function makeEventSchema(t: Translator) {
+  const urlField = z.url({ protocol: /^https?$/, message: t("invalidUrl") });
+  const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, t("invalidDateFormat"));
+  const isoTime = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, t("invalidTimeFormat"));
 
-export const eventSchema = z
-  .object({
-    title: z.string().trim().min(5, "El título es muy corto").max(200),
-    description: z
-      .string()
-      .trim()
-      .min(30, "La descripción debe tener al menos 30 caracteres")
-      .max(5000),
-    eventType: z.enum(EVENT_TYPES),
-    format: z.enum(EVENT_FORMATS),
-    status: z.enum(EVENT_STATUSES).default("approved"),
-    isFeatured: z.boolean().default(false),
-    startDate: isoDate,
-    endDate: isoDate,
-    startTime: isoTime.optional().or(z.literal("")),
-    endTime: isoTime.optional().or(z.literal("")),
-    dateNote: z.string().trim().max(200).optional().or(z.literal("")),
-    timezone: z.string().trim().min(1).max(50).default("UTC"),
-    country: z.string().trim().min(2).max(100),
-    city: z.string().trim().max(100).optional().or(z.literal("")),
-    venue: z.string().trim().max(200).optional().or(z.literal("")),
-    organizer: z.string().trim().min(2).max(200),
-    topics: z
-      .array(z.string().trim().min(1).max(60))
-      .min(1, "Agregá al menos un tema")
-      .max(10),
-    officialUrl: urlField,
-    registrationUrl: urlField.optional().or(z.literal("")),
+  const eventSourceSchema = z.object({
+    sourceName: z.string().trim().min(2).max(200),
     sourceUrl: urlField,
-    lastVerifiedAt: isoDate,
-    sources: z.array(eventSourceSchema).min(1, "Agregá al menos una fuente de datos").max(5),
-  })
-  .refine((data) => data.endDate >= data.startDate, {
-    message: "La fecha de fin debe ser igual o posterior a la de inicio",
-    path: ["endDate"],
+    sourceType: z.enum(EVENT_SOURCE_TYPES),
+    notes: z.string().trim().max(500).optional().or(z.literal("")),
   });
 
-export type EventInput = z.infer<typeof eventSchema>;
+  return z
+    .object({
+      title: z.string().trim().min(5, t("titleTooShort")).max(200),
+      description: z.string().trim().min(30, t("descriptionTooShort")).max(5000),
+      eventType: z.enum(EVENT_TYPES),
+      format: z.enum(EVENT_FORMATS),
+      status: z.enum(EVENT_STATUSES).default("approved"),
+      isFeatured: z.boolean().default(false),
+      startDate: isoDate,
+      endDate: isoDate,
+      startTime: isoTime.optional().or(z.literal("")),
+      endTime: isoTime.optional().or(z.literal("")),
+      dateNote: z.string().trim().max(200).optional().or(z.literal("")),
+      timezone: z.string().trim().min(1).max(50).default("UTC"),
+      country: z.string().trim().min(2).max(100),
+      city: z.string().trim().max(100).optional().or(z.literal("")),
+      venue: z.string().trim().max(200).optional().or(z.literal("")),
+      organizer: z.string().trim().min(2).max(200),
+      topics: z.array(z.string().trim().min(1).max(60)).min(1, t("topicsRequired")).max(10),
+      officialUrl: urlField,
+      registrationUrl: urlField.optional().or(z.literal("")),
+      sourceUrl: urlField,
+      lastVerifiedAt: isoDate,
+      sources: z.array(eventSourceSchema).min(1, t("sourcesRequired")).max(5),
+    })
+    .refine((data) => data.endDate >= data.startDate, {
+      message: t("endDateBeforeStart"),
+      path: ["endDate"],
+    });
+}
+
+export type EventInput = z.infer<ReturnType<typeof makeEventSchema>>;
 
 export const eventSearchSchema = z.object({
   q: z.string().trim().max(200).optional(),

@@ -11,27 +11,28 @@ import { getSurgeonForAdmin } from "@/lib/data/admin";
 import { formatDate, primarySpecialtyLabels } from "@/lib/format";
 import type { SurgeonProfileFormValues } from "@/lib/validation/surgeon";
 
-export const metadata: Metadata = { title: "Revisar perfil de cirujano" };
-export const dynamic = "force-dynamic";
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/admin/surgeons/[id]">): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "adminSurgeonDetail" });
+  return { title: t("metaTitle") };
+}
 
-const STATUS_LABELS: Record<string, string> = {
-  submitted: "enviado",
-  approved: "aprobado",
-  rejected: "rechazado",
-  suspended: "suspendido",
-  draft: "borrador",
-};
+export const dynamic = "force-dynamic";
 
 export default async function AdminSurgeonDetailPage({
   params,
-}: {
-  params: Promise<{ id: string; locale: string }>;
-}) {
+}: PageProps<"/[locale]/admin/surgeons/[id]">) {
   const { id, locale } = await params;
   const surgeon = await getSurgeonForAdmin(id);
   if (!surgeon) notFound();
 
-  const tSpecialties = await getTranslations("specialties");
+  const [t, tStatus, tSpecialties] = await Promise.all([
+    getTranslations({ locale, namespace: "adminSurgeonDetail" }),
+    getTranslations({ locale, namespace: "adminSurgeonStatus" }),
+    getTranslations({ locale, namespace: "specialties" }),
+  ]);
   const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
 
   const defaultValues: SurgeonProfileFormValues = {
@@ -66,18 +67,18 @@ export default async function AdminSurgeonDetailPage({
           href="/admin/surgeons"
           className="text-sm text-muted-foreground hover:text-foreground"
         >
-          ← Volver a la cola
+          {t("backToQueue")}
         </Link>
         <div className="mt-2 flex flex-wrap items-center gap-3">
           <h2 className="font-heading text-2xl font-semibold text-foreground">
             {surgeon.full_name}
           </h2>
-          <Badge>{STATUS_LABELS[surgeon.status]}</Badge>
-          {surgeon.is_demo && <Badge variant="outline">Dato de muestra</Badge>}
+          <Badge>{tStatus(surgeon.status)}</Badge>
+          {surgeon.is_demo && <Badge variant="outline">{t("sampleProfile")}</Badge>}
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
-          {PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]} · Creado el{" "}
-          {formatDate(surgeon.created_at.slice(0, 10), locale)}
+          {PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]} ·{" "}
+          {t("createdOn", { date: formatDate(surgeon.created_at.slice(0, 10), locale) })}
         </p>
       </div>
 
@@ -87,7 +88,7 @@ export default async function AdminSurgeonDetailPage({
 
       <div className="surface-flat p-6">
         <h3 className="mb-4 font-heading text-lg font-semibold text-foreground">
-          Editar perfil
+          {t("editHeading")}
         </h3>
         <SurgeonProfileForm
           defaultValues={defaultValues}

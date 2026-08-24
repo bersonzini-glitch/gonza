@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { Badge } from "@/components/ui/badge";
@@ -7,33 +8,36 @@ import { Button } from "@/components/ui/button";
 import { formatDateRange } from "@/lib/format";
 import { listEventsForAdmin } from "@/lib/data/admin";
 
-export const metadata: Metadata = { title: "Gestionar eventos" };
-export const dynamic = "force-dynamic";
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/admin/events">): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "adminEventsPage" });
+  return { title: t("metaTitle") };
+}
 
-const EVENT_STATUS_LABELS: Record<string, string> = {
-  pending: "pendiente",
-  approved: "aprobado",
-  rejected: "rechazado",
-};
+export const dynamic = "force-dynamic";
 
 export default async function AdminEventsPage({ params }: PageProps<"/[locale]/admin/events">) {
   const { locale } = await params;
   const events = await listEventsForAdmin();
+  const [t, tStatus] = await Promise.all([
+    getTranslations({ locale, namespace: "adminEventsPage" }),
+    getTranslations({ locale, namespace: "adminEventStatus" }),
+  ]);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h2 className="font-heading text-2xl font-semibold text-foreground">
-            Gestionar eventos
-          </h2>
+          <h2 className="font-heading text-2xl font-semibold text-foreground">{t("heading")}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {events.length} {events.length === 1 ? "evento" : "eventos"} en el índice.
+            {t("countLabel", { count: events.length })}
           </p>
         </div>
         <Button asChild>
           <Link href="/admin/events/new">
-            <Plus className="size-4" /> Nuevo evento
+            <Plus className="size-4" /> {t("newEvent")}
           </Link>
         </Button>
       </div>
@@ -42,10 +46,10 @@ export default async function AdminEventsPage({ params }: PageProps<"/[locale]/a
         <table className="w-full min-w-[640px] text-sm">
           <thead className="border-b border-border bg-secondary/40 text-left text-xs font-medium tracking-wide text-muted-foreground uppercase">
             <tr>
-              <th className="px-4 py-3">Título</th>
-              <th className="px-4 py-3">Fecha</th>
-              <th className="px-4 py-3">País</th>
-              <th className="px-4 py-3">Estado</th>
+              <th className="px-4 py-3">{t("titleHeader")}</th>
+              <th className="px-4 py-3">{t("dateHeader")}</th>
+              <th className="px-4 py-3">{t("countryHeader")}</th>
+              <th className="px-4 py-3">{t("statusHeader")}</th>
             </tr>
           </thead>
           <tbody>
@@ -62,7 +66,7 @@ export default async function AdminEventsPage({ params }: PageProps<"/[locale]/a
                     {event.title}
                   </Link>
                   {event.is_featured && (
-                    <span className="ml-2 text-xs text-muted-foreground">★ destacado</span>
+                    <span className="ml-2 text-xs text-muted-foreground">{t("featuredTag")}</span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">
@@ -71,7 +75,7 @@ export default async function AdminEventsPage({ params }: PageProps<"/[locale]/a
                 <td className="px-4 py-3 text-muted-foreground">{event.country}</td>
                 <td className="px-4 py-3">
                   <Badge variant={event.status === "approved" ? "secondary" : "outline"}>
-                    {EVENT_STATUS_LABELS[event.status]}
+                    {tStatus(event.status)}
                   </Badge>
                 </td>
               </tr>
@@ -79,7 +83,7 @@ export default async function AdminEventsPage({ params }: PageProps<"/[locale]/a
             {events.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-4 py-10 text-center text-muted-foreground">
-                  Todavía no hay eventos.
+                  {t("emptyState")}
                 </td>
               </tr>
             )}

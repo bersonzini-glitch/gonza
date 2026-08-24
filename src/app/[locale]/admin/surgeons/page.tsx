@@ -6,7 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { primarySpecialtyLabels } from "@/lib/format";
 import { listSurgeonsForAdmin } from "@/lib/data/admin";
 
-export const metadata: Metadata = { title: "Cola de cirujanos" };
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/admin/surgeons">): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "adminSurgeonsPage" });
+  return { title: t("metaTitle") };
+}
 
 const STATUS_OPTIONS = ["submitted", "approved", "rejected", "suspended", "draft"] as const;
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline" | "destructive"> = {
@@ -16,83 +22,85 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline" | "dest
   suspended: "destructive",
   draft: "outline",
 };
-const STATUS_LABELS: Record<string, string> = {
-  submitted: "enviado",
-  approved: "aprobado",
-  rejected: "rechazado",
-  suspended: "suspendido",
-  draft: "borrador",
-};
 
 export default async function AdminSurgeonsPage({
+  params,
   searchParams,
-}: {
-  searchParams: Promise<{ status?: string; country?: string; specialty?: string; q?: string }>;
-}) {
-  const params = await searchParams;
+}: PageProps<"/[locale]/admin/surgeons">) {
+  const { locale } = await params;
+  const rawParams = await searchParams;
+  const status = typeof rawParams.status === "string" ? rawParams.status : undefined;
+  const country = typeof rawParams.country === "string" ? rawParams.country : undefined;
+  const specialty = typeof rawParams.specialty === "string" ? rawParams.specialty : undefined;
+  const q = typeof rawParams.q === "string" ? rawParams.q : undefined;
+
   const surgeons = await listSurgeonsForAdmin({
-    status: params.status as never,
-    country: params.country,
-    specialty: params.specialty as never,
-    q: params.q,
+    status: status as never,
+    country,
+    specialty: specialty as never,
+    q,
   });
-  const tSpecialties = await getTranslations("specialties");
+
+  const [t, tStatus, tSpecialties] = await Promise.all([
+    getTranslations({ locale, namespace: "adminSurgeonsPage" }),
+    getTranslations({ locale, namespace: "adminSurgeonStatus" }),
+    getTranslations({ locale, namespace: "specialties" }),
+  ]);
   const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-heading text-2xl font-semibold text-foreground">Cola de cirujanos</h2>
+        <h2 className="font-heading text-2xl font-semibold text-foreground">{t("heading")}</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          {surgeons.length} {surgeons.length === 1 ? "perfil" : "perfiles"} · revisá, aprobá o
-          editá cualquier perfil enviado al directorio.
+          {t("subtitle", { count: surgeons.length })}
         </p>
       </div>
 
       <form
         className="surface-flat flex flex-wrap items-end gap-3 p-3"
         method="GET"
-        aria-label="Filtrar cirujanos"
+        aria-label={t("filterAriaLabel")}
       >
         <div className="flex flex-col gap-1">
           <label htmlFor="status" className="text-xs font-medium text-muted-foreground">
-            Estado
+            {t("statusLabel")}
           </label>
           <select
             id="status"
             name="status"
-            defaultValue={params.status ?? ""}
+            defaultValue={status ?? ""}
             className="h-9 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
           >
-            <option value="">Todos los estados</option>
+            <option value="">{t("allStatuses")}</option>
             {STATUS_OPTIONS.map((s) => (
               <option key={s} value={s}>
-                {STATUS_LABELS[s]}
+                {tStatus(s)}
               </option>
             ))}
           </select>
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="country" className="text-xs font-medium text-muted-foreground">
-            País
+            {t("countryLabel")}
           </label>
           <input
             id="country"
             name="country"
-            placeholder="Ej: Argentina"
-            defaultValue={params.country ?? ""}
+            placeholder={t("countryPlaceholder")}
+            defaultValue={country ?? ""}
             className="h-9 w-36 rounded-lg border border-input bg-transparent px-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
           />
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="q" className="text-xs font-medium text-muted-foreground">
-            Buscar
+            {t("searchLabel")}
           </label>
           <input
             id="q"
             name="q"
-            placeholder="Buscar por nombre…"
-            defaultValue={params.q ?? ""}
+            placeholder={t("searchPlaceholder")}
+            defaultValue={q ?? ""}
             className="h-9 w-48 rounded-lg border border-input bg-transparent px-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
           />
         </div>
@@ -100,14 +108,14 @@ export default async function AdminSurgeonsPage({
           type="submit"
           className="h-9 cursor-pointer rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80"
         >
-          Filtrar
+          {t("filterButton")}
         </button>
-        {(params.status || params.country || params.q) && (
+        {(status || country || q) && (
           <Link
             href="/admin/surgeons"
             className="h-9 content-center text-sm text-muted-foreground hover:text-foreground hover:underline"
           >
-            Limpiar filtros
+            {t("clearFilters")}
           </Link>
         )}
       </form>
@@ -116,10 +124,10 @@ export default async function AdminSurgeonsPage({
         <table className="w-full min-w-[640px] text-sm">
           <thead className="border-b border-border bg-secondary/40 text-left text-xs font-medium tracking-wide text-muted-foreground uppercase">
             <tr>
-              <th className="px-4 py-3">Nombre</th>
-              <th className="px-4 py-3">Especialidad</th>
-              <th className="px-4 py-3">Estado</th>
-              <th className="px-4 py-3">Enviado</th>
+              <th className="px-4 py-3">{t("nameHeader")}</th>
+              <th className="px-4 py-3">{t("specialtyHeader")}</th>
+              <th className="px-4 py-3">{t("statusHeader")}</th>
+              <th className="px-4 py-3">{t("submittedHeader")}</th>
             </tr>
           </thead>
           <tbody>
@@ -133,24 +141,24 @@ export default async function AdminSurgeonsPage({
                     {s.full_name}
                   </Link>
                   {s.is_demo && (
-                    <span className="ml-2 text-xs text-muted-foreground">(demo)</span>
+                    <span className="ml-2 text-xs text-muted-foreground">{t("demoTag")}</span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">
                   {PRIMARY_SPECIALTY_LABELS[s.primary_specialty]}
                 </td>
                 <td className="px-4 py-3">
-                  <Badge variant={STATUS_VARIANT[s.status]}>{STATUS_LABELS[s.status]}</Badge>
+                  <Badge variant={STATUS_VARIANT[s.status]}>{tStatus(s.status)}</Badge>
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">
-                  {s.submitted_at ? new Date(s.submitted_at).toLocaleDateString("es-419") : "—"}
+                  {s.submitted_at ? new Date(s.submitted_at).toLocaleDateString(locale) : "—"}
                 </td>
               </tr>
             ))}
             {surgeons.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-4 py-10 text-center text-muted-foreground">
-                  Ningún perfil de cirujano coincide con estos filtros.
+                  {t("emptyState")}
                 </td>
               </tr>
             )}

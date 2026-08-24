@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { DeleteEventButton } from "@/components/admin/delete-event-button";
@@ -7,13 +8,23 @@ import { updateEventAction } from "@/lib/actions/admin";
 import { getEventForAdmin } from "@/lib/data/admin";
 import type { EventInput } from "@/lib/validation/event";
 
-export const metadata: Metadata = { title: "Editar evento" };
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/admin/events/[id]/edit">): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "eventForm" });
+  return { title: t("metaTitleEdit") };
+}
+
 export const dynamic = "force-dynamic";
 
-export default async function EditEventPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export default async function EditEventPage({
+  params,
+}: PageProps<"/[locale]/admin/events/[id]/edit">) {
+  const { id, locale } = await params;
   const event = await getEventForAdmin(id);
   if (!event) notFound();
+  const t = await getTranslations({ locale, namespace: "eventForm" });
 
   const defaultValues: EventInput = {
     title: event.title,
@@ -51,10 +62,15 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="font-heading text-2xl font-semibold text-foreground">Editar evento</h2>
+        <h2 className="font-heading text-2xl font-semibold text-foreground">
+          {t("headingEdit")}
+        </h2>
         <DeleteEventButton eventId={event.id} />
       </div>
-      <EventForm defaultValues={defaultValues} action={updateEventAction.bind(null, event.id)} />
+      <EventForm
+        defaultValues={defaultValues}
+        action={updateEventAction.bind(null, locale, event.id)}
+      />
     </div>
   );
 }
