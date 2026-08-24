@@ -339,7 +339,8 @@
     "invalidFieldsToast": "Check the fields marked in red before saving.",
     "profileSavedToast": "Profile saved",
     "saving": "Saving…",
-    "saveProfile": "Save profile"
+    "saveProfile": "Save profile",
+    "saveProfileBeforeReview": "Save profile before review"
   },
   "surgeonValidation": {
     "fullNameTooShort": "Full name is too short",

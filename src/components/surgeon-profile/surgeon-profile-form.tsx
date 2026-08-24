@@ -46,10 +46,20 @@ export function SurgeonProfileForm({
   defaultValues,
   onSaved,
   action,
+  awaitingFirstSubmission = false,
 }: {
   defaultValues: SurgeonProfileFormValues;
   onSaved?: () => void;
   action: (values: SurgeonProfileFormValues) => Promise<{ error?: string; success?: boolean }>;
+  /**
+   * True while the profile hasn't been sent for review yet (no profile
+   * saved yet, still a draft, or kicked back as rejected) — the save
+   * button says so explicitly, so a surgeon filling this in for the first
+   * time understands saving isn't the last step; submitting for review is
+   * separate. Not set from the admin edit form, where this two-step framing
+   * doesn't apply.
+   */
+  awaitingFirstSubmission?: boolean;
 }) {
   const router = useRouter();
   const [customTag, setCustomTag] = useState("");
@@ -619,7 +629,11 @@ export function SurgeonProfileForm({
       )}
 
       <Button type="submit" disabled={form.formState.isSubmitting} size="lg">
-        {form.formState.isSubmitting ? t("saving") : t("saveProfile")}
+        {form.formState.isSubmitting
+          ? t("saving")
+          : awaitingFirstSubmission
+            ? t("saveProfileBeforeReview")
+            : t("saveProfile")}
       </Button>
     </form>
   );

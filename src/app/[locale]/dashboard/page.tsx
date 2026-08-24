@@ -158,6 +158,7 @@ export default async function DashboardPage({ params }: PageProps<"/[locale]/das
         <SurgeonProfileForm
           defaultValues={defaultValues}
           action={saveSurgeonProfileAction.bind(null, locale)}
+          awaitingFirstSubmission={!surgeon || surgeon.status === "draft" || surgeon.status === "rejected"}
         />
         {surgeon && (surgeon.status === "draft" || surgeon.status === "rejected") && (
           <div className="mt-6 border-t border-border pt-6">
