@@ -1,6 +1,6 @@
 import { AlertCircle } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 import { AuthCard } from "@/components/auth/auth-card";
 import { UpdatePasswordForm } from "@/components/auth/update-password-form";

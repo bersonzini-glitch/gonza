@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Trash2, X, ShieldAlert } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 

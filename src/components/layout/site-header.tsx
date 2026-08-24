@@ -1,8 +1,9 @@
 import { Activity } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { UserMenu } from "@/components/layout/user-menu";
+import { LanguageToggle } from "@/components/shared/language-toggle";
 import { NavLink } from "@/components/shared/nav-link";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { getCurrentProfile } from "@/lib/auth/session";
@@ -40,6 +41,7 @@ export async function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-1.5">
+          <LanguageToggle />
           <ThemeToggle />
           <div className="hidden md:block">
             <UserMenu profile={profile} />

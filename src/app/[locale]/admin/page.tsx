@@ -1,6 +1,6 @@
 import { CalendarCheck, Clock, ShieldCheck, Users } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 import { getAdminOverviewMetrics } from "@/lib/data/admin";
 

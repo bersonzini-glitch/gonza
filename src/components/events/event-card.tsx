@@ -1,5 +1,5 @@
 import { CalendarDays, MapPin } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 import { Badge } from "@/components/ui/badge";
 import { EVENT_FORMAT_LABELS, EVENT_TYPE_LABELS, formatDateRange } from "@/lib/format";

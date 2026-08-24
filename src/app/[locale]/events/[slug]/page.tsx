@@ -8,7 +8,7 @@ import {
   Ticket,
 } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 
 import { EventCard } from "@/components/events/event-card";
@@ -29,7 +29,7 @@ export const revalidate = 120;
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
-export async function generateMetadata({ params }: PageProps<"/events/[slug]">): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<"/[locale]/events/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const event = await getEventBySlug(slug);
   if (!event) return {};
@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: PageProps<"/events/[slug]">):
   };
 }
 
-export default async function EventDetailPage({ params }: PageProps<"/events/[slug]">) {
+export default async function EventDetailPage({ params }: PageProps<"/[locale]/events/[slug]">) {
   const { slug } = await params;
   const event = await getEventBySlug(slug);
   if (!event) notFound();

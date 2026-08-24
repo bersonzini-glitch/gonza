@@ -1,5 +1,5 @@
 import { LayoutDashboard, ShieldCheck, UserRound } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 import { SignOutItem } from "@/components/layout/sign-out-item";
 import { Button } from "@/components/ui/button";

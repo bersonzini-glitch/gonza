@@ -11,7 +11,7 @@ import {
   Video,
 } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 
 import { FadeIn } from "@/components/shared/fade-in";
@@ -38,7 +38,7 @@ function initials(name: string) {
 
 export async function generateMetadata({
   params,
-}: PageProps<"/surgeons/[slug]">): Promise<Metadata> {
+}: PageProps<"/[locale]/surgeons/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const surgeon = await getSurgeonBySlug(slug);
   if (!surgeon || surgeon.status !== "approved") return {};
@@ -53,7 +53,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function SurgeonProfilePage({ params }: PageProps<"/surgeons/[slug]">) {
+export default async function SurgeonProfilePage({ params }: PageProps<"/[locale]/surgeons/[slug]">) {
   const { slug } = await params;
   const surgeon = await getSurgeonBySlug(slug);
 

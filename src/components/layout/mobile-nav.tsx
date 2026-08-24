@@ -1,7 +1,8 @@
 "use client";
 
 import { LayoutDashboard, Menu, ShieldCheck } from "lucide-react";
-import Link from "next/link";
+import { useLocale } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { NAV_LINKS } from "@/lib/nav-links";
@@ -16,10 +17,21 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { type AppLocale, routing } from "@/i18n/routing";
 import type { CurrentProfile } from "@/lib/auth/types";
+import { cn } from "@/lib/utils";
+
+const LOCALE_LABELS: Record<AppLocale, string> = { es: "ES", en: "EN", pt: "PT" };
 
 export function MobileNav({ profile }: { profile: CurrentProfile | null }) {
   const [open, setOpen] = useState(false);
+  const locale = useLocale() as AppLocale;
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const query = searchParams.toString();
+  const target = query ? `${pathname}?${query}` : pathname;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -32,6 +44,27 @@ export function MobileNav({ profile }: { profile: CurrentProfile | null }) {
         <SheetHeader>
           <SheetTitle>Menú</SheetTitle>
         </SheetHeader>
+        <div className="flex items-center justify-between gap-1 px-4 pb-2">
+          <span className="text-xs font-medium text-muted-foreground">Idioma</span>
+          <div className="flex gap-1">
+            {routing.locales.map((l) => (
+              <button
+                key={l}
+                type="button"
+                onClick={() => router.replace(target, { locale: l })}
+                className={cn(
+                  "rounded-md px-2 py-1 text-xs font-medium",
+                  l === locale
+                    ? "bg-secondary text-foreground"
+                    : "text-muted-foreground hover:bg-secondary/60",
+                )}
+              >
+                {LOCALE_LABELS[l]}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <nav aria-label="Móvil" className="flex flex-col gap-1 px-4">
           {NAV_LINKS.map((link) => (
             <SheetClose asChild key={link.href}>

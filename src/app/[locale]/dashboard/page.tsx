@@ -1,6 +1,6 @@
 import { CheckCircle2, Clock, Eye, FileEdit, ShieldAlert, XCircle } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 import { PhotoUpload } from "@/components/surgeon-profile/photo-upload";
 import { SubmitButton } from "@/components/surgeon-profile/submit-button";

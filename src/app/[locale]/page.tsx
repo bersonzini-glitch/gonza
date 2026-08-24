@@ -1,6 +1,6 @@
 import { CalendarSearch, MapPinned, ShieldCheck, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 import { EventCard } from "@/components/events/event-card";
 import { FadeIn } from "@/components/shared/fade-in";

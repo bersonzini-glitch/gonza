@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertCircle } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useActionState } from "react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";

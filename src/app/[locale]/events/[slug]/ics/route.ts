@@ -4,7 +4,7 @@ import { getEventBySlug } from "@/lib/data/events";
 import { generateEventIcs } from "@/lib/ics";
 import { slugify } from "@/lib/slug";
 
-export async function GET(_request: Request, context: RouteContext<"/events/[slug]/ics">) {
+export async function GET(_request: Request, context: RouteContext<"/[locale]/events/[slug]/ics">) {
   const { slug } = await context.params;
   const event = await getEventBySlug(slug);
 
