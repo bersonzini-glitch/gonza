@@ -20,9 +20,12 @@ function DialogTrigger({
   const resolvedRender =
     asChild && React.isValidElement(children) ? (children as React.ReactElement) : render;
   return (
-    <DialogPrimitive.Trigger data-slot="dialog-trigger" render={resolvedRender} {...props}>
-      {asChild ? undefined : children}
-    </DialogPrimitive.Trigger>
+    <DialogPrimitive.Trigger
+      data-slot="dialog-trigger"
+      render={resolvedRender}
+      {...props}
+      {...(!asChild && { children })}
+    />
   );
 }
 

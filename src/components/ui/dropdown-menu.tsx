@@ -23,9 +23,12 @@ function DropdownMenuTrigger({
   const resolvedRender =
     asChild && React.isValidElement(children) ? (children as React.ReactElement) : render;
   return (
-    <MenuPrimitive.Trigger data-slot="dropdown-menu-trigger" render={resolvedRender} {...props}>
-      {asChild ? undefined : children}
-    </MenuPrimitive.Trigger>
+    <MenuPrimitive.Trigger
+      data-slot="dropdown-menu-trigger"
+      render={resolvedRender}
+      {...props}
+      {...(!asChild && { children })}
+    />
   );
 }
 
@@ -99,21 +102,49 @@ function DropdownMenuItem({
   variant?: "default" | "destructive";
   asChild?: boolean;
 }) {
-  const resolvedRender =
-    asChild && React.isValidElement(children) ? (children as React.ReactElement) : render;
+  const itemClassName = cn(
+    "group/dropdown-menu-item relative flex cursor-default items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground data-inset:pl-7 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive dark:data-[variant=destructive]:focus:bg-destructive/20 data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 data-[variant=destructive]:*:[svg]:text-destructive",
+    className,
+  );
+
+  // asChild takes a full element (e.g. a next-intl <Link>) whose own
+  // children need to survive Base UI's internal prop merging for Menu.Item
+  // specifically — passing it via the `render` element prop lets Base UI's
+  // getItemProps()/getButtonProps() chain silently drop those children
+  // (unlike Button/Dialog/Sheet, where the same pattern works). Cloning the
+  // element ourselves inside the `render` callback sidesteps that merge
+  // entirely and keeps the icon + label that were passed in.
+  if (asChild && React.isValidElement(children)) {
+    const child = children as React.ReactElement<{
+      className?: string;
+      children?: React.ReactNode;
+    }>;
+    return (
+      <MenuPrimitive.Item
+        data-slot="dropdown-menu-item"
+        data-inset={inset}
+        data-variant={variant}
+        render={(itemProps) =>
+          React.cloneElement(child, {
+            ...itemProps,
+            className: cn(itemClassName, child.props.className),
+          })
+        }
+        {...props}
+      />
+    );
+  }
+
   return (
     <MenuPrimitive.Item
       data-slot="dropdown-menu-item"
       data-inset={inset}
       data-variant={variant}
-      className={cn(
-        "group/dropdown-menu-item relative flex cursor-default items-center gap-1.5 rounded-md px-1.5 py-1 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground data-inset:pl-7 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive dark:data-[variant=destructive]:focus:bg-destructive/20 data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 data-[variant=destructive]:*:[svg]:text-destructive",
-        className,
-      )}
-      render={resolvedRender}
+      className={itemClassName}
+      render={render}
       {...props}
     >
-      {asChild ? undefined : children}
+      {children}
     </MenuPrimitive.Item>
   );
 }

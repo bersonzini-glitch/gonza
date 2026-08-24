@@ -20,9 +20,12 @@ function SheetTrigger({
   const resolvedRender =
     asChild && React.isValidElement(children) ? (children as React.ReactElement) : render;
   return (
-    <SheetPrimitive.Trigger data-slot="sheet-trigger" render={resolvedRender} {...props}>
-      {asChild ? undefined : children}
-    </SheetPrimitive.Trigger>
+    <SheetPrimitive.Trigger
+      data-slot="sheet-trigger"
+      render={resolvedRender}
+      {...props}
+      {...(!asChild && { children })}
+    />
   );
 }
 
@@ -35,9 +38,12 @@ function SheetClose({
   const resolvedRender =
     asChild && React.isValidElement(children) ? (children as React.ReactElement) : render;
   return (
-    <SheetPrimitive.Close data-slot="sheet-close" render={resolvedRender} {...props}>
-      {asChild ? undefined : children}
-    </SheetPrimitive.Close>
+    <SheetPrimitive.Close
+      data-slot="sheet-close"
+      render={resolvedRender}
+      {...props}
+      {...(!asChild && { children })}
+    />
   );
 }
 

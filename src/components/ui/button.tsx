@@ -58,9 +58,8 @@ function Button({
       className={cn(buttonVariants({ variant, size, className }))}
       render={resolvedRender}
       {...props}
-    >
-      {asChild ? undefined : children}
-    </ButtonPrimitive>
+      {...(!asChild && { children })}
+    />
   );
 }
 
