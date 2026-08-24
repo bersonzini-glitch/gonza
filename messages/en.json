@@ -497,7 +497,7 @@
       "failed": "Last search failed"
     },
     "aiSearchLastRunStarted": "Started on {date}. This can take a few minutes — refresh the page later.",
-    "aiSearchLastRunCompleted": "On {date}, {inserted, plural, one {# event} other {# events}} were added pending review.",
+    "aiSearchLastRunCompleted": "{inserted, plural, one {On {date}, # event was added pending review.} other {On {date}, # events were added pending review.}}",
     "aiSearchLastRunFailed": "The search on {date} couldn't complete. You can try again."
   },
   "eventForm": {

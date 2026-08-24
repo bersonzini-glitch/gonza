@@ -497,7 +497,7 @@
       "failed": "Última busca falhou"
     },
     "aiSearchLastRunStarted": "Iniciada em {date}. Isso pode levar alguns minutos — atualize a página mais tarde.",
-    "aiSearchLastRunCompleted": "Em {date}, {inserted, plural, one {# evento} other {# eventos}} foram adicionados aguardando revisão.",
+    "aiSearchLastRunCompleted": "{inserted, plural, one {Em {date}, # evento foi adicionado aguardando revisão.} other {Em {date}, # eventos foram adicionados aguardando revisão.}}",
     "aiSearchLastRunFailed": "A busca de {date} não pôde ser concluída. Você pode tentar novamente."
   },
   "eventForm": {
