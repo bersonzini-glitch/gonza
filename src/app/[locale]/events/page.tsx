@@ -1,5 +1,6 @@
 import { CalendarX2 } from "lucide-react";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { EventCard } from "@/components/events/event-card";
@@ -9,17 +10,19 @@ import { Button } from "@/components/ui/button";
 import { searchEvents } from "@/lib/data/events";
 import { eventSearchSchema } from "@/lib/validation/event";
 
-export const metadata: Metadata = {
-  title: "Congresos de cirugía de columna en Latinoamérica",
-  description:
-    "Buscá y filtrá próximos congresos, cursos, talleres y webinars de cirugía de columna en Latinoamérica por país, fecha, modalidad y tema.",
-};
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/events">): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "eventsPage" });
+  return { title: t("metaTitle"), description: t("metaDescription") };
+}
 
 export default async function EventsPage({
+  params,
   searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
+}: PageProps<"/[locale]/events">) {
+  const { locale } = await params;
   const rawParams = await searchParams;
   const parsed = eventSearchSchema.safeParse({
     q: rawParams.q,
@@ -36,17 +39,15 @@ export default async function EventsPage({
   const filters = parsed.success ? parsed.data : eventSearchSchema.parse({});
   const { events, total, page, pageSize } = await searchEvents(filters);
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const t = await getTranslations({ locale, namespace: "eventsPage" });
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="max-w-2xl">
         <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
-          Congresos de cirugía de columna en Latinoamérica
+          {t("heading")}
         </h1>
-        <p className="mt-2 text-muted-foreground">
-          {total} {total === 1 ? "evento verificado" : "eventos verificados"} a partir de fuentes
-          oficiales.
-        </p>
+        <p className="mt-2 text-muted-foreground">{t("resultsCount", { count: total })}</p>
       </div>
 
       <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[280px_1fr]">
@@ -59,13 +60,11 @@ export default async function EventsPage({
             <div className="rounded-xl border border-dashed border-border p-12 text-center">
               <CalendarX2 className="mx-auto size-10 text-muted-foreground" aria-hidden="true" />
               <h2 className="mt-4 font-heading text-xl font-semibold text-foreground">
-                Ningún congreso coincide con tus filtros
+                {t("emptyHeading")}
               </h2>
-              <p className="mt-2 text-muted-foreground">
-                Probá ampliar el rango de fechas o quitar algún filtro.
-              </p>
+              <p className="mt-2 text-muted-foreground">{t("emptyBody")}</p>
               <Button variant="outline" className="mt-5" asChild>
-                <Link href="/events">Limpiar todos los filtros</Link>
+                <Link href="/events">{t("clearFilters")}</Link>
               </Button>
             </div>
           ) : (
@@ -80,18 +79,18 @@ export default async function EventsPage({
 
               {totalPages > 1 && (
                 <nav
-                  aria-label="Paginación"
+                  aria-label={t("paginationLabel")}
                   className="mt-10 flex items-center justify-center gap-3"
                 >
                   <Button variant="outline" disabled={page <= 1} asChild={page > 1}>
                     {page > 1 ? (
-                      <Link href={buildPageHref(rawParams, page - 1)}>Anterior</Link>
+                      <Link href={buildPageHref(rawParams, page - 1)}>{t("previous")}</Link>
                     ) : (
-                      <span>Anterior</span>
+                      <span>{t("previous")}</span>
                     )}
                   </Button>
                   <span className="text-sm text-muted-foreground">
-                    Página {page} de {totalPages}
+                    {t("pageOf", { page, totalPages })}
                   </span>
                   <Button
                     variant="outline"
@@ -99,9 +98,9 @@ export default async function EventsPage({
                     asChild={page < totalPages}
                   >
                     {page < totalPages ? (
-                      <Link href={buildPageHref(rawParams, page + 1)}>Siguiente</Link>
+                      <Link href={buildPageHref(rawParams, page + 1)}>{t("next")}</Link>
                     ) : (
-                      <span>Siguiente</span>
+                      <span>{t("next")}</span>
                     )}
                   </Button>
                 </nav>

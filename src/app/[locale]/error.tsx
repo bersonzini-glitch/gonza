@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertTriangle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useEffect } from "react";
 
@@ -13,6 +14,8 @@ export default function ErrorBoundary({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTranslations("errorBoundary");
+
   useEffect(() => {
     console.error(error);
   }, [error]);
@@ -21,16 +24,13 @@ export default function ErrorBoundary({
     <div className="mx-auto flex min-h-[60vh] max-w-md flex-col items-center justify-center px-4 text-center">
       <AlertTriangle className="size-10 text-destructive" aria-hidden="true" />
       <h1 className="mt-4 font-heading text-2xl font-semibold text-foreground">
-        Algo salió mal
+        {t("heading")}
       </h1>
-      <p className="mt-2 text-muted-foreground">
-        Ocurrió un error inesperado al cargar esta página. Podés intentar de nuevo o volver al
-        inicio.
-      </p>
+      <p className="mt-2 text-muted-foreground">{t("body")}</p>
       <div className="mt-6 flex gap-3">
-        <Button onClick={reset}>Intentar de nuevo</Button>
+        <Button onClick={reset}>{t("retry")}</Button>
         <Button variant="outline" asChild>
-          <Link href="/">Ir al inicio</Link>
+          <Link href="/">{t("goHome")}</Link>
         </Button>
       </div>
     </div>

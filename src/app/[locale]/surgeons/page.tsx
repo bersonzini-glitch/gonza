@@ -1,5 +1,6 @@
 import { UserX } from "lucide-react";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { FadeIn } from "@/components/shared/fade-in";
@@ -9,35 +10,37 @@ import { Button } from "@/components/ui/button";
 import { searchSurgeons } from "@/lib/data/surgeons";
 import { surgeonSearchSchema } from "@/lib/validation/surgeon";
 
-export const metadata: Metadata = {
-  title: "Directorio de cirujanos de columna en LATAM",
-  description:
-    "Buscá traumatólogos y neurocirujanos de columna verificados en Latinoamérica por país, ciudad, especialidad, subespecialidad e idioma.",
-};
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/surgeons">): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "surgeonsPage" });
+  return { title: t("metaTitle"), description: t("metaDescription") };
+}
 
 export default async function SurgeonsPage({
+  params,
   searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
+}: PageProps<"/[locale]/surgeons">) {
+  const { locale } = await params;
   const rawParams = await searchParams;
   const parsed = surgeonSearchSchema.safeParse(rawParams);
   const filters = parsed.success ? parsed.data : surgeonSearchSchema.parse({});
 
   const { surgeons, total, page, pageSize } = await searchSurgeons(filters);
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const t = await getTranslations({ locale, namespace: "surgeonsPage" });
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="max-w-2xl">
         <h1 className="font-heading text-3xl font-semibold text-foreground sm:text-4xl">
-          Cirujanos de columna verificados en Latinoamérica
+          {t("heading")}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          {total} {total === 1 ? "perfil verificado" : "perfiles verificados"}. Directorio solo
-          informativo — no reemplaza el consejo médico profesional.{" "}
+          {t("resultsCount", { count: total })}{" "}
           <Link href="/privacy" className="text-primary hover:underline">
-            Leé nuestro aviso legal
+            {t("readDisclaimer")}
           </Link>
           .
         </p>
@@ -53,13 +56,11 @@ export default async function SurgeonsPage({
             <div className="rounded-xl border border-dashed border-border p-12 text-center">
               <UserX className="mx-auto size-10 text-muted-foreground" aria-hidden="true" />
               <h2 className="mt-4 font-heading text-xl font-semibold text-foreground">
-                Ningún cirujano coincide con tus filtros
+                {t("emptyHeading")}
               </h2>
-              <p className="mt-2 text-muted-foreground">
-                Probá quitar algún filtro para ver más resultados.
-              </p>
+              <p className="mt-2 text-muted-foreground">{t("emptyBody")}</p>
               <Button variant="outline" className="mt-5" asChild>
-                <Link href="/surgeons">Limpiar todos los filtros</Link>
+                <Link href="/surgeons">{t("clearFilters")}</Link>
               </Button>
             </div>
           ) : (
@@ -74,18 +75,18 @@ export default async function SurgeonsPage({
 
               {totalPages > 1 && (
                 <nav
-                  aria-label="Paginación"
+                  aria-label={t("paginationLabel")}
                   className="mt-10 flex items-center justify-center gap-3"
                 >
                   <Button variant="outline" disabled={page <= 1} asChild={page > 1}>
                     {page > 1 ? (
-                      <Link href={buildHref(rawParams, page - 1)}>Anterior</Link>
+                      <Link href={buildHref(rawParams, page - 1)}>{t("previous")}</Link>
                     ) : (
-                      <span>Anterior</span>
+                      <span>{t("previous")}</span>
                     )}
                   </Button>
                   <span className="text-sm text-muted-foreground">
-                    Página {page} de {totalPages}
+                    {t("pageOf", { page, totalPages })}
                   </span>
                   <Button
                     variant="outline"
@@ -93,9 +94,9 @@ export default async function SurgeonsPage({
                     asChild={page < totalPages}
                   >
                     {page < totalPages ? (
-                      <Link href={buildHref(rawParams, page + 1)}>Siguiente</Link>
+                      <Link href={buildHref(rawParams, page + 1)}>{t("next")}</Link>
                     ) : (
-                      <span>Siguiente</span>
+                      <span>{t("next")}</span>
                     )}
                   </Button>
                 </nav>
