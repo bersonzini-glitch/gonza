@@ -1,4 +1,4 @@
-import { Activity } from "lucide-react";
+import { AlignVerticalDistributeCenter } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
@@ -35,7 +35,7 @@ export async function SiteFooter() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="max-w-xs">
             <div className="flex items-center gap-2 font-heading text-lg font-semibold">
-              <Activity className="size-5 text-primary" aria-hidden="true" />
+              <AlignVerticalDistributeCenter className="size-5 text-primary" aria-hidden="true" />
               <span>
                 Columna<span className="text-primary">LATAM</span>
               </span>

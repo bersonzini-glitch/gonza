@@ -1,4 +1,4 @@
-import { Activity } from "lucide-react";
+import { AlignVerticalDistributeCenter } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
@@ -21,7 +21,7 @@ export async function SiteHeader() {
           className="flex items-center gap-2 rounded-md font-heading text-lg font-semibold tracking-tight text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Activity className="size-4.5" aria-hidden="true" />
+            <AlignVerticalDistributeCenter className="size-4.5" aria-hidden="true" />
           </span>
           <span>
             Columna<span className="text-primary">LATAM</span>
