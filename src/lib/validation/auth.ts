@@ -1,51 +1,66 @@
+import type { useTranslations } from "next-intl";
 import { z } from "zod";
 
-const usernameField = z
-  .string()
-  .trim()
-  .min(3, "El usuario debe tener al menos 3 caracteres")
-  .max(32, "El usuario debe tener como máximo 32 caracteres")
-  .regex(/^[a-zA-Z0-9_.-]+$/, "Solo letras, números, puntos, guiones bajos y guiones");
+type Translator = ReturnType<typeof useTranslations<"authValidation">>;
 
-const passwordField = z
-  .string()
-  .min(8, "La contraseña debe tener al menos 8 caracteres")
-  .max(128)
-  .regex(/[a-z]/, "Incluí al menos una letra minúscula")
-  .regex(/[A-Z]/, "Incluí al menos una letra mayúscula")
-  .regex(/[0-9]/, "Incluí al menos un número");
+function usernameField(t: Translator) {
+  return z
+    .string()
+    .trim()
+    .min(3, t("usernameMin"))
+    .max(32, t("usernameMax"))
+    .regex(/^[a-zA-Z0-9_.-]+$/, t("usernamePattern"));
+}
 
-export const signUpSchema = z.object({
-  username: usernameField,
-  fullName: z.string().trim().min(2, "El nombre es muy corto").max(150),
-  email: z.email("Ingresá un email válido"),
-  password: passwordField,
-});
+function passwordField(t: Translator) {
+  return z
+    .string()
+    .min(8, t("passwordMin"))
+    .max(128)
+    .regex(/[a-z]/, t("passwordLower"))
+    .regex(/[A-Z]/, t("passwordUpper"))
+    .regex(/[0-9]/, t("passwordNumber"));
+}
 
-export type SignUpInput = z.infer<typeof signUpSchema>;
+export function makeSignUpSchema(t: Translator) {
+  return z.object({
+    username: usernameField(t),
+    fullName: z.string().trim().min(2, t("fullNameMin")).max(150),
+    email: z.email(t("invalidEmail")),
+    password: passwordField(t),
+  });
+}
+
+export type SignUpInput = z.infer<ReturnType<typeof makeSignUpSchema>>;
 
 // Sign-in accepts either a username or an email in the same field; the
 // server action resolves a username to its email via the
 // get_email_by_username() RPC before calling signInWithPassword.
-export const signInSchema = z.object({
-  identifier: z.string().trim().min(1, "Ingresá tu usuario o email"),
-  password: z.string().min(1, "La contraseña es obligatoria"),
-});
-
-export type SignInInput = z.infer<typeof signInSchema>;
-
-export const requestPasswordResetSchema = z.object({
-  email: z.email("Ingresá un email válido"),
-});
-
-export const resetPasswordSchema = z
-  .object({
-    password: passwordField,
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Las contraseñas no coinciden",
-    path: ["confirmPassword"],
+export function makeSignInSchema(t: Translator) {
+  return z.object({
+    identifier: z.string().trim().min(1, t("identifierRequired")),
+    password: z.string().min(1, t("passwordRequired")),
   });
+}
 
-export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+export type SignInInput = z.infer<ReturnType<typeof makeSignInSchema>>;
+
+export function makeRequestPasswordResetSchema(t: Translator) {
+  return z.object({
+    email: z.email(t("invalidEmail")),
+  });
+}
+
+export function makeResetPasswordSchema(t: Translator) {
+  return z
+    .object({
+      password: passwordField(t),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("passwordsMismatch"),
+      path: ["confirmPassword"],
+    });
+}
+
+export type ResetPasswordInput = z.infer<ReturnType<typeof makeResetPasswordSchema>>;

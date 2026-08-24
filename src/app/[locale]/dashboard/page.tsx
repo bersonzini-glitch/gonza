@@ -1,5 +1,6 @@
 import { CheckCircle2, Clock, Eye, FileEdit, ShieldAlert, XCircle } from "lucide-react";
 import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { PhotoUpload } from "@/components/surgeon-profile/photo-upload";
@@ -8,41 +9,52 @@ import { SurgeonProfileForm } from "@/components/surgeon-profile/surgeon-profile
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { requireUser } from "@/lib/auth/session";
 import { getOwnSurgeonProfile } from "@/lib/data/surgeons";
+import { saveSurgeonProfileAction } from "@/lib/actions/surgeon";
 import type { SurgeonProfileFormValues } from "@/lib/validation/surgeon";
 
-export const metadata: Metadata = { title: "Mi perfil de cirujano" };
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/dashboard">): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "dashboard" });
+  return { title: t("title") };
+}
+
 export const dynamic = "force-dynamic";
 
-const STATUS_META = {
-  draft: {
-    icon: FileEdit,
-    label: "Borrador",
-    description: "Este perfil solo es visible para vos. Completalo y enviálo a revisión.",
-  },
-  submitted: {
-    icon: Clock,
-    label: "En revisión",
-    description:
-      "Un administrador está revisando tu perfil. Te avisaremos apenas haya una decisión.",
-  },
-  approved: {
-    icon: CheckCircle2,
-    label: "Aprobado y público",
-    description: "Tu perfil ya está publicado en el directorio.",
-  },
-  rejected: {
-    icon: XCircle,
-    label: "Se solicitaron cambios",
-    description: "Un administrador pidió cambios. Editá tu perfil abajo y volvé a enviarlo.",
-  },
-  suspended: {
-    icon: ShieldAlert,
-    label: "Suspendido",
-    description: "Tu perfil fue suspendido y no es visible públicamente. Contactá a un administrador.",
-  },
-} as const;
+export default async function DashboardPage({ params }: PageProps<"/[locale]/dashboard">) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("dashboard");
 
-export default async function DashboardPage() {
+  const STATUS_META = {
+    draft: {
+      icon: FileEdit,
+      label: t("statusDraftLabel"),
+      description: t("statusDraftDescription"),
+    },
+    submitted: {
+      icon: Clock,
+      label: t("statusSubmittedLabel"),
+      description: t("statusSubmittedDescription"),
+    },
+    approved: {
+      icon: CheckCircle2,
+      label: t("statusApprovedLabel"),
+      description: t("statusApprovedDescription"),
+    },
+    rejected: {
+      icon: XCircle,
+      label: t("statusRejectedLabel"),
+      description: t("statusRejectedDescription"),
+    },
+    suspended: {
+      icon: ShieldAlert,
+      label: t("statusSuspendedLabel"),
+      description: t("statusSuspendedDescription"),
+    },
+  } as const;
+
   const profile = await requireUser("/dashboard");
   const surgeon = await getOwnSurgeonProfile(profile.id);
 
@@ -95,14 +107,11 @@ export default async function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="font-heading text-3xl font-semibold text-foreground">
-        Mi perfil de cirujano
-      </h1>
+      <h1 className="font-heading text-3xl font-semibold text-foreground">{t("title")}</h1>
       <p className="mt-2 text-muted-foreground">
-        Administrá la información que se muestra en el directorio público. Nada es visible
-        públicamente hasta que un administrador lo apruebe.{" "}
+        {t("subtitle")}{" "}
         <Link href="/privacy" className="text-primary hover:underline">
-          Leé nuestro aviso legal
+          {t("readDisclaimer")}
         </Link>
         .
       </p>
@@ -115,7 +124,7 @@ export default async function DashboardPage() {
             {statusMeta.description}
             {surgeon?.status === "rejected" && surgeon.rejection_reason && (
               <p className="mt-1 font-medium text-foreground">
-                Nota del revisor: {surgeon.rejection_reason}
+                {t("reviewerNote", { reason: surgeon.rejection_reason })}
               </p>
             )}
           </AlertDescription>
@@ -128,7 +137,7 @@ export default async function DashboardPage() {
           className="mt-3 inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
         >
           <Eye className="size-4" />
-          Ver tu perfil público
+          {t("viewPublicProfile")}
         </Link>
       )}
 
@@ -144,14 +153,15 @@ export default async function DashboardPage() {
 
       <div className="surface-flat mt-8 p-6">
         <h2 className="mb-5 font-heading text-lg font-semibold text-foreground">
-          Editar información del perfil
+          {t("editHeading")}
         </h2>
-        <SurgeonProfileForm defaultValues={defaultValues} />
+        <SurgeonProfileForm
+          defaultValues={defaultValues}
+          action={saveSurgeonProfileAction.bind(null, locale)}
+        />
         {surgeon && (surgeon.status === "draft" || surgeon.status === "rejected") && (
           <div className="mt-6 border-t border-border pt-6">
-            <p className="mb-3 text-sm text-muted-foreground">
-              ¿Listo para la revisión? Primero guardá tus cambios de arriba y después enviá.
-            </p>
+            <p className="mb-3 text-sm text-muted-foreground">{t("readyToSubmit")}</p>
             <SubmitButton />
           </div>
         )}

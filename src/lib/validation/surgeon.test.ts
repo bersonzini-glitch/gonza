@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { deriveConsultationAvailability, surgeonProfileSchema } from "@/lib/validation/surgeon";
+import {
+  deriveConsultationAvailability,
+  makeSurgeonProfileSchema,
+} from "@/lib/validation/surgeon";
+
+// Tests exercise validation logic, not translated copy, so a translator
+// that echoes the key back is enough to build the schema.
+const identityT = ((key: string) => key) as Parameters<typeof makeSurgeonProfileSchema>[0];
+const surgeonProfileSchema = makeSurgeonProfileSchema(identityT);
 
 const validProfile = {
   fullName: "Ana Martínez",

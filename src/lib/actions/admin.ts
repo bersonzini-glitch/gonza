@@ -4,6 +4,8 @@ import { randomUUID } from "node:crypto";
 
 import { revalidatePath } from "next/cache";
 
+import { getTranslations } from "next-intl/server";
+
 import { logAdminAction } from "@/lib/audit";
 import { requireAdmin } from "@/lib/auth/session";
 import { slugify } from "@/lib/slug";
@@ -12,7 +14,7 @@ import { SURGEON_PHOTOS_BUCKET } from "@/lib/supabase/storage";
 import { eventSchema, type EventInput } from "@/lib/validation/event";
 import {
   deriveConsultationAvailability,
-  surgeonProfileSchema,
+  makeSurgeonProfileSchema,
   type SurgeonProfileFormValues,
 } from "@/lib/validation/surgeon";
 
@@ -136,12 +138,14 @@ export async function deleteSurgeonAction(surgeonId: string): Promise<AdminActio
 }
 
 export async function adminUpdateSurgeonProfileAction(
+  locale: string,
   surgeonId: string,
   input: SurgeonProfileFormValues,
 ): Promise<AdminActionResult> {
   const { admin, supabase } = await requireAdminClient();
+  const tValidation = await getTranslations({ locale, namespace: "surgeonValidation" });
 
-  const parsed = surgeonProfileSchema.safeParse(input);
+  const parsed = makeSurgeonProfileSchema(tValidation).safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
   const data = parsed.data;
   const { inPersonAvailable, telemedicineAvailable } = deriveConsultationAvailability(

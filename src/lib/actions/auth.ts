@@ -1,15 +1,16 @@
 "use server";
 
 import { headers } from "next/headers";
+import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 
 import { checkRateLimit } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import {
-  requestPasswordResetSchema,
-  resetPasswordSchema,
-  signInSchema,
-  signUpSchema,
+  makeRequestPasswordResetSchema,
+  makeResetPasswordSchema,
+  makeSignInSchema,
+  makeSignUpSchema,
 } from "@/lib/validation/auth";
 
 export interface AuthActionState {
@@ -22,31 +23,38 @@ async function getClientIp(): Promise<string> {
   return h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 }
 
-// Supabase Auth returns its own error messages in English (they come
-// from the auth service, not our code). This maps the common ones to
-// Spanish for a fully localized UI; anything unrecognized falls back to
-// the original message rather than being silently swallowed.
-const AUTH_ERROR_TRANSLATIONS: Record<string, string> = {
-  "User already registered": "Ese email ya está registrado.",
-  "Password should be at least 6 characters":
-    "La contraseña debe tener al menos 6 caracteres.",
-  "Email not confirmed": "Todavía no confirmaste tu email.",
-  "Invalid login credentials": "Email o contraseña inválidos.",
-  "Unable to validate email address: invalid format": "El formato del email no es válido.",
-  "Signup requires a valid password": "El registro requiere una contraseña válida.",
-  "For security purposes, you can only request this after some time.":
-    "Por seguridad, solo podés solicitar esto de nuevo después de un tiempo.",
-};
-
-function translateAuthError(message: string): string {
-  return AUTH_ERROR_TRANSLATIONS[message] ?? message;
+// Supabase Auth returns its own error messages in English (they come from
+// the auth service, not our code). This maps the common ones to the active
+// locale for a fully localized UI; anything unrecognized falls back to the
+// original message rather than being silently swallowed.
+function translateAuthError(
+  message: string,
+  t: Awaited<ReturnType<typeof getTranslations<"authErrors">>>,
+): string {
+  const map: Record<string, string> = {
+    "User already registered": t("alreadyRegistered"),
+    "Password should be at least 6 characters": t("supabasePasswordMin"),
+    "Email not confirmed": t("emailNotConfirmed"),
+    "Invalid login credentials": t("invalidLoginCredentials"),
+    "Unable to validate email address: invalid format": t("invalidEmailFormat"),
+    "Signup requires a valid password": t("signUpRequiresPassword"),
+    "For security purposes, you can only request this after some time.":
+      t("rateLimitedBySupabase"),
+  };
+  return map[message] ?? message;
 }
 
 export async function signUpAction(
+  locale: string,
   _prevState: AuthActionState,
   formData: FormData,
 ): Promise<AuthActionState> {
-  const parsed = signUpSchema.safeParse({
+  const [tValidation, tErrors] = await Promise.all([
+    getTranslations({ locale, namespace: "authValidation" }),
+    getTranslations({ locale, namespace: "authErrors" }),
+  ]);
+
+  const parsed = makeSignUpSchema(tValidation).safeParse({
     username: formData.get("username"),
     fullName: formData.get("fullName"),
     email: formData.get("email"),
@@ -54,7 +62,7 @@ export async function signUpAction(
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
   }
 
   const supabase = await createClient();
@@ -62,14 +70,14 @@ export async function signUpAction(
 
   const allowed = await checkRateLimit(supabase, ip, "sign-up", 5, 60 * 15);
   if (!allowed) {
-    return { error: "Demasiados intentos. Esperá unos minutos y volvé a intentar." };
+    return { error: tErrors("tooManyAttempts") };
   }
 
   const { data: available } = await supabase.rpc("is_username_available", {
     check_username: parsed.data.username,
   });
   if (available === false) {
-    return { error: "Ese nombre de usuario ya está en uso." };
+    return { error: tErrors("usernameTaken") };
   }
 
   const h = await headers();
@@ -85,26 +93,29 @@ export async function signUpAction(
   });
 
   if (error) {
-    return { error: translateAuthError(error.message) };
+    return { error: translateAuthError(error.message, tErrors) };
   }
 
-  return {
-    success:
-      "Cuenta creada. Revisá tu email para confirmar tu dirección antes de iniciar sesión.",
-  };
+  return { success: tErrors("signUpSuccess") };
 }
 
 export async function signInAction(
+  locale: string,
   _prevState: AuthActionState,
   formData: FormData,
 ): Promise<AuthActionState> {
-  const parsed = signInSchema.safeParse({
+  const [tValidation, tErrors] = await Promise.all([
+    getTranslations({ locale, namespace: "authValidation" }),
+    getTranslations({ locale, namespace: "authErrors" }),
+  ]);
+
+  const parsed = makeSignInSchema(tValidation).safeParse({
     identifier: formData.get("identifier"),
     password: formData.get("password"),
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
   }
 
   const supabase = await createClient();
@@ -118,7 +129,7 @@ export async function signInAction(
     60 * 10,
   );
   if (!allowed) {
-    return { error: "Demasiados intentos. Esperá unos minutos y volvé a intentar." };
+    return { error: tErrors("tooManyAttempts") };
   }
 
   let email = parsed.data.identifier;
@@ -127,7 +138,7 @@ export async function signInAction(
       lookup_username: parsed.data.identifier,
     });
     if (!resolvedEmail) {
-      return { error: "Usuario/email o contraseña inválidos." };
+      return { error: tErrors("invalidCredentials") };
     }
     email = resolvedEmail;
   }
@@ -138,11 +149,16 @@ export async function signInAction(
   });
 
   if (error) {
-    return { error: "Usuario/email o contraseña inválidos." };
+    return { error: tErrors("invalidCredentials") };
   }
 
   const next = formData.get("next");
-  redirect(typeof next === "string" && next.startsWith("/") ? next : "/dashboard");
+  const localePrefix = locale === "es" ? "" : `/${locale}`;
+  redirect(
+    typeof next === "string" && next.startsWith("/")
+      ? next
+      : `${localePrefix}/dashboard`,
+  );
 }
 
 export async function signOutAction() {
@@ -152,13 +168,21 @@ export async function signOutAction() {
 }
 
 export async function requestPasswordResetAction(
+  locale: string,
   _prevState: AuthActionState,
   formData: FormData,
 ): Promise<AuthActionState> {
-  const parsed = requestPasswordResetSchema.safeParse({ email: formData.get("email") });
+  const [tValidation, tErrors] = await Promise.all([
+    getTranslations({ locale, namespace: "authValidation" }),
+    getTranslations({ locale, namespace: "authErrors" }),
+  ]);
+
+  const parsed = makeRequestPasswordResetSchema(tValidation).safeParse({
+    email: formData.get("email"),
+  });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
   }
 
   const supabase = await createClient();
@@ -166,31 +190,38 @@ export async function requestPasswordResetAction(
 
   const allowed = await checkRateLimit(supabase, ip, "reset-request", 5, 60 * 15);
   if (!allowed) {
-    return { error: "Demasiados intentos. Esperá unos minutos y volvé a intentar." };
+    return { error: tErrors("tooManyAttempts") };
   }
 
   const h = await headers();
   const origin = `${h.get("x-forwarded-proto") ?? "https"}://${h.get("host")}`;
+  const localePrefix = locale === "es" ? "" : `/${locale}`;
 
   await supabase.auth.resetPasswordForEmail(parsed.data.email, {
-    redirectTo: `${origin}/reset-password/confirm`,
+    redirectTo: `${origin}${localePrefix}/reset-password/confirm`,
   });
 
   // Always report success to avoid leaking whether an email is registered.
-  return { success: "Si ese email está registrado, te llegará un enlace de recuperación." };
+  return { success: tErrors("resetSent") };
 }
 
 export async function updatePasswordAction(
+  locale: string,
   _prevState: AuthActionState,
   formData: FormData,
 ): Promise<AuthActionState> {
-  const parsed = resetPasswordSchema.safeParse({
+  const [tValidation, tErrors] = await Promise.all([
+    getTranslations({ locale, namespace: "authValidation" }),
+    getTranslations({ locale, namespace: "authErrors" }),
+  ]);
+
+  const parsed = makeResetPasswordSchema(tValidation).safeParse({
     password: formData.get("password"),
     confirmPassword: formData.get("confirmPassword"),
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos" };
+    return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
   }
 
   const supabase = await createClient();
@@ -199,14 +230,15 @@ export async function updatePasswordAction(
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { error: "Tu enlace de recuperación expiró. Solicitá uno nuevo." };
+    return { error: tErrors("resetLinkExpired") };
   }
 
   const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
 
   if (error) {
-    return { error: translateAuthError(error.message) };
+    return { error: translateAuthError(error.message, tErrors) };
   }
 
-  redirect("/dashboard");
+  const localePrefix = locale === "es" ? "" : `/${locale}`;
+  redirect(`${localePrefix}/dashboard`);
 }

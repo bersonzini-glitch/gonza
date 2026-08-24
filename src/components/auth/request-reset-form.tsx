@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useActionState } from "react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -12,7 +13,12 @@ import { requestPasswordResetAction, type AuthActionState } from "@/lib/actions/
 const initialState: AuthActionState = {};
 
 export function RequestResetForm() {
-  const [state, formAction, isPending] = useActionState(requestPasswordResetAction, initialState);
+  const locale = useLocale();
+  const t = useTranslations("auth");
+  const [state, formAction, isPending] = useActionState(
+    requestPasswordResetAction.bind(null, locale),
+    initialState,
+  );
 
   if (state.success) {
     return (
@@ -26,7 +32,7 @@ export function RequestResetForm() {
   return (
     <form action={formAction} className="space-y-4" noValidate>
       <div className="space-y-1.5">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("email")}</Label>
         <Input id="email" name="email" type="email" autoComplete="email" required />
       </div>
 
@@ -38,7 +44,7 @@ export function RequestResetForm() {
       )}
 
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Enviando…" : "Enviar enlace de recuperación"}
+        {isPending ? t("sending") : t("sendResetLink")}
       </Button>
     </form>
   );

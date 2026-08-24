@@ -21,23 +21,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { saveSurgeonProfileAction } from "@/lib/actions/surgeon";
-import { primarySpecialtyLabels } from "@/lib/format";
+import { consultationFormatLabels, primarySpecialtyLabels } from "@/lib/format";
 import {
   CONSULTATION_FORMATS,
   LANGUAGE_OPTIONS,
   PRIMARY_SPECIALTIES,
   SUGGESTED_SUBSPECIALTIES,
-  surgeonProfileSchema,
+  makeSurgeonProfileSchema,
   type SurgeonProfileFormValues,
 } from "@/lib/validation/surgeon";
 import { LATAM_COUNTRIES } from "@/lib/validation/event";
-
-const CONSULTATION_FORMAT_OPTIONS: Record<(typeof CONSULTATION_FORMATS)[number], string> = {
-  in_person: "Solo presencial",
-  telemedicine: "Solo telemedicina",
-  both: "Presencial y telemedicina",
-};
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const SITE_HOST = SITE_URL.replace(/^https?:\/\//, "");
@@ -52,20 +45,24 @@ const COUNTRY_ITEMS: Record<string, string> = Object.fromEntries(
 export function SurgeonProfileForm({
   defaultValues,
   onSaved,
-  action = saveSurgeonProfileAction,
+  action,
 }: {
   defaultValues: SurgeonProfileFormValues;
   onSaved?: () => void;
-  action?: (values: SurgeonProfileFormValues) => Promise<{ error?: string; success?: boolean }>;
+  action: (values: SurgeonProfileFormValues) => Promise<{ error?: string; success?: boolean }>;
 }) {
   const router = useRouter();
   const [customTag, setCustomTag] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
+  const t = useTranslations("surgeonForm");
+  const tValidation = useTranslations("surgeonValidation");
   const tSpecialties = useTranslations("specialties");
+  const tConsultationFormats = useTranslations("consultationFormats");
   const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
+  const CONSULTATION_FORMAT_OPTIONS = consultationFormatLabels(tConsultationFormats);
 
   const form = useForm<SurgeonProfileFormValues>({
-    resolver: zodResolver(surgeonProfileSchema) as Resolver<SurgeonProfileFormValues>,
+    resolver: zodResolver(makeSurgeonProfileSchema(tValidation)) as Resolver<SurgeonProfileFormValues>,
     defaultValues,
   });
 
@@ -97,7 +94,7 @@ export function SurgeonProfileForm({
     const current = form.getValues("subspecialties");
     form.setValue(
       "subspecialties",
-      checked ? [...current, tag] : current.filter((t) => t !== tag),
+      checked ? [...current, tag] : current.filter((s) => s !== tag),
       { shouldValidate: true },
     );
   }
@@ -126,7 +123,7 @@ export function SurgeonProfileForm({
       setServerError(result.error);
       return;
     }
-    toast.success("Perfil guardado");
+    toast.success(t("profileSavedToast"));
     router.refresh();
     onSaved?.();
   }
@@ -135,7 +132,7 @@ export function SurgeonProfileForm({
     // react-hook-form blocks the submit silently otherwise, so the only
     // sign anything went wrong is a small red line under one of the many
     // fields — easy to miss, which reads as "guardar no hace nada".
-    toast.error("Revisá los campos marcados en rojo antes de guardar.");
+    toast.error(t("invalidFieldsToast"));
   }
 
   // For an array field (e.g. an enum array), RHF/zod reports either one
@@ -160,10 +157,12 @@ export function SurgeonProfileForm({
   return (
     <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="space-y-8" noValidate>
       <section className="space-y-4">
-        <h2 className="font-heading text-lg font-semibold text-foreground">Datos básicos</h2>
+        <h2 className="font-heading text-lg font-semibold text-foreground">
+          {t("basicDataHeading")}
+        </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <Label htmlFor="fullName">Nombre completo</Label>
+            <Label htmlFor="fullName">{t("fullName")}</Label>
             <Input
               id="fullName"
               aria-invalid={!!form.formState.errors.fullName}
@@ -175,7 +174,7 @@ export function SurgeonProfileForm({
           </div>
           {!!defaultValues.slug && (
             <div className="space-y-1.5 sm:col-span-2">
-              <Label htmlFor="slug">Dirección del perfil (permalink)</Label>
+              <Label htmlFor="slug">{t("profileUrlLabel")}</Label>
               <div className="flex items-center gap-1 rounded-lg border border-input bg-transparent pl-2.5 has-[[aria-invalid=true]]:border-destructive has-[[aria-invalid=true]]:ring-3 has-[[aria-invalid=true]]:ring-destructive/20">
                 <span className="shrink-0 text-sm text-muted-foreground">{SITE_HOST}/surgeons/</span>
                 <Input
@@ -185,17 +184,14 @@ export function SurgeonProfileForm({
                   {...form.register("slug")}
                 />
               </div>
-              <p className="text-xs text-muted-foreground">
-                Si la cambiás, el enlace anterior deja de funcionar. Usá solo minúsculas, números
-                y guiones.
-              </p>
+              <p className="text-xs text-muted-foreground">{t("profileUrlHint")}</p>
               {form.formState.errors.slug && (
                 <p className="text-xs text-destructive">{form.formState.errors.slug.message}</p>
               )}
             </div>
           )}
           <div className="space-y-1.5">
-            <Label htmlFor="primarySpecialty">Especialidad principal</Label>
+            <Label htmlFor="primarySpecialty">{t("primarySpecialty")}</Label>
             <Select
               items={PRIMARY_SPECIALTY_LABELS}
               value={form.watch("primarySpecialty")}
@@ -214,7 +210,7 @@ export function SurgeonProfileForm({
                 className="w-full"
                 aria-invalid={!!form.formState.errors.primarySpecialty}
               >
-                <SelectValue placeholder="Seleccioná una especialidad" />
+                <SelectValue placeholder={t("selectSpecialty")} />
               </SelectTrigger>
               <SelectContent>
                 {PRIMARY_SPECIALTIES.map((s) => (
@@ -231,7 +227,7 @@ export function SurgeonProfileForm({
             )}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="yearsExperience">Años de experiencia</Label>
+            <Label htmlFor="yearsExperience">{t("yearsExperience")}</Label>
             <Input
               id="yearsExperience"
               type="number"
@@ -249,7 +245,7 @@ export function SurgeonProfileForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="bio">Biografía</Label>
+          <Label htmlFor="bio">{t("bio")}</Label>
           <Textarea
             id="bio"
             rows={6}
@@ -257,7 +253,7 @@ export function SurgeonProfileForm({
             {...form.register("bio")}
           />
           <p className="text-xs text-muted-foreground">
-            {bio?.length ?? 0}/4000 caracteres · mínimo 50
+            {t("bioCounter", { count: bio?.length ?? 0 })}
           </p>
           {form.formState.errors.bio && (
             <p className="text-xs text-destructive">{form.formState.errors.bio.message}</p>
@@ -267,20 +263,18 @@ export function SurgeonProfileForm({
 
       <section className="space-y-4">
         <h2 className="font-heading text-lg font-semibold text-foreground">
-          Afiliación y credenciales
+          {t("affiliationHeading")}
         </h2>
 
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <Label>Hospitales / clínicas</Label>
+            <Label>{t("hospitalsLabel")}</Label>
             <Button type="button" variant="outline" size="sm" onClick={addHospital}>
-              <Plus className="size-4" /> Agregar
+              <Plus className="size-4" /> {t("add")}
             </Button>
           </div>
           {hospitalAffiliations.length === 0 && (
-            <p className="text-xs text-muted-foreground">
-              Agregá los hospitales o clínicas donde atendés.
-            </p>
+            <p className="text-xs text-muted-foreground">{t("addHospitalHint")}</p>
           )}
           {hospitalAffiliations.map((value, index) => (
             <div key={index} className="flex items-center gap-2">
@@ -295,7 +289,7 @@ export function SurgeonProfileForm({
                 size="icon"
                 className="shrink-0 text-destructive"
                 onClick={() => removeHospital(index)}
-                aria-label="Quitar hospital o clínica"
+                aria-label={t("removeHospital")}
               >
                 <Trash2 className="size-4" />
               </Button>
@@ -303,17 +297,14 @@ export function SurgeonProfileForm({
           ))}
           {form.formState.errors.hospitalAffiliations && (
             <p className="text-xs text-destructive">
-              {arrayFieldErrorMessage(
-                form.formState.errors.hospitalAffiliations,
-                "Revisá los hospitales o clínicas agregados.",
-              )}
+              {arrayFieldErrorMessage(form.formState.errors.hospitalAffiliations, t("hospitalsError"))}
             </p>
           )}
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <Label htmlFor="medicalLicenseNumber">Número de matrícula</Label>
+            <Label htmlFor="medicalLicenseNumber">{t("licenseNumber")}</Label>
             <Input
               id="medicalLicenseNumber"
               aria-invalid={!!form.formState.errors.medicalLicenseNumber}
@@ -326,7 +317,7 @@ export function SurgeonProfileForm({
             )}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="medicalLicenseCountry">País de la matrícula</Label>
+            <Label htmlFor="medicalLicenseCountry">{t("licenseCountry")}</Label>
             <Input
               id="medicalLicenseCountry"
               aria-invalid={!!form.formState.errors.medicalLicenseCountry}
@@ -339,7 +330,7 @@ export function SurgeonProfileForm({
             )}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="specialistLicenseNumber">Matrícula de especialista</Label>
+            <Label htmlFor="specialistLicenseNumber">{t("specialistLicenseNumber")}</Label>
             <Input
               id="specialistLicenseNumber"
               aria-invalid={!!form.formState.errors.specialistLicenseNumber}
@@ -355,7 +346,9 @@ export function SurgeonProfileForm({
       </section>
 
       <section className="space-y-4">
-        <h2 className="font-heading text-lg font-semibold text-foreground">Subespecialidades</h2>
+        <h2 className="font-heading text-lg font-semibold text-foreground">
+          {t("subspecialtiesHeading")}
+        </h2>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {SUGGESTED_SUBSPECIALTIES.map((tag) => (
             <label key={tag} className="flex items-center gap-2 text-sm">
@@ -369,7 +362,7 @@ export function SurgeonProfileForm({
         </div>
         <div className="flex gap-2">
           <Input
-            placeholder="Agregar otra subespecialidad…"
+            placeholder={t("addSubspecialtyPlaceholder")}
             value={customTag}
             onChange={(e) => setCustomTag(e.target.value)}
             onKeyDown={(e) => {
@@ -380,21 +373,20 @@ export function SurgeonProfileForm({
             }}
           />
           <Button type="button" variant="outline" onClick={addCustomTag}>
-            <Plus className="size-4" /> Agregar
+            <Plus className="size-4" /> {t("add")}
           </Button>
         </div>
         {form.formState.errors.subspecialties && (
           <p className="text-xs text-destructive">
-            {arrayFieldErrorMessage(
-              form.formState.errors.subspecialties,
-              "Revisá las subespecialidades seleccionadas.",
-            )}
+            {arrayFieldErrorMessage(form.formState.errors.subspecialties, t("subspecialtiesError"))}
           </p>
         )}
       </section>
 
       <section className="space-y-4">
-        <h2 className="font-heading text-lg font-semibold text-foreground">Idiomas</h2>
+        <h2 className="font-heading text-lg font-semibold text-foreground">
+          {t("languagesHeading")}
+        </h2>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {LANGUAGE_OPTIONS.map((lang) => (
             <label key={lang} className="flex items-center gap-2 text-sm">
@@ -408,17 +400,14 @@ export function SurgeonProfileForm({
         </div>
         {form.formState.errors.languages && (
           <p className="text-xs text-destructive">
-            {arrayFieldErrorMessage(
-              form.formState.errors.languages,
-              "Revisá los idiomas seleccionados: alguno no es una opción válida.",
-            )}
+            {arrayFieldErrorMessage(form.formState.errors.languages, t("languagesError"))}
           </p>
         )}
       </section>
 
       <section className="space-y-4">
         <h2 className="font-heading text-lg font-semibold text-foreground">
-          Modalidad de consulta
+          {t("consultationFormatHeading")}
         </h2>
         <Select
           items={CONSULTATION_FORMAT_OPTIONS}
@@ -457,7 +446,7 @@ export function SurgeonProfileForm({
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-heading text-lg font-semibold text-foreground">
-            Lugares de atención
+            {t("locationsHeading")}
           </h2>
           <Button
             type="button"
@@ -465,7 +454,7 @@ export function SurgeonProfileForm({
             size="sm"
             onClick={() => append({ country: "", city: "", isPrimary: fields.length === 0 })}
           >
-            <Plus className="size-4" /> Agregar lugar
+            <Plus className="size-4" /> {t("addLocation")}
           </Button>
         </div>
 
@@ -475,7 +464,7 @@ export function SurgeonProfileForm({
             className="grid grid-cols-1 gap-3 rounded-lg border border-border p-4 sm:grid-cols-[1fr_1fr_auto_auto]"
           >
             <div className="space-y-1.5">
-              <Label>País</Label>
+              <Label>{t("country")}</Label>
               <Select
                 items={COUNTRY_ITEMS}
                 value={form.watch(`locations.${index}.country`)}
@@ -487,7 +476,7 @@ export function SurgeonProfileForm({
                   className="w-full"
                   aria-invalid={!!form.formState.errors.locations?.[index]?.country}
                 >
-                  <SelectValue placeholder="Seleccioná el país" />
+                  <SelectValue placeholder={t("selectCountry")} />
                 </SelectTrigger>
                 <SelectContent>
                   {LATAM_COUNTRIES.map((c) => (
@@ -504,7 +493,7 @@ export function SurgeonProfileForm({
               )}
             </div>
             <div className="space-y-1.5">
-              <Label>Ciudad</Label>
+              <Label>{t("city")}</Label>
               <Input
                 aria-invalid={!!form.formState.errors.locations?.[index]?.city}
                 {...form.register(`locations.${index}.city`)}
@@ -522,7 +511,7 @@ export function SurgeonProfileForm({
                   form.setValue(`locations.${index}.isPrimary`, checked === true)
                 }
               />
-              Principal
+              {t("primary")}
             </label>
             <Button
               type="button"
@@ -530,7 +519,7 @@ export function SurgeonProfileForm({
               size="icon"
               className="self-end text-destructive"
               onClick={() => remove(index)}
-              aria-label="Quitar lugar"
+              aria-label={t("removeLocation")}
             >
               <Trash2 className="size-4" />
             </Button>
@@ -538,18 +527,18 @@ export function SurgeonProfileForm({
         ))}
         {form.formState.errors.locations && (
           <p className="text-xs text-destructive">
-            {form.formState.errors.locations.message ?? "Revisá tus lugares de atención."}
+            {form.formState.errors.locations.message ?? t("locationsError")}
           </p>
         )}
       </section>
 
       <section className="space-y-4">
         <h2 className="font-heading text-lg font-semibold text-foreground">
-          Contacto y enlaces
+          {t("contactHeading")}
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <Label htmlFor="websiteUrl">Sitio web profesional</Label>
+            <Label htmlFor="websiteUrl">{t("websiteUrl")}</Label>
             <Input
               id="websiteUrl"
               placeholder="https://"
@@ -563,7 +552,7 @@ export function SurgeonProfileForm({
             )}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="instagramUrl">Instagram</Label>
+            <Label htmlFor="instagramUrl">{t("instagram")}</Label>
             <Input
               id="instagramUrl"
               placeholder="https://instagram.com/…"
@@ -577,7 +566,7 @@ export function SurgeonProfileForm({
             )}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="linkedinUrl">LinkedIn</Label>
+            <Label htmlFor="linkedinUrl">{t("linkedin")}</Label>
             <Input
               id="linkedinUrl"
               placeholder="https://linkedin.com/in/…"
@@ -591,7 +580,7 @@ export function SurgeonProfileForm({
             )}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="contactEmail">Email de contacto público</Label>
+            <Label htmlFor="contactEmail">{t("contactEmail")}</Label>
             <Input
               id="contactEmail"
               type="email"
@@ -605,7 +594,7 @@ export function SurgeonProfileForm({
             )}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="contactPhone">Teléfono de contacto público</Label>
+            <Label htmlFor="contactPhone">{t("contactPhone")}</Label>
             <Input
               id="contactPhone"
               aria-invalid={!!form.formState.errors.contactPhone}
@@ -628,7 +617,7 @@ export function SurgeonProfileForm({
       )}
 
       <Button type="submit" disabled={form.formState.isSubmitting} size="lg">
-        {form.formState.isSubmitting ? "Guardando…" : "Guardar perfil"}
+        {form.formState.isSubmitting ? t("saving") : t("saveProfile")}
       </Button>
     </form>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { Send } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -10,6 +11,9 @@ import { submitSurgeonProfileAction } from "@/lib/actions/surgeon";
 
 export function SubmitButton() {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations("dashboard");
+  const tActions = useTranslations("surgeonActions");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -21,18 +25,18 @@ export function SubmitButton() {
         onClick={() =>
           startTransition(async () => {
             setError(null);
-            const result = await submitSurgeonProfileAction();
+            const result = await submitSurgeonProfileAction(locale);
             if (result.error) {
               setError(result.error);
               return;
             }
-            toast.success("Perfil enviado a revisión");
+            toast.success(tActions("profileSubmittedToast"));
             router.refresh();
           })
         }
       >
         <Send className="size-4" />
-        {isPending ? "Enviando…" : "Enviar a revisión"}
+        {isPending ? t("submitting") : t("submitForReview")}
       </Button>
       {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertCircle } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useActionState } from "react";
 
@@ -13,20 +14,25 @@ import { signInAction, type AuthActionState } from "@/lib/actions/auth";
 const initialState: AuthActionState = {};
 
 export function SignInForm({ next }: { next?: string }) {
-  const [state, formAction, isPending] = useActionState(signInAction, initialState);
+  const locale = useLocale();
+  const t = useTranslations("auth");
+  const [state, formAction, isPending] = useActionState(
+    signInAction.bind(null, locale),
+    initialState,
+  );
 
   return (
     <form action={formAction} className="space-y-4" noValidate>
       {next && <input type="hidden" name="next" value={next} />}
       <div className="space-y-1.5">
-        <Label htmlFor="identifier">Usuario o email</Label>
+        <Label htmlFor="identifier">{t("usernameOrEmail")}</Label>
         <Input id="identifier" name="identifier" autoComplete="username" required />
       </div>
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password">Contraseña</Label>
+          <Label htmlFor="password">{t("password")}</Label>
           <Link href="/reset-password" className="text-xs text-primary hover:underline">
-            ¿Olvidaste tu contraseña?
+            {t("forgotPassword")}
           </Link>
         </div>
         <Input
@@ -46,7 +52,7 @@ export function SignInForm({ next }: { next?: string }) {
       )}
 
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Iniciando sesión…" : "Iniciar sesión"}
+        {isPending ? t("signingIn") : t("signIn")}
       </Button>
     </form>
   );

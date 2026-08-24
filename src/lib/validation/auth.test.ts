@@ -1,6 +1,17 @@
 import { describe, expect, it } from "vitest";
 
-import { resetPasswordSchema, signInSchema, signUpSchema } from "@/lib/validation/auth";
+import {
+  makeResetPasswordSchema,
+  makeSignInSchema,
+  makeSignUpSchema,
+} from "@/lib/validation/auth";
+
+// Tests exercise validation logic, not translated copy, so a translator
+// that echoes the key back is enough to build the schemas.
+const identityT = ((key: string) => key) as Parameters<typeof makeSignUpSchema>[0];
+const signUpSchema = makeSignUpSchema(identityT);
+const signInSchema = makeSignInSchema(identityT);
+const resetPasswordSchema = makeResetPasswordSchema(identityT);
 
 describe("signUpSchema", () => {
   const base = {

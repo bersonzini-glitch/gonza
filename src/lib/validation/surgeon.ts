@@ -1,3 +1,4 @@
+import type { useTranslations } from "next-intl";
 import { z } from "zod";
 
 export const PRIMARY_SPECIALTIES = ["orthopedic_spine_surgeon", "neurosurgeon_spine"] as const;
@@ -37,68 +38,63 @@ export const LANGUAGE_OPTIONS = [
   "Alemán",
 ] as const;
 
-export const surgeonLocationSchema = z.object({
-  country: z.string().trim().min(2, "El país es obligatorio").max(100),
-  city: z.string().trim().min(2, "La ciudad es obligatoria").max(100),
-  isPrimary: z.boolean(),
-});
+type Translator = ReturnType<typeof useTranslations<"surgeonValidation">>;
+
+export function makeSurgeonLocationSchema(t: Translator) {
+  return z.object({
+    country: z.string().trim().min(2, t("countryRequired")).max(100),
+    city: z.string().trim().min(2, t("cityRequired")).max(100),
+    isPrimary: z.boolean(),
+  });
+}
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
-const optionalUrlField = () =>
-  z
-    .union([z.url({ protocol: /^https?$/, message: "Debe ser una URL http(s) válida" }), z.literal("")])
-    .optional();
+function optionalUrlField(t: Translator) {
+  return z.union([z.url({ protocol: /^https?$/, message: t("invalidUrl") }), z.literal("")]).optional();
+}
 
-export const surgeonProfileSchema = z.object({
-  fullName: z.string().trim().min(3, "El nombre completo es muy corto").max(150),
-  // Empty/omitted means "don't change it" — the field is only shown once a
-  // profile (and therefore a public URL) already exists.
-  slug: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .max(100, "La dirección es muy larga")
-    .optional()
-    .or(z.literal(""))
-    .refine((v) => !v || (v.length >= 3 && SLUG_PATTERN.test(v)), {
-      message:
-        "Usá solo minúsculas, números y guiones, sin espacios ni acentos (mínimo 3 caracteres)",
-    }),
-  primarySpecialty: z.enum(PRIMARY_SPECIALTIES),
-  subspecialties: z
-    .array(z.string().trim().min(2).max(80))
-    .min(1, "Seleccioná o agregá al menos una subespecialidad")
-    .max(15),
-  bio: z
-    .string()
-    .trim()
-    .min(50, "La biografía debe tener al menos 50 caracteres")
-    .max(4000, "La biografía es muy larga"),
-  hospitalAffiliations: z
-    .array(z.string().trim().min(1, "El nombre no puede estar vacío").max(200))
-    .max(10, "Máximo 10 hospitales o clínicas")
-    .optional(),
-  medicalLicenseNumber: z.string().trim().max(100).optional().or(z.literal("")),
-  medicalLicenseCountry: z.string().trim().max(100).optional().or(z.literal("")),
-  specialistLicenseNumber: z.string().trim().max(100).optional().or(z.literal("")),
-  yearsExperience: z.coerce.number().int().min(0).max(70).optional(),
-  consultationFormat: z.enum(CONSULTATION_FORMATS),
-  languages: z.array(z.enum(LANGUAGE_OPTIONS)).min(1, "Seleccioná al menos un idioma"),
-  websiteUrl: optionalUrlField(),
-  instagramUrl: optionalUrlField(),
-  linkedinUrl: optionalUrlField(),
-  contactEmail: z
-    .union([z.email({ message: "Debe ser un email válido" }), z.literal("")])
-    .optional(),
-  contactPhone: z.string().trim().max(40).optional().or(z.literal("")),
-  locations: z
-    .array(surgeonLocationSchema)
-    .min(1, "Agregá al menos un lugar de atención")
-    .max(10),
-});
+export function makeSurgeonProfileSchema(t: Translator) {
+  return z.object({
+    fullName: z.string().trim().min(3, t("fullNameTooShort")).max(150),
+    // Empty/omitted means "don't change it" — the field is only shown once a
+    // profile (and therefore a public URL) already exists.
+    slug: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .max(100, t("slugTooLong"))
+      .optional()
+      .or(z.literal(""))
+      .refine((v) => !v || (v.length >= 3 && SLUG_PATTERN.test(v)), {
+        message: t("slugInvalid"),
+      }),
+    primarySpecialty: z.enum(PRIMARY_SPECIALTIES),
+    subspecialties: z
+      .array(z.string().trim().min(2).max(80))
+      .min(1, t("subspecialtiesRequired"))
+      .max(15),
+    bio: z.string().trim().min(50, t("bioTooShort")).max(4000, t("bioTooLong")),
+    hospitalAffiliations: z
+      .array(z.string().trim().min(1, t("hospitalNameEmpty")).max(200))
+      .max(10, t("tooManyHospitals"))
+      .optional(),
+    medicalLicenseNumber: z.string().trim().max(100).optional().or(z.literal("")),
+    medicalLicenseCountry: z.string().trim().max(100).optional().or(z.literal("")),
+    specialistLicenseNumber: z.string().trim().max(100).optional().or(z.literal("")),
+    yearsExperience: z.coerce.number().int().min(0).max(70).optional(),
+    consultationFormat: z.enum(CONSULTATION_FORMATS),
+    languages: z.array(z.enum(LANGUAGE_OPTIONS)).min(1, t("languagesRequired")),
+    websiteUrl: optionalUrlField(t),
+    instagramUrl: optionalUrlField(t),
+    linkedinUrl: optionalUrlField(t),
+    contactEmail: z.union([z.email({ message: t("invalidEmail") }), z.literal("")]).optional(),
+    contactPhone: z.string().trim().max(40).optional().or(z.literal("")),
+    locations: z.array(makeSurgeonLocationSchema(t)).min(1, t("locationsRequired")).max(10),
+  });
+}
 
-export type SurgeonProfileFormValues = z.infer<typeof surgeonProfileSchema>;
+export type SurgeonProfileFormValues = z.infer<ReturnType<typeof makeSurgeonProfileSchema>>;
 
 /** Deriva las dos columnas booleanas de la DB a partir del campo consultationFormat. */
 export function deriveConsultationAvailability(format: (typeof CONSULTATION_FORMATS)[number]) {

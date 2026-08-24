@@ -1,21 +1,31 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { AuthCard } from "@/components/auth/auth-card";
 import { SignUpForm } from "@/components/auth/sign-up-form";
 
-export const metadata: Metadata = { title: "Creá tu cuenta" };
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/sign-up">): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "auth" });
+  return { title: t("signUpTitle") };
+}
 
-export default function SignUpPage() {
+export default async function SignUpPage({ params }: PageProps<"/[locale]/sign-up">) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "auth" });
+
   return (
     <AuthCard
-      title="Creá tu cuenta de cirujano"
-      description="Registrate para enviar y administrar tu perfil en el directorio de cirujanos de columna de LATAM."
+      title={t("signUpTitle")}
+      description={t("signUpDescription")}
       footer={
         <>
-          ¿Ya tenés una cuenta?{" "}
+          {t("alreadyHaveAccount")}{" "}
           <Link href="/sign-in" className="font-medium text-primary hover:underline">
-            Iniciar sesión
+            {t("signIn")}
           </Link>
         </>
       }

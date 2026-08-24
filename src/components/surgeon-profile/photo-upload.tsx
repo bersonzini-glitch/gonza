@@ -1,6 +1,7 @@
 "use client";
 
 import { Upload } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -22,6 +23,9 @@ export function PhotoUpload({
   fullName: string;
 }) {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations("photoUpload");
+  const tActions = useTranslations("surgeonActions");
   const inputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -42,11 +46,11 @@ export function PhotoUpload({
     setError(null);
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      setError("Solo se permiten imágenes JPEG, PNG o WebP.");
+      setError(tActions("onlyImageTypes"));
       return;
     }
     if (file.size > MAX_BYTES) {
-      setError("La imagen debe pesar menos de 5 MB.");
+      setError(tActions("imageTooLarge"));
       return;
     }
 
@@ -54,13 +58,13 @@ export function PhotoUpload({
     formData.set("photo", file);
 
     startTransition(async () => {
-      const result = await uploadSurgeonPhotoAction(formData);
+      const result = await uploadSurgeonPhotoAction(locale, formData);
       if (result.error) {
         setError(result.error);
         return;
       }
       setCacheBust((v) => v + 1);
-      toast.success("Foto actualizada");
+      toast.success(tActions("photoUpdatedToast"));
       router.refresh();
     });
   }
@@ -87,9 +91,9 @@ export function PhotoUpload({
           onClick={() => inputRef.current?.click()}
         >
           <Upload className="size-4" />
-          {isPending ? "Subiendo…" : "Subir foto"}
+          {isPending ? t("uploading") : t("uploadPhoto")}
         </Button>
-        <p className="mt-1 text-xs text-muted-foreground">JPEG, PNG o WebP. Máximo 5 MB.</p>
+        <p className="mt-1 text-xs text-muted-foreground">{t("fileHint")}</p>
         {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
       </div>
     </div>
