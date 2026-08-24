@@ -1,5 +1,133 @@
 {
   "common": {
-    "language": "Language"
+    "language": "Language",
+    "changeLanguage": "Change language",
+    "changeTheme": "Change theme",
+    "switchToLight": "Switch to light theme",
+    "switchToDark": "Switch to dark theme",
+    "skipToContent": "Skip to main content",
+    "featured": "Featured"
+  },
+  "nav": {
+    "events": "Conferences",
+    "surgeons": "Surgeon directory",
+    "about": "About us & sources",
+    "primaryLabel": "Primary",
+    "mobileLabel": "Mobile",
+    "menu": "Menu",
+    "openMenu": "Open menu"
+  },
+  "userMenu": {
+    "signIn": "Sign in",
+    "signUp": "Join as a surgeon",
+    "dashboard": "My surgeon profile",
+    "admin": "Admin panel",
+    "signOut": "Sign out",
+    "signingOut": "Signing out…"
+  },
+  "footer": {
+    "tagline": "An independent directory of spine surgery conferences and verified surgeons across Latin America. For informational purposes only — not a substitute for professional medical advice.",
+    "discoverHeading": "Discover",
+    "searchEvents": "Search conferences",
+    "surgeonDirectory": "Surgeon directory",
+    "aboutHeading": "About",
+    "aboutUs": "Who we are & our sources",
+    "privacy": "Privacy & medical disclaimer",
+    "forSurgeonsHeading": "For surgeons",
+    "createProfile": "Create your profile",
+    "signIn": "Sign in",
+    "copyright": "© {year} ColumnaLATAM. All event and surgeon data comes from verified sources or was submitted as explained on our data sources page.",
+    "emergencyDisclaimer": "This is not an emergency medical service. In an emergency, contact your local emergency services immediately."
+  },
+  "eventTypes": {
+    "congress": "Congress",
+    "conference": "Conference",
+    "course": "Course",
+    "workshop": "Workshop",
+    "webinar": "Webinar"
+  },
+  "eventFormats": {
+    "inPerson": "In-person",
+    "hybrid": "Hybrid",
+    "online": "Online"
+  },
+  "specialties": {
+    "orthopedicSpineSurgeon": "Orthopedic spine surgeon",
+    "neurosurgeonSpine": "Neurosurgeon (spine specialist)"
+  },
+  "consultationFormats": {
+    "inPerson": "In-person only",
+    "telemedicine": "Telemedicine only",
+    "both": "In-person and telemedicine"
+  },
+  "surgeonProfile": {
+    "verifiedProfile": "Verified profile",
+    "demoProfile": "Sample profile",
+    "verifiedOn": "Verified on {date}",
+    "demoNotice": "This is a clearly labeled <strong>sample profile</strong>, used to demo the directory while real, verified surgeon profiles are added. It does not represent a real person.",
+    "bioHeading": "Biography",
+    "subspecialtiesHeading": "Subspecialties & procedures",
+    "hospitalsPlural": "Hospitals / clinics",
+    "hospitalSingular": "Hospital / clinic",
+    "licenseNumber": "Medical license",
+    "specialistLicense": "Specialist license",
+    "languagesHeading": "Languages",
+    "consultationFormatHeading": "Consultation format",
+    "inPerson": "In-person",
+    "telemedicine": "Telemedicine",
+    "notSpecified": "Not specified",
+    "websiteLink": "Professional website",
+    "disclaimer": "This profile is for informational purposes only and does not constitute medical advice or an endorsement. Always verify credentials directly with the surgeon or their institution.",
+    "readFullDisclaimer": "Read our full legal disclaimer",
+    "metaDescription": "{specialty} verified in the ColumnaLATAM directory.",
+    "telemedicineAvailable": "Telemedicine available"
+  },
+  "eventDetail": {
+    "dateLabel": "Date",
+    "locationLabel": "Location",
+    "organizerLabel": "Organizer",
+    "lastVerifiedLabel": "Last verified",
+    "officialSite": "Official site",
+    "register": "Register",
+    "addToCalendar": "Add to calendar",
+    "aboutHeading": "About this event",
+    "topicsHeading": "Topics",
+    "sourcesHeading": "Data sources",
+    "sourceCheckedOn": "· checked on {date}",
+    "relatedHeading": "Related events"
+  },
+  "eventFilters": {
+    "searchLabel": "Search",
+    "searchPlaceholder": "Event, organizer, city…",
+    "apply": "Apply",
+    "countryLabel": "Country",
+    "anyCountry": "Any country",
+    "eventTypeLabel": "Event type",
+    "anyType": "Any type",
+    "formatLabel": "Format",
+    "anyFormat": "Any format",
+    "topicLabel": "Topic",
+    "anyTopic": "Any topic",
+    "fromLabel": "From",
+    "toLabel": "To",
+    "sortLabel": "Sort by",
+    "sortSoonest": "Soonest",
+    "sortRecentlyAdded": "Recently added",
+    "sortAlphabetical": "Alphabetical",
+    "formAriaLabel": "Filter conferences"
+  },
+  "surgeonFilters": {
+    "searchLabel": "Search by name",
+    "searchPlaceholder": "Search by name…",
+    "apply": "Apply",
+    "countryLabel": "Country",
+    "anyCountry": "Any country",
+    "specialtyLabel": "Specialty",
+    "anySpecialty": "Any specialty",
+    "languageLabel": "Language",
+    "anyLanguage": "Any language",
+    "inPersonLabel": "In-person consultations",
+    "telemedicineLabel": "Telemedicine available",
+    "formAriaLabel": "Filter surgeons"
   }
 }

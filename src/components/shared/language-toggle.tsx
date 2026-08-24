@@ -1,7 +1,7 @@
 "use client";
 
 import { Languages } from "lucide-react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -27,6 +27,7 @@ export function LanguageToggle() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const t = useTranslations("common");
 
   useEffect(() => {
     // Same mount-guard as ThemeToggle: useLocale() can briefly mismatch
@@ -36,7 +37,7 @@ export function LanguageToggle() {
   }, []);
 
   if (!mounted) {
-    return <Button variant="ghost" size="icon" aria-label="Cambiar idioma" disabled />;
+    return <Button variant="ghost" size="icon" aria-label={t("changeLanguage")} disabled />;
   }
 
   const query = searchParams.toString();
@@ -45,7 +46,7 @@ export function LanguageToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Cambiar idioma">
+        <Button variant="ghost" size="icon" aria-label={t("changeLanguage")}>
           <Languages className="size-4.5" />
         </Button>
       </DropdownMenuTrigger>

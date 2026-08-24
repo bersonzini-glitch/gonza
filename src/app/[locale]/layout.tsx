@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 
@@ -91,6 +91,7 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
 
   setRequestLocale(locale);
+  const t = await getTranslations("common");
 
   return (
     <html
@@ -104,7 +105,7 @@ export default async function LocaleLayout({
             <TooltipProvider delay={200}>
               <SmoothScrollProvider>
                 <a href="#main-content" className="skip-link">
-                  Saltar al contenido principal
+                  {t("skipToContent")}
                 </a>
                 <SiteHeader />
                 <main id="main-content" className="flex-1">

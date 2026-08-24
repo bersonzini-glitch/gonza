@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 
@@ -7,7 +8,7 @@ import { SurgeonProfileForm } from "@/components/surgeon-profile/surgeon-profile
 import { Badge } from "@/components/ui/badge";
 import { adminUpdateSurgeonProfileAction } from "@/lib/actions/admin";
 import { getSurgeonForAdmin } from "@/lib/data/admin";
-import { formatDate, PRIMARY_SPECIALTY_LABELS } from "@/lib/format";
+import { formatDate, primarySpecialtyLabels } from "@/lib/format";
 import type { SurgeonProfileFormValues } from "@/lib/validation/surgeon";
 
 export const metadata: Metadata = { title: "Revisar perfil de cirujano" };
@@ -24,11 +25,14 @@ const STATUS_LABELS: Record<string, string> = {
 export default async function AdminSurgeonDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; locale: string }>;
 }) {
-  const { id } = await params;
+  const { id, locale } = await params;
   const surgeon = await getSurgeonForAdmin(id);
   if (!surgeon) notFound();
+
+  const tSpecialties = await getTranslations("specialties");
+  const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
 
   const defaultValues: SurgeonProfileFormValues = {
     fullName: surgeon.full_name,
@@ -73,7 +77,7 @@ export default async function AdminSurgeonDetailPage({
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
           {PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]} · Creado el{" "}
-          {formatDate(surgeon.created_at.slice(0, 10))}
+          {formatDate(surgeon.created_at.slice(0, 10), locale)}
         </p>
       </div>
 

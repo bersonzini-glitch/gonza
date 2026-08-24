@@ -1,31 +1,34 @@
 import { Activity } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
-const FOOTER_LINKS = [
-  {
-    heading: "Descubrir",
-    links: [
-      { href: "/events", label: "Buscar congresos" },
-      { href: "/surgeons", label: "Directorio de cirujanos" },
-    ],
-  },
-  {
-    heading: "Sobre nosotros",
-    links: [
-      { href: "/about", label: "Quiénes somos y fuentes" },
-      { href: "/privacy", label: "Privacidad y aviso médico" },
-    ],
-  },
-  {
-    heading: "Para cirujanos",
-    links: [
-      { href: "/sign-up", label: "Creá tu perfil" },
-      { href: "/sign-in", label: "Iniciar sesión" },
-    ],
-  },
-];
+export async function SiteFooter() {
+  const t = await getTranslations("footer");
 
-export function SiteFooter() {
+  const FOOTER_LINKS = [
+    {
+      heading: t("discoverHeading"),
+      links: [
+        { href: "/events", label: t("searchEvents") },
+        { href: "/surgeons", label: t("surgeonDirectory") },
+      ],
+    },
+    {
+      heading: t("aboutHeading"),
+      links: [
+        { href: "/about", label: t("aboutUs") },
+        { href: "/privacy", label: t("privacy") },
+      ],
+    },
+    {
+      heading: t("forSurgeonsHeading"),
+      links: [
+        { href: "/sign-up", label: t("createProfile") },
+        { href: "/sign-in", label: t("signIn") },
+      ],
+    },
+  ];
+
   return (
     <footer className="mt-auto border-t border-border bg-secondary/40">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -37,11 +40,7 @@ export function SiteFooter() {
                 Columna<span className="text-primary">LATAM</span>
               </span>
             </div>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Un directorio independiente de congresos de cirugía de columna y cirujanos
-              verificados en Latinoamérica. Es solo informativo — no reemplaza el consejo médico
-              profesional.
-            </p>
+            <p className="mt-3 text-sm text-muted-foreground">{t("tagline")}</p>
           </div>
 
           {FOOTER_LINKS.map((group) => (
@@ -64,15 +63,8 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-10 flex flex-col gap-2 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {new Date().getFullYear()} ColumnaLATAM. Todos los datos de eventos y cirujanos
-            provienen de fuentes verificadas o fueron enviados según se explica en nuestra página
-            de fuentes de datos.
-          </p>
-          <p>
-            No es un servicio de emergencias médicas. Ante una emergencia, contactá a los
-            servicios de emergencia locales de inmediato.
-          </p>
+          <p>{t("copyright", { year: new Date().getFullYear() })}</p>
+          <p>{t("emergencyDisclaimer")}</p>
         </div>
       </div>
     </footer>

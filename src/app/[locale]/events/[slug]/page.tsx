@@ -8,6 +8,7 @@ import {
   Ticket,
 } from "lucide-react";
 import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 
@@ -17,8 +18,8 @@ import { ShareButton } from "@/components/shared/share-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  EVENT_FORMAT_LABELS,
-  EVENT_TYPE_LABELS,
+  eventFormatLabels,
+  eventTypeLabels,
   formatDate,
   formatDateRange,
   formatTimeRange,
@@ -29,7 +30,9 @@ export const revalidate = 120;
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
-export async function generateMetadata({ params }: PageProps<"/[locale]/events/[slug]">): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/events/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const event = await getEventBySlug(slug);
   if (!event) return {};
@@ -49,8 +52,11 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/events/[
   };
 }
 
-export default async function EventDetailPage({ params }: PageProps<"/[locale]/events/[slug]">) {
-  const { slug } = await params;
+export default async function EventDetailPage({
+  params,
+}: PageProps<"/[locale]/events/[slug]">) {
+  const { slug, locale } = await params;
+  setRequestLocale(locale);
   const event = await getEventBySlug(slug);
   if (!event) notFound();
 
@@ -58,6 +64,16 @@ export default async function EventDetailPage({ params }: PageProps<"/[locale]/e
     getEventSources(event.id),
     getRelatedEvents(event),
   ]);
+
+  const [t, tCommon, tNav, tEventTypes, tEventFormats] = await Promise.all([
+    getTranslations("eventDetail"),
+    getTranslations("common"),
+    getTranslations("nav"),
+    getTranslations("eventTypes"),
+    getTranslations("eventFormats"),
+  ]);
+  const EVENT_TYPE_LABELS = eventTypeLabels(tEventTypes);
+  const EVENT_FORMAT_LABELS = eventFormatLabels(tEventFormats);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -87,8 +103,10 @@ export default async function EventDetailPage({ params }: PageProps<"/[locale]/e
     organizer: { "@type": "Organization", name: event.organizer, url: event.official_url },
     description: event.description,
     url: `${SITE_URL}/events/${event.slug}`,
-    inLanguage: "es",
+    inLanguage: locale,
   };
+
+  const timeRange = formatTimeRange(event.start_time, event.end_time, locale);
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
@@ -97,9 +115,9 @@ export default async function EventDetailPage({ params }: PageProps<"/[locale]/e
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav aria-label="Ruta de navegación" className="text-sm text-muted-foreground">
+      <nav aria-label={tNav("primaryLabel")} className="text-sm text-muted-foreground">
         <Link href="/events" className="hover:text-foreground">
-          Congresos
+          {tNav("events")}
         </Link>
         <span className="mx-1.5">/</span>
         <span className="text-foreground">{event.title}</span>
@@ -110,7 +128,7 @@ export default async function EventDetailPage({ params }: PageProps<"/[locale]/e
           <Badge variant="secondary">{EVENT_TYPE_LABELS[event.event_type]}</Badge>
           <Badge variant="outline">{EVENT_FORMAT_LABELS[event.format]}</Badge>
           {event.is_featured && (
-            <Badge className="bg-accent text-accent-foreground">Destacado</Badge>
+            <Badge className="bg-accent text-accent-foreground">{tCommon("featured")}</Badge>
           )}
         </div>
 
@@ -122,14 +140,12 @@ export default async function EventDetailPage({ params }: PageProps<"/[locale]/e
           <div className="flex gap-2.5">
             <CalendarDays className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
             <div>
-              <dt className="text-xs font-medium text-muted-foreground">Fecha</dt>
+              <dt className="text-xs font-medium text-muted-foreground">{t("dateLabel")}</dt>
               <dd className="text-sm text-foreground">
-                {formatDateRange(event.start_date, event.end_date)} ({event.timezone})
+                {formatDateRange(event.start_date, event.end_date, locale)} ({event.timezone})
               </dd>
-              {formatTimeRange(event.start_time, event.end_time) && (
-                <dd className="mt-0.5 text-xs text-muted-foreground">
-                  {formatTimeRange(event.start_time, event.end_time)}
-                </dd>
+              {timeRange && (
+                <dd className="mt-0.5 text-xs text-muted-foreground">{timeRange}</dd>
               )}
               {event.date_note && (
                 <dd className="mt-0.5 text-xs text-muted-foreground">{event.date_note}</dd>
@@ -139,7 +155,7 @@ export default async function EventDetailPage({ params }: PageProps<"/[locale]/e
           <div className="flex gap-2.5">
             <MapPin className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
             <div>
-              <dt className="text-xs font-medium text-muted-foreground">Ubicación</dt>
+              <dt className="text-xs font-medium text-muted-foreground">{t("locationLabel")}</dt>
               <dd className="text-sm text-foreground">
                 {[event.venue, event.city, event.country].filter(Boolean).join(", ")}
               </dd>
@@ -148,15 +164,21 @@ export default async function EventDetailPage({ params }: PageProps<"/[locale]/e
           <div className="flex gap-2.5">
             <Globe className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
             <div>
-              <dt className="text-xs font-medium text-muted-foreground">Organizador</dt>
+              <dt className="text-xs font-medium text-muted-foreground">
+                {t("organizerLabel")}
+              </dt>
               <dd className="text-sm text-foreground">{event.organizer}</dd>
             </div>
           </div>
           <div className="flex gap-2.5">
             <CheckCircle2 className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
             <div>
-              <dt className="text-xs font-medium text-muted-foreground">Última verificación</dt>
-              <dd className="text-sm text-foreground">{formatDate(event.last_verified_at)}</dd>
+              <dt className="text-xs font-medium text-muted-foreground">
+                {t("lastVerifiedLabel")}
+              </dt>
+              <dd className="text-sm text-foreground">
+                {formatDate(event.last_verified_at, locale)}
+              </dd>
             </div>
           </div>
         </dl>
@@ -164,7 +186,7 @@ export default async function EventDetailPage({ params }: PageProps<"/[locale]/e
         <div className="mt-6 flex flex-wrap gap-3">
           <Button asChild>
             <a href={event.official_url} target="_blank" rel="noopener noreferrer">
-              Sitio oficial
+              {t("officialSite")}
               <ExternalLink className="size-4" aria-hidden="true" />
             </a>
           </Button>
@@ -172,14 +194,14 @@ export default async function EventDetailPage({ params }: PageProps<"/[locale]/e
             <Button variant="outline" asChild>
               <a href={event.registration_url} target="_blank" rel="noopener noreferrer">
                 <Ticket className="size-4" aria-hidden="true" />
-                Inscribirse
+                {t("register")}
               </a>
             </Button>
           )}
           <Button variant="outline" asChild>
             <a href={`/events/${event.slug}/ics`} download>
               <Download className="size-4" aria-hidden="true" />
-              Agregar al calendario
+              {t("addToCalendar")}
             </a>
           </Button>
           <ShareButton title={event.title} url={`${SITE_URL}/events/${event.slug}`} />
@@ -187,14 +209,14 @@ export default async function EventDetailPage({ params }: PageProps<"/[locale]/e
 
         <div className="prose prose-neutral dark:prose-invert mt-10 max-w-none">
           <h2 className="font-heading text-xl font-semibold text-foreground">
-            Sobre este evento
+            {t("aboutHeading")}
           </h2>
           <p className="whitespace-pre-line text-muted-foreground">{event.description}</p>
         </div>
 
         {event.topics.length > 0 && (
           <div className="mt-6">
-            <h2 className="text-sm font-semibold text-foreground">Temas</h2>
+            <h2 className="text-sm font-semibold text-foreground">{t("topicsHeading")}</h2>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {event.topics.map((topic) => (
                 <Badge key={topic} variant="secondary">
@@ -207,7 +229,7 @@ export default async function EventDetailPage({ params }: PageProps<"/[locale]/e
 
         {sources.length > 0 && (
           <div className="mt-10 rounded-xl border border-border bg-secondary/30 p-5">
-            <h2 className="text-sm font-semibold text-foreground">Fuentes de datos</h2>
+            <h2 className="text-sm font-semibold text-foreground">{t("sourcesHeading")}</h2>
             <ul className="mt-2 space-y-1.5">
               {sources.map((source) => (
                 <li key={source.id} className="text-sm">
@@ -221,7 +243,9 @@ export default async function EventDetailPage({ params }: PageProps<"/[locale]/e
                   </a>
                   <span className="text-muted-foreground">
                     {" "}
-                    · consultado el {formatDate(source.fetched_at.slice(0, 10))}
+                    {t("sourceCheckedOn", {
+                      date: formatDate(source.fetched_at.slice(0, 10), locale),
+                    })}
                   </span>
                 </li>
               ))}
@@ -233,7 +257,7 @@ export default async function EventDetailPage({ params }: PageProps<"/[locale]/e
       {relatedEvents.length > 0 && (
         <section className="mt-14">
           <h2 className="font-heading text-xl font-semibold text-foreground">
-            Eventos relacionados
+            {t("relatedHeading")}
           </h2>
           <ul className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {relatedEvents.map((related) => (

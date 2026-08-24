@@ -1,4 +1,5 @@
 import { Activity } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { MobileNav } from "@/components/layout/mobile-nav";
@@ -10,7 +11,7 @@ import { getCurrentProfile } from "@/lib/auth/session";
 import { NAV_LINKS } from "@/lib/nav-links";
 
 export async function SiteHeader() {
-  const profile = await getCurrentProfile();
+  const [profile, t] = await Promise.all([getCurrentProfile(), getTranslations("nav")]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur supports-backdrop-filter:bg-background/70">
@@ -27,7 +28,7 @@ export async function SiteHeader() {
           </span>
         </Link>
 
-        <nav aria-label="Principal" className="hidden items-center gap-1 md:flex">
+        <nav aria-label={t("primaryLabel")} className="hidden items-center gap-1 md:flex">
           {NAV_LINKS.map((link) => (
             <NavLink
               key={link.href}
@@ -35,7 +36,7 @@ export async function SiteHeader() {
               className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               activeClassName="bg-secondary text-foreground"
             >
-              {link.label}
+              {t(link.labelKey)}
             </NavLink>
           ))}
         </nav>

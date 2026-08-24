@@ -1,9 +1,10 @@
 import { BadgeCheck, MapPin, Video } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { PRIMARY_SPECIALTY_LABELS } from "@/lib/format";
+import { primarySpecialtyLabels } from "@/lib/format";
 import { surgeonPhotoUrl } from "@/lib/supabase/storage";
 import type { SurgeonWithRelations } from "@/lib/data/surgeons";
 
@@ -17,7 +18,13 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-export function SurgeonCard({ surgeon }: { surgeon: SurgeonWithRelations }) {
+export async function SurgeonCard({ surgeon }: { surgeon: SurgeonWithRelations }) {
+  const [t, tSpecialties] = await Promise.all([
+    getTranslations("surgeonProfile"),
+    getTranslations("specialties"),
+  ]);
+  const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
+
   const primaryLocation =
     surgeon.surgeon_locations.find((l) => l.is_primary) ?? surgeon.surgeon_locations[0];
   const photoUrl = surgeonPhotoUrl(surgeon.id, Boolean(surgeon.photo_path));
@@ -43,14 +50,14 @@ export function SurgeonCard({ surgeon }: { surgeon: SurgeonWithRelations }) {
         {!surgeon.is_demo && (
           <BadgeCheck
             className="ml-auto size-5 shrink-0 text-primary"
-            aria-label="Perfil verificado"
+            aria-label={t("verifiedProfile")}
           />
         )}
       </div>
 
       <div className="flex flex-wrap gap-1.5">
         <Badge variant="secondary">{PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]}</Badge>
-        {surgeon.is_demo && <Badge variant="outline">Perfil de muestra</Badge>}
+        {surgeon.is_demo && <Badge variant="outline">{t("demoProfile")}</Badge>}
       </div>
 
       <div className="mt-auto space-y-1.5 text-sm text-muted-foreground">
@@ -63,7 +70,7 @@ export function SurgeonCard({ surgeon }: { surgeon: SurgeonWithRelations }) {
         {surgeon.telemedicine_available && (
           <p className="flex items-center gap-1.5">
             <Video className="size-3.5 shrink-0" aria-hidden="true" />
-            Telemedicina disponible
+            {t("telemedicineAvailable")}
           </p>
         )}
       </div>

@@ -1,3 +1,5 @@
+import type { useTranslations } from "next-intl";
+
 import type {
   ConsultationFormat,
   EventFormat,
@@ -5,65 +7,90 @@ import type {
   PrimarySpecialty,
 } from "@/types/database";
 
-export const EVENT_TYPE_LABELS: Record<EventType, string> = {
-  congress: "Congreso",
-  conference: "Conferencia",
-  course: "Curso",
-  workshop: "Taller",
-  webinar: "Webinar",
-};
+// Each *Labels() function takes the translator for its message namespace
+// and returns the same Record<Enum, string> shape the old hardcoded
+// constants had, so call sites keep doing LABELS[key] unchanged — only
+// the one line that builds LABELS (useTranslations/getTranslations +
+// this call) is new.
+type Translator<Ns extends string> = ReturnType<typeof useTranslations<Ns>>;
 
-export const EVENT_FORMAT_LABELS: Record<EventFormat, string> = {
-  in_person: "Presencial",
-  hybrid: "Híbrido",
-  online: "Online",
-};
+export function eventTypeLabels(t: Translator<"eventTypes">): Record<EventType, string> {
+  return {
+    congress: t("congress"),
+    conference: t("conference"),
+    course: t("course"),
+    workshop: t("workshop"),
+    webinar: t("webinar"),
+  };
+}
 
-export const PRIMARY_SPECIALTY_LABELS: Record<PrimarySpecialty, string> = {
-  orthopedic_spine_surgeon: "Traumatólogo especialista en columna",
-  neurosurgeon_spine: "Neurocirujano especialista en columna",
-};
+export function eventFormatLabels(t: Translator<"eventFormats">): Record<EventFormat, string> {
+  return {
+    in_person: t("inPerson"),
+    hybrid: t("hybrid"),
+    online: t("online"),
+  };
+}
 
-export const CONSULTATION_FORMAT_LABELS: Record<ConsultationFormat, string> = {
-  in_person: "Solo presencial",
-  telemedicine: "Solo telemedicina",
-  both: "Presencial y telemedicina",
-};
+export function primarySpecialtyLabels(
+  t: Translator<"specialties">,
+): Record<PrimarySpecialty, string> {
+  return {
+    orthopedic_spine_surgeon: t("orthopedicSpineSurgeon"),
+    neurosurgeon_spine: t("neurosurgeonSpine"),
+  };
+}
 
-const dateFormatter = new Intl.DateTimeFormat("es-419", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  timeZone: "UTC",
-});
+export function consultationFormatLabels(
+  t: Translator<"consultationFormats">,
+): Record<ConsultationFormat, string> {
+  return {
+    in_person: t("inPerson"),
+    telemedicine: t("telemedicine"),
+    both: t("both"),
+  };
+}
 
-const shortDateFormatter = new Intl.DateTimeFormat("es-419", {
-  year: "numeric",
-  month: "short",
-  day: "numeric",
-  timeZone: "UTC",
-});
+const LOCALE_TAGS = { es: "es-419", en: "en-US", pt: "pt-BR" } as const;
+
+function resolveLocaleTag(locale: string): string {
+  return LOCALE_TAGS[locale as keyof typeof LOCALE_TAGS] ?? LOCALE_TAGS.es;
+}
 
 /** Formatea una fecha YYYY-MM-DD sin desplazarla al huso horario local. */
-export function formatDate(dateStr: string): string {
-  return dateFormatter.format(new Date(`${dateStr}T00:00:00Z`));
+export function formatDate(dateStr: string, locale: string): string {
+  return new Intl.DateTimeFormat(resolveLocaleTag(locale), {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${dateStr}T00:00:00Z`));
 }
 
-export function formatDateShort(dateStr: string): string {
-  return shortDateFormatter.format(new Date(`${dateStr}T00:00:00Z`));
+export function formatDateShort(dateStr: string, locale: string): string {
+  return new Intl.DateTimeFormat(resolveLocaleTag(locale), {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${dateStr}T00:00:00Z`));
 }
 
-export function formatDateRange(startDate: string, endDate: string): string {
-  if (endDate === startDate) return formatDate(startDate);
-  return `${shortDateFormatter.format(new Date(`${startDate}T00:00:00Z`))} – ${formatDate(endDate)}`;
+export function formatDateRange(startDate: string, endDate: string, locale: string): string {
+  if (endDate === startDate) return formatDate(startDate, locale);
+  return `${formatDateShort(startDate, locale)} – ${formatDate(endDate, locale)}`;
 }
 
-export function formatTimeRange(startTime: string | null, endTime: string | null): string | null {
+export function formatTimeRange(
+  startTime: string | null,
+  endTime: string | null,
+  locale: string,
+): string | null {
   if (!startTime) return null;
   const format = (t: string) => {
     const [h, m] = t.split(":").map(Number);
     const d = new Date(Date.UTC(2000, 0, 1, h, m));
-    return new Intl.DateTimeFormat("es-419", {
+    return new Intl.DateTimeFormat(resolveLocaleTag(locale), {
       hour: "numeric",
       minute: "2-digit",
       timeZone: "UTC",

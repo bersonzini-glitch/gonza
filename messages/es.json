@@ -1,5 +1,133 @@
 {
   "common": {
-    "language": "Idioma"
+    "language": "Idioma",
+    "changeLanguage": "Cambiar idioma",
+    "changeTheme": "Cambiar tema",
+    "switchToLight": "Cambiar a tema claro",
+    "switchToDark": "Cambiar a tema oscuro",
+    "skipToContent": "Saltar al contenido principal",
+    "featured": "Destacado"
+  },
+  "nav": {
+    "events": "Congresos",
+    "surgeons": "Directorio de cirujanos",
+    "about": "Sobre nosotros y fuentes",
+    "primaryLabel": "Principal",
+    "mobileLabel": "Móvil",
+    "menu": "Menú",
+    "openMenu": "Abrir menú"
+  },
+  "userMenu": {
+    "signIn": "Iniciar sesión",
+    "signUp": "Sumate como cirujano",
+    "dashboard": "Mi perfil de cirujano",
+    "admin": "Panel de administración",
+    "signOut": "Cerrar sesión",
+    "signingOut": "Cerrando sesión…"
+  },
+  "footer": {
+    "tagline": "Un directorio independiente de congresos de cirugía de columna y cirujanos verificados en Latinoamérica. Es solo informativo — no reemplaza el consejo médico profesional.",
+    "discoverHeading": "Descubrir",
+    "searchEvents": "Buscar congresos",
+    "surgeonDirectory": "Directorio de cirujanos",
+    "aboutHeading": "Sobre nosotros",
+    "aboutUs": "Quiénes somos y fuentes",
+    "privacy": "Privacidad y aviso médico",
+    "forSurgeonsHeading": "Para cirujanos",
+    "createProfile": "Creá tu perfil",
+    "signIn": "Iniciar sesión",
+    "copyright": "© {year} ColumnaLATAM. Todos los datos de eventos y cirujanos provienen de fuentes verificadas o fueron enviados según se explica en nuestra página de fuentes de datos.",
+    "emergencyDisclaimer": "No es un servicio de emergencias médicas. Ante una emergencia, contactá a los servicios de emergencia locales de inmediato."
+  },
+  "eventTypes": {
+    "congress": "Congreso",
+    "conference": "Conferencia",
+    "course": "Curso",
+    "workshop": "Taller",
+    "webinar": "Webinar"
+  },
+  "eventFormats": {
+    "inPerson": "Presencial",
+    "hybrid": "Híbrido",
+    "online": "Online"
+  },
+  "specialties": {
+    "orthopedicSpineSurgeon": "Traumatólogo especialista en columna",
+    "neurosurgeonSpine": "Neurocirujano especialista en columna"
+  },
+  "consultationFormats": {
+    "inPerson": "Solo presencial",
+    "telemedicine": "Solo telemedicina",
+    "both": "Presencial y telemedicina"
+  },
+  "surgeonProfile": {
+    "verifiedProfile": "Perfil verificado",
+    "demoProfile": "Perfil de muestra",
+    "verifiedOn": "Verificado el {date}",
+    "demoNotice": "Este es un <strong>perfil de muestra</strong> claramente identificado, usado para demostrar el directorio mientras se incorporan perfiles reales y verificados de cirujanos. No representa a una persona real.",
+    "bioHeading": "Biografía",
+    "subspecialtiesHeading": "Subespecialidades y procedimientos",
+    "hospitalsPlural": "Hospitales / clínicas",
+    "hospitalSingular": "Hospital / clínica",
+    "licenseNumber": "Matrícula profesional",
+    "specialistLicense": "Matrícula de especialista",
+    "languagesHeading": "Idiomas",
+    "consultationFormatHeading": "Modalidad de consulta",
+    "inPerson": "Presencial",
+    "telemedicine": "Telemedicina",
+    "notSpecified": "No especificado",
+    "websiteLink": "Sitio web profesional",
+    "disclaimer": "Este perfil es solo informativo y no constituye consejo médico ni un aval. Siempre verificá las credenciales directamente con el cirujano o su institución.",
+    "readFullDisclaimer": "Leé nuestro aviso legal completo",
+    "metaDescription": "{specialty} verificado en el directorio de ColumnaLATAM.",
+    "telemedicineAvailable": "Telemedicina disponible"
+  },
+  "eventDetail": {
+    "dateLabel": "Fecha",
+    "locationLabel": "Ubicación",
+    "organizerLabel": "Organizador",
+    "lastVerifiedLabel": "Última verificación",
+    "officialSite": "Sitio oficial",
+    "register": "Inscribirse",
+    "addToCalendar": "Agregar al calendario",
+    "aboutHeading": "Sobre este evento",
+    "topicsHeading": "Temas",
+    "sourcesHeading": "Fuentes de datos",
+    "sourceCheckedOn": "· consultado el {date}",
+    "relatedHeading": "Eventos relacionados"
+  },
+  "eventFilters": {
+    "searchLabel": "Buscar",
+    "searchPlaceholder": "Evento, organizador, ciudad…",
+    "apply": "Aplicar",
+    "countryLabel": "País",
+    "anyCountry": "Cualquier país",
+    "eventTypeLabel": "Tipo de evento",
+    "anyType": "Cualquier tipo",
+    "formatLabel": "Modalidad",
+    "anyFormat": "Cualquier modalidad",
+    "topicLabel": "Tema",
+    "anyTopic": "Cualquier tema",
+    "fromLabel": "Desde",
+    "toLabel": "Hasta",
+    "sortLabel": "Ordenar por",
+    "sortSoonest": "Más próximos",
+    "sortRecentlyAdded": "Agregados recientemente",
+    "sortAlphabetical": "Alfabético",
+    "formAriaLabel": "Filtrar congresos"
+  },
+  "surgeonFilters": {
+    "searchLabel": "Buscar por nombre",
+    "searchPlaceholder": "Buscar por nombre…",
+    "apply": "Aplicar",
+    "countryLabel": "País",
+    "anyCountry": "Cualquier país",
+    "specialtyLabel": "Especialidad",
+    "anySpecialty": "Cualquier especialidad",
+    "languageLabel": "Idioma",
+    "anyLanguage": "Cualquier idioma",
+    "inPersonLabel": "Consultas presenciales",
+    "telemedicineLabel": "Telemedicina disponible",
+    "formAriaLabel": "Filtrar cirujanos"
   }
 }

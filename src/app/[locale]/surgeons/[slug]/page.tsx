@@ -11,6 +11,7 @@ import {
   Video,
 } from "lucide-react";
 import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 
@@ -18,7 +19,7 @@ import { FadeIn } from "@/components/shared/fade-in";
 import { ShareButton } from "@/components/shared/share-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { formatDate, PRIMARY_SPECIALTY_LABELS } from "@/lib/format";
+import { formatDate, primarySpecialtyLabels } from "@/lib/format";
 import { getSurgeonBySlug } from "@/lib/data/surgeons";
 import { surgeonPhotoUrl } from "@/lib/supabase/storage";
 
@@ -43,7 +44,14 @@ export async function generateMetadata({
   const surgeon = await getSurgeonBySlug(slug);
   if (!surgeon || surgeon.status !== "approved") return {};
 
-  const description = `${PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]} verificado en el directorio de ColumnaLATAM.`;
+  const [t, tSpecialties] = await Promise.all([
+    getTranslations("surgeonProfile"),
+    getTranslations("specialties"),
+  ]);
+  const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
+  const description = t("metaDescription", {
+    specialty: PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty],
+  });
 
   return {
     title: surgeon.full_name,
@@ -53,11 +61,21 @@ export async function generateMetadata({
   };
 }
 
-export default async function SurgeonProfilePage({ params }: PageProps<"/[locale]/surgeons/[slug]">) {
-  const { slug } = await params;
+export default async function SurgeonProfilePage({
+  params,
+}: PageProps<"/[locale]/surgeons/[slug]">) {
+  const { slug, locale } = await params;
+  setRequestLocale(locale);
   const surgeon = await getSurgeonBySlug(slug);
 
   if (!surgeon || surgeon.status !== "approved") notFound();
+
+  const [t, tNav, tSpecialties] = await Promise.all([
+    getTranslations("surgeonProfile"),
+    getTranslations("nav"),
+    getTranslations("specialties"),
+  ]);
+  const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
 
   const photoUrl = surgeonPhotoUrl(surgeon.id, Boolean(surgeon.photo_path));
   const primaryLocation =
@@ -77,7 +95,7 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/[locale
           addressCountry: primaryLocation.country,
         }
       : undefined,
-    inLanguage: "es",
+    inLanguage: locale,
   };
 
   return (
@@ -87,9 +105,9 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/[locale
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav aria-label="Ruta de navegación" className="text-sm text-muted-foreground">
+      <nav aria-label={tNav("primaryLabel")} className="text-sm text-muted-foreground">
         <Link href="/surgeons" className="hover:text-foreground">
-          Directorio de cirujanos
+          {tNav("surgeons")}
         </Link>
         <span className="mx-1.5">/</span>
         <span className="text-foreground">{surgeon.full_name}</span>
@@ -108,17 +126,17 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/[locale
                 {surgeon.full_name}
               </h1>
               {!surgeon.is_demo && (
-                <BadgeCheck className="size-5 text-primary" aria-label="Perfil verificado" />
+                <BadgeCheck className="size-5 text-primary" aria-label={t("verifiedProfile")} />
               )}
             </div>
             <div className="mt-3 flex flex-wrap gap-1.5">
               <Badge variant="secondary">
                 {PRIMARY_SPECIALTY_LABELS[surgeon.primary_specialty]}
               </Badge>
-              {surgeon.is_demo && <Badge variant="outline">Perfil de muestra</Badge>}
+              {surgeon.is_demo && <Badge variant="outline">{t("demoProfile")}</Badge>}
               {surgeon.approved_at && (
                 <Badge variant="outline">
-                  Verificado el {formatDate(surgeon.approved_at.slice(0, 10))}
+                  {t("verifiedOn", { date: formatDate(surgeon.approved_at.slice(0, 10), locale) })}
                 </Badge>
               )}
             </div>
@@ -131,15 +149,15 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/[locale
 
         {surgeon.is_demo && (
           <div className="mt-6 rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning-foreground">
-            Este es un <strong>perfil de muestra</strong> claramente identificado, usado para
-            demostrar el directorio mientras se incorporan perfiles reales y verificados de
-            cirujanos. No representa a una persona real.
+            {t.rich("demoNotice", { strong: (chunks) => <strong>{chunks}</strong> })}
           </div>
         )}
 
         {surgeon.bio && (
           <div className="prose prose-neutral dark:prose-invert mt-8 max-w-none">
-            <h2 className="font-heading text-xl font-semibold text-foreground">Biografía</h2>
+            <h2 className="font-heading text-xl font-semibold text-foreground">
+              {t("bioHeading")}
+            </h2>
             <p className="whitespace-pre-line text-muted-foreground">{surgeon.bio}</p>
           </div>
         )}
@@ -147,7 +165,7 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/[locale
         {surgeon.surgeon_specialties.length > 0 && (
           <div className="mt-8">
             <h2 className="text-sm font-semibold text-foreground">
-              Subespecialidades y procedimientos
+              {t("subspecialtiesHeading")}
             </h2>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {surgeon.surgeon_specialties.map((s) => (
@@ -177,8 +195,8 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/[locale
               <div>
                 <p className="text-xs font-medium text-muted-foreground">
                   {surgeon.hospital_affiliations.length > 1
-                    ? "Hospitales / clínicas"
-                    : "Hospital / clínica"}
+                    ? t("hospitalsPlural")
+                    : t("hospitalSingular")}
                 </p>
                 <p className="text-sm text-foreground">
                   {surgeon.hospital_affiliations.join(", ")}
@@ -191,9 +209,7 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/[locale
             <div className="flex gap-2.5">
               <BadgeCheck className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
               <div>
-                <p className="text-xs font-medium text-muted-foreground">
-                  Matrícula profesional
-                </p>
+                <p className="text-xs font-medium text-muted-foreground">{t("licenseNumber")}</p>
                 <p className="text-sm text-foreground">
                   {surgeon.medical_license_number}
                   {surgeon.medical_license_country ? ` (${surgeon.medical_license_country})` : ""}
@@ -207,7 +223,7 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/[locale
               <BadgeCheck className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
               <div>
                 <p className="text-xs font-medium text-muted-foreground">
-                  Matrícula de especialista
+                  {t("specialistLicense")}
                 </p>
                 <p className="text-sm text-foreground">{surgeon.specialist_license_number}</p>
               </div>
@@ -218,7 +234,9 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/[locale
             <div className="flex gap-2.5">
               <Languages className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
               <div>
-                <p className="text-xs font-medium text-muted-foreground">Idiomas</p>
+                <p className="text-xs font-medium text-muted-foreground">
+                  {t("languagesHeading")}
+                </p>
                 <p className="text-sm text-foreground">{surgeon.languages.join(", ")}</p>
               </div>
             </div>
@@ -227,14 +245,16 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/[locale
           <div className="flex gap-2.5">
             <Video className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
             <div>
-              <p className="text-xs font-medium text-muted-foreground">Modalidad de consulta</p>
+              <p className="text-xs font-medium text-muted-foreground">
+                {t("consultationFormatHeading")}
+              </p>
               <p className="text-sm text-foreground">
                 {[
-                  surgeon.in_person_available && "Presencial",
-                  surgeon.telemedicine_available && "Telemedicina",
+                  surgeon.in_person_available && t("inPerson"),
+                  surgeon.telemedicine_available && t("telemedicine"),
                 ]
                   .filter(Boolean)
-                  .join(" · ") || "No especificado"}
+                  .join(" · ") || t("notSpecified")}
               </p>
             </div>
           </div>
@@ -254,7 +274,7 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/[locale
                 className="flex items-center gap-1.5 text-primary hover:underline"
               >
                 <Globe className="size-4" aria-hidden="true" />
-                Sitio web profesional
+                {t("websiteLink")}
               </a>
             )}
             {surgeon.instagram_url && (
@@ -298,10 +318,9 @@ export default async function SurgeonProfilePage({ params }: PageProps<"/[locale
         )}
 
         <p className="mt-10 border-t border-border pt-6 text-xs text-muted-foreground">
-          Este perfil es solo informativo y no constituye consejo médico ni un aval. Siempre
-          verificá las credenciales directamente con el cirujano o su institución.{" "}
+          {t("disclaimer")}{" "}
           <Link href="/privacy" className="underline">
-            Leé nuestro aviso legal completo
+            {t("readFullDisclaimer")}
           </Link>
           .
         </p>

@@ -16,7 +16,8 @@ const EVENT_STATUS_LABELS: Record<string, string> = {
   rejected: "rechazado",
 };
 
-export default async function AdminEventsPage() {
+export default async function AdminEventsPage({ params }: PageProps<"/[locale]/admin/events">) {
+  const { locale } = await params;
   const events = await listEventsForAdmin();
 
   return (
@@ -65,7 +66,7 @@ export default async function AdminEventsPage() {
                   )}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">
-                  {formatDateRange(event.start_date, event.end_date)}
+                  {formatDateRange(event.start_date, event.end_date, locale)}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{event.country}</td>
                 <td className="px-4 py-3">

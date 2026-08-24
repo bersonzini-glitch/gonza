@@ -1,7 +1,7 @@
 "use client";
 
 import { LayoutDashboard, Menu, ShieldCheck } from "lucide-react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
@@ -32,20 +32,25 @@ export function MobileNav({ profile }: { profile: CurrentProfile | null }) {
   const router = useRouter();
   const query = searchParams.toString();
   const target = query ? `${pathname}?${query}` : pathname;
+  const t = useTranslations("nav");
+  const tUser = useTranslations("userMenu");
+  const tCommon = useTranslations("common");
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden" aria-label="Abrir menú">
+        <Button variant="ghost" size="icon" className="md:hidden" aria-label={t("openMenu")}>
           <Menu className="size-5" />
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="w-72">
         <SheetHeader>
-          <SheetTitle>Menú</SheetTitle>
+          <SheetTitle>{t("menu")}</SheetTitle>
         </SheetHeader>
         <div className="flex items-center justify-between gap-1 px-4 pb-2">
-          <span className="text-xs font-medium text-muted-foreground">Idioma</span>
+          <span className="text-xs font-medium text-muted-foreground">
+            {tCommon("language")}
+          </span>
           <div className="flex gap-1">
             {routing.locales.map((l) => (
               <button
@@ -65,7 +70,7 @@ export function MobileNav({ profile }: { profile: CurrentProfile | null }) {
           </div>
         </div>
 
-        <nav aria-label="Móvil" className="flex flex-col gap-1 px-4">
+        <nav aria-label={t("mobileLabel")} className="flex flex-col gap-1 px-4">
           {NAV_LINKS.map((link) => (
             <SheetClose asChild key={link.href}>
               <NavLink
@@ -73,7 +78,7 @@ export function MobileNav({ profile }: { profile: CurrentProfile | null }) {
                 className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-secondary"
                 activeClassName="bg-secondary text-primary"
               >
-                {link.label}
+                {t(link.labelKey)}
               </NavLink>
             </SheetClose>
           ))}
@@ -87,7 +92,7 @@ export function MobileNav({ profile }: { profile: CurrentProfile | null }) {
                   href="/dashboard"
                   className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-secondary"
                 >
-                  <LayoutDashboard className="size-4" /> Mi perfil de cirujano
+                  <LayoutDashboard className="size-4" /> {tUser("dashboard")}
                 </Link>
               </SheetClose>
               {profile.role === "admin" && (
@@ -96,7 +101,7 @@ export function MobileNav({ profile }: { profile: CurrentProfile | null }) {
                     href="/admin"
                     className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-foreground hover:bg-secondary"
                   >
-                    <ShieldCheck className="size-4" /> Panel de administración
+                    <ShieldCheck className="size-4" /> {tUser("admin")}
                   </Link>
                 </SheetClose>
               )}
@@ -108,12 +113,12 @@ export function MobileNav({ profile }: { profile: CurrentProfile | null }) {
             <div className="flex flex-col gap-2 px-1 pt-1">
               <SheetClose asChild>
                 <Button variant="outline" asChild>
-                  <Link href="/sign-in">Iniciar sesión</Link>
+                  <Link href="/sign-in">{tUser("signIn")}</Link>
                 </Button>
               </SheetClose>
               <SheetClose asChild>
                 <Button asChild>
-                  <Link href="/sign-up">Sumate como cirujano</Link>
+                  <Link href="/sign-up">{tUser("signUp")}</Link>
                 </Button>
               </SheetClose>
             </div>

@@ -1,12 +1,13 @@
 import { CalendarSearch, MapPinned, ShieldCheck, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { EventCard } from "@/components/events/event-card";
 import { FadeIn } from "@/components/shared/fade-in";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { EVENT_FORMAT_LABELS, formatDateRange } from "@/lib/format";
+import { eventFormatLabels, formatDateRange } from "@/lib/format";
 import { getDistinctCountries, getFeaturedEvent, getUpcomingEvents } from "@/lib/data/events";
 
 export const revalidate = 60;
@@ -15,12 +16,17 @@ export const metadata: Metadata = {
   title: "Congresos de columna y directorio de cirujanos verificados en LATAM",
 };
 
-export default async function HomePage() {
-  const [upcomingEvents, featuredEvent, countries] = await Promise.all([
+export default async function HomePage({ params }: PageProps<"/[locale]">) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const [upcomingEvents, featuredEvent, countries, tEventFormats] = await Promise.all([
     getUpcomingEvents(6),
     getFeaturedEvent(),
     getDistinctCountries(),
+    getTranslations("eventFormats"),
   ]);
+  const EVENT_FORMAT_LABELS = eventFormatLabels(tEventFormats);
 
   return (
     <div>
@@ -94,7 +100,7 @@ export default async function HomePage() {
                   {featuredEvent.title}
                 </h2>
                 <p className="mt-2 text-muted-foreground">
-                  {formatDateRange(featuredEvent.start_date, featuredEvent.end_date)} ·{" "}
+                  {formatDateRange(featuredEvent.start_date, featuredEvent.end_date, locale)} ·{" "}
                   {[featuredEvent.city, featuredEvent.country].filter(Boolean).join(", ")} ·{" "}
                   {EVENT_FORMAT_LABELS[featuredEvent.format]}
                 </p>

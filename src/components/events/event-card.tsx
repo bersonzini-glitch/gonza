@@ -1,11 +1,21 @@
 import { CalendarDays, MapPin } from "lucide-react";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { Badge } from "@/components/ui/badge";
-import { EVENT_FORMAT_LABELS, EVENT_TYPE_LABELS, formatDateRange } from "@/lib/format";
+import { eventFormatLabels, eventTypeLabels, formatDateRange } from "@/lib/format";
 import type { EventRow } from "@/lib/data/events";
 
-export function EventCard({ event }: { event: EventRow }) {
+export async function EventCard({ event }: { event: EventRow }) {
+  const [locale, tCommon, tEventTypes, tEventFormats] = await Promise.all([
+    getLocale(),
+    getTranslations("common"),
+    getTranslations("eventTypes"),
+    getTranslations("eventFormats"),
+  ]);
+  const EVENT_TYPE_LABELS = eventTypeLabels(tEventTypes);
+  const EVENT_FORMAT_LABELS = eventFormatLabels(tEventFormats);
+
   return (
     <Link
       href={`/events/${event.slug}`}
@@ -15,7 +25,7 @@ export function EventCard({ event }: { event: EventRow }) {
         <Badge variant="secondary">{EVENT_TYPE_LABELS[event.event_type]}</Badge>
         <Badge variant="outline">{EVENT_FORMAT_LABELS[event.format]}</Badge>
         {event.is_featured && (
-          <Badge className="bg-accent text-accent-foreground">Destacado</Badge>
+          <Badge className="bg-accent text-accent-foreground">{tCommon("featured")}</Badge>
         )}
       </div>
 
@@ -26,7 +36,7 @@ export function EventCard({ event }: { event: EventRow }) {
       <div className="mt-auto space-y-1.5 text-sm text-muted-foreground">
         <p className="flex items-center gap-1.5">
           <CalendarDays className="size-3.5 shrink-0" aria-hidden="true" />
-          {formatDateRange(event.start_date, event.end_date)}
+          {formatDateRange(event.start_date, event.end_date, locale)}
           {event.date_note ? ` · ${event.date_note}` : ""}
         </p>
         <p className="flex items-center gap-1.5">

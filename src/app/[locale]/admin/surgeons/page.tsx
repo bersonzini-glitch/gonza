@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { Badge } from "@/components/ui/badge";
-import { PRIMARY_SPECIALTY_LABELS } from "@/lib/format";
+import { primarySpecialtyLabels } from "@/lib/format";
 import { listSurgeonsForAdmin } from "@/lib/data/admin";
 
 export const metadata: Metadata = { title: "Cola de cirujanos" };
@@ -35,6 +36,8 @@ export default async function AdminSurgeonsPage({
     specialty: params.specialty as never,
     q: params.q,
   });
+  const tSpecialties = await getTranslations("specialties");
+  const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
 
   return (
     <div className="space-y-6">

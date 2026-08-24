@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, Plus, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useState } from "react";
 import { useFieldArray, useForm, type Resolver } from "react-hook-form";
@@ -20,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { EVENT_FORMAT_LABELS, EVENT_TYPE_LABELS } from "@/lib/format";
+import { eventFormatLabels, eventTypeLabels } from "@/lib/format";
 import {
   EVENT_FORMATS,
   EVENT_SOURCE_TYPES,
@@ -65,6 +66,10 @@ export function EventForm({
   const router = useRouter();
   const [customTopic, setCustomTopic] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
+  const tEventTypes = useTranslations("eventTypes");
+  const tEventFormats = useTranslations("eventFormats");
+  const EVENT_TYPE_LABELS = eventTypeLabels(tEventTypes);
+  const EVENT_FORMAT_LABELS = eventFormatLabels(tEventFormats);
 
   const form = useForm<EventInput>({
     resolver: zodResolver(eventSchema) as Resolver<EventInput>,

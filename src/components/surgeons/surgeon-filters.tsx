@@ -1,6 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 
 import { useRouter } from "@/i18n/navigation";
@@ -17,33 +18,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PRIMARY_SPECIALTY_LABELS } from "@/lib/format";
+import { primarySpecialtyLabels } from "@/lib/format";
 import { LANGUAGE_OPTIONS } from "@/lib/validation/surgeon";
 import { LATAM_COUNTRIES } from "@/lib/validation/event";
 
 const ANY = "__any__";
-
-// Base UI's <Select.Value> only resolves a label for the current value from
-// an explicit `items` map passed to <Select.Root> — without it, it falls
-// back to showing the raw stored value (e.g. the ANY sentinel itself).
-const COUNTRY_ITEMS: Record<string, string> = {
-  [ANY]: "Cualquier país",
-  ...Object.fromEntries(LATAM_COUNTRIES.map((c) => [c, c])),
-};
-const SPECIALTY_ITEMS: Record<string, string> = {
-  [ANY]: "Cualquier especialidad",
-  ...PRIMARY_SPECIALTY_LABELS,
-};
-const LANGUAGE_ITEMS: Record<string, string> = {
-  [ANY]: "Cualquier idioma",
-  ...Object.fromEntries(LANGUAGE_OPTIONS.map((l) => [l, l])),
-};
 
 export function SurgeonFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
   const [q, setQ] = useState(searchParams.get("q") ?? "");
+  const t = useTranslations("surgeonFilters");
+  const tSpecialties = useTranslations("specialties");
+
+  const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
+
+  // Base UI's <Select.Value> only resolves a label for the current value from
+  // an explicit `items` map passed to <Select.Root> — without it, it falls
+  // back to showing the raw stored value (e.g. the ANY sentinel itself).
+  const COUNTRY_ITEMS: Record<string, string> = {
+    [ANY]: t("anyCountry"),
+    ...Object.fromEntries(LATAM_COUNTRIES.map((c) => [c, c])),
+  };
+  const SPECIALTY_ITEMS: Record<string, string> = {
+    [ANY]: t("anySpecialty"),
+    ...PRIMARY_SPECIALTY_LABELS,
+  };
+  const LANGUAGE_ITEMS: Record<string, string> = {
+    [ANY]: t("anyLanguage"),
+    ...Object.fromEntries(LANGUAGE_OPTIONS.map((l) => [l, l])),
+  };
 
   function updateParam(key: string, value: string | null) {
     const params = new URLSearchParams(searchParams.toString());
@@ -65,7 +70,7 @@ export function SurgeonFilters() {
   return (
     <form
       onSubmit={handleSubmit}
-      aria-label="Filtrar cirujanos"
+      aria-label={t("formAriaLabel")}
       className="space-y-4 rounded-xl border border-border bg-card p-4 sm:p-5"
     >
       <div className="flex flex-col gap-2 sm:flex-row">
@@ -75,24 +80,24 @@ export function SurgeonFilters() {
             aria-hidden="true"
           />
           <Label htmlFor="q" className="sr-only">
-            Buscar por nombre
+            {t("searchLabel")}
           </Label>
           <Input
             id="q"
             type="search"
-            placeholder="Buscar por nombre…"
+            placeholder={t("searchPlaceholder")}
             value={q}
             onChange={(e) => setQ(e.target.value)}
             className="pl-9"
           />
         </div>
-        <Button type="submit">Aplicar</Button>
+        <Button type="submit">{t("apply")}</Button>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
           <Label htmlFor="country" className="mb-1.5 block text-xs">
-            País
+            {t("countryLabel")}
           </Label>
           <Select
             items={COUNTRY_ITEMS}
@@ -100,10 +105,10 @@ export function SurgeonFilters() {
             onValueChange={(v) => updateParam("country", v)}
           >
             <SelectTrigger id="country" className="w-full">
-              <SelectValue placeholder="Cualquier país" />
+              <SelectValue placeholder={t("anyCountry")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ANY}>Cualquier país</SelectItem>
+              <SelectItem value={ANY}>{t("anyCountry")}</SelectItem>
               {LATAM_COUNTRIES.map((c) => (
                 <SelectItem key={c} value={c}>
                   {c}
@@ -115,7 +120,7 @@ export function SurgeonFilters() {
 
         <div>
           <Label htmlFor="specialty" className="mb-1.5 block text-xs">
-            Especialidad
+            {t("specialtyLabel")}
           </Label>
           <Select
             items={SPECIALTY_ITEMS}
@@ -123,10 +128,10 @@ export function SurgeonFilters() {
             onValueChange={(v) => updateParam("specialty", v)}
           >
             <SelectTrigger id="specialty" className="w-full">
-              <SelectValue placeholder="Cualquier especialidad" />
+              <SelectValue placeholder={t("anySpecialty")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ANY}>Cualquier especialidad</SelectItem>
+              <SelectItem value={ANY}>{t("anySpecialty")}</SelectItem>
               {Object.entries(PRIMARY_SPECIALTY_LABELS).map(([value, label]) => (
                 <SelectItem key={value} value={value}>
                   {label}
@@ -138,7 +143,7 @@ export function SurgeonFilters() {
 
         <div className="col-span-2">
           <Label htmlFor="language" className="mb-1.5 block text-xs">
-            Idioma
+            {t("languageLabel")}
           </Label>
           <Select
             items={LANGUAGE_ITEMS}
@@ -146,10 +151,10 @@ export function SurgeonFilters() {
             onValueChange={(v) => updateParam("language", v)}
           >
             <SelectTrigger id="language" className="w-full">
-              <SelectValue placeholder="Cualquier idioma" />
+              <SelectValue placeholder={t("anyLanguage")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={ANY}>Cualquier idioma</SelectItem>
+              <SelectItem value={ANY}>{t("anyLanguage")}</SelectItem>
               {LANGUAGE_OPTIONS.map((lang) => (
                 <SelectItem key={lang} value={lang}>
                   {lang}
@@ -163,7 +168,7 @@ export function SurgeonFilters() {
       <div className="space-y-3 border-t border-border pt-3">
         <div className="flex items-center justify-between">
           <Label htmlFor="inPerson" className="text-sm font-normal">
-            Consultas presenciales
+            {t("inPersonLabel")}
           </Label>
           <Switch
             id="inPerson"
@@ -173,7 +178,7 @@ export function SurgeonFilters() {
         </div>
         <div className="flex items-center justify-between">
           <Label htmlFor="telemedicine" className="text-sm font-normal">
-            Telemedicina disponible
+            {t("telemedicineLabel")}
           </Label>
           <Switch
             id="telemedicine"

@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, Plus, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useState } from "react";
 import { useFieldArray, useForm, type Resolver } from "react-hook-form";
@@ -21,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { saveSurgeonProfileAction } from "@/lib/actions/surgeon";
-import { PRIMARY_SPECIALTY_LABELS } from "@/lib/format";
+import { primarySpecialtyLabels } from "@/lib/format";
 import {
   CONSULTATION_FORMATS,
   LANGUAGE_OPTIONS,
@@ -60,6 +61,8 @@ export function SurgeonProfileForm({
   const router = useRouter();
   const [customTag, setCustomTag] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
+  const tSpecialties = useTranslations("specialties");
+  const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
 
   const form = useForm<SurgeonProfileFormValues>({
     resolver: zodResolver(surgeonProfileSchema) as Resolver<SurgeonProfileFormValues>,

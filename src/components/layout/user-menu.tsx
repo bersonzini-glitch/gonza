@@ -1,4 +1,5 @@
 import { LayoutDashboard, ShieldCheck, UserRound } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { SignOutItem } from "@/components/layout/sign-out-item";
@@ -13,15 +14,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { CurrentProfile } from "@/lib/auth/types";
 
-export function UserMenu({ profile }: { profile: CurrentProfile | null }) {
+export async function UserMenu({ profile }: { profile: CurrentProfile | null }) {
+  const t = await getTranslations("userMenu");
+
   if (!profile) {
     return (
       <div className="flex items-center gap-2">
         <Button variant="ghost" asChild>
-          <Link href="/sign-in">Iniciar sesión</Link>
+          <Link href="/sign-in">{t("signIn")}</Link>
         </Button>
         <Button asChild>
-          <Link href="/sign-up">Sumate como cirujano</Link>
+          <Link href="/sign-up">{t("signUp")}</Link>
         </Button>
       </div>
     );
@@ -41,14 +44,14 @@ export function UserMenu({ profile }: { profile: CurrentProfile | null }) {
         <DropdownMenuItem asChild>
           <Link href="/dashboard">
             <LayoutDashboard className="size-4" aria-hidden="true" />
-            Mi perfil de cirujano
+            {t("dashboard")}
           </Link>
         </DropdownMenuItem>
         {profile.role === "admin" && (
           <DropdownMenuItem asChild>
             <Link href="/admin">
               <ShieldCheck className="size-4" aria-hidden="true" />
-              Panel de administración
+              {t("admin")}
             </Link>
           </DropdownMenuItem>
         )}
