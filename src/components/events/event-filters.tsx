@@ -117,7 +117,7 @@ export function EventFilters() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-3">
         <div>
           <Label htmlFor="country" className="mb-1.5 block text-xs">
             {t("countryLabel")}
