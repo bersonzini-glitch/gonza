@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, Lock } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useActionState } from "react";
 
@@ -13,7 +13,15 @@ import { sendContactMessageAction, type ContactActionState } from "@/lib/actions
 
 const initialState: ContactActionState = {};
 
-export function ContactForm() {
+const LOCKED_FIELD_CLASSNAME = "read-only:bg-input/50 read-only:cursor-default";
+
+export function ContactForm({
+  defaultName,
+  defaultEmail,
+}: {
+  defaultName?: string;
+  defaultEmail?: string;
+}) {
   const locale = useLocale();
   const t = useTranslations("contact");
   const [state, formAction, isPending] = useActionState(
@@ -33,13 +41,36 @@ export function ContactForm() {
   return (
     <form action={formAction} className="space-y-4" noValidate>
       <div className="space-y-1.5">
-        <Label htmlFor="name">{t("nameLabel")}</Label>
-        <Input id="name" name="name" autoComplete="name" required />
+        <Label htmlFor="name" className="flex items-center gap-1.5">
+          {t("nameLabel")}
+          {defaultName && <Lock className="size-3 text-muted-foreground" aria-hidden="true" />}
+        </Label>
+        <Input
+          id="name"
+          name="name"
+          autoComplete="name"
+          required
+          defaultValue={defaultName}
+          readOnly={Boolean(defaultName)}
+          className={defaultName ? LOCKED_FIELD_CLASSNAME : undefined}
+        />
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="email">{t("emailLabel")}</Label>
-        <Input id="email" name="email" type="email" autoComplete="email" required />
+        <Label htmlFor="email" className="flex items-center gap-1.5">
+          {t("emailLabel")}
+          {defaultEmail && <Lock className="size-3 text-muted-foreground" aria-hidden="true" />}
+        </Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          defaultValue={defaultEmail}
+          readOnly={Boolean(defaultEmail)}
+          className={defaultEmail ? LOCKED_FIELD_CLASSNAME : undefined}
+        />
       </div>
 
       <div className="space-y-1.5">
