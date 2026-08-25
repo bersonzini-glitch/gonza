@@ -18,6 +18,7 @@ export async function SiteFooter() {
       links: [
         { href: "/about", label: t("aboutUs") },
         { href: "/privacy", label: t("privacy") },
+        { href: "/contact", label: t("contact") },
       ],
     },
     {

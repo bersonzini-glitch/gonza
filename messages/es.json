@@ -15,7 +15,8 @@
     "primaryLabel": "Principal",
     "mobileLabel": "Móvil",
     "menu": "Menú",
-    "openMenu": "Abrir menú"
+    "openMenu": "Abrir menú",
+    "contact": "Contacto"
   },
   "userMenu": {
     "signIn": "Iniciar sesión",
@@ -37,7 +38,8 @@
     "createProfile": "Creá tu perfil",
     "signIn": "Iniciar sesión",
     "copyright": "© {year} ColumnaLATAM. Todos los datos de eventos y cirujanos provienen de fuentes verificadas o fueron enviados según se explica en nuestra página de fuentes de datos.",
-    "emergencyDisclaimer": "No es un servicio de emergencias médicas. Ante una emergencia, contactá a los servicios de emergencia locales de inmediato."
+    "emergencyDisclaimer": "No es un servicio de emergencias médicas. Ante una emergencia, contactá a los servicios de emergencia locales de inmediato.",
+    "contact": "Contacto"
   },
   "eventTypes": {
     "congress": "Congreso",
@@ -610,5 +612,28 @@
     "cervical_spine": "Columna cervical",
     "lumbar_spine": "Columna lumbar",
     "scoliosis": "Escoliosis"
+  },
+  "contact": {
+    "metaTitle": "Contacto",
+    "metaDescription": "Escribinos para sugerir un congreso, curso o webinar, o para cualquier consulta sobre ColumnaLATAM.",
+    "pageTitle": "Contacto",
+    "intro": "¿Querés sugerir un congreso, curso o webinar, o tenés alguna consulta? Escribinos y te respondemos a la brevedad.",
+    "nameLabel": "Nombre",
+    "emailLabel": "Email",
+    "messageLabel": "Mensaje",
+    "send": "Enviar mensaje",
+    "sending": "Enviando..."
+  },
+  "contactValidation": {
+    "nameMin": "El nombre debe tener al menos 2 caracteres.",
+    "invalidEmail": "Ingresá un email válido.",
+    "messageMin": "El mensaje debe tener al menos 10 caracteres."
+  },
+  "contactErrors": {
+    "invalidData": "Revisá los datos ingresados.",
+    "tooManyAttempts": "Demasiados intentos. Probá de nuevo más tarde.",
+    "notConfigured": "El formulario de contacto no está disponible en este momento.",
+    "sendFailed": "No se pudo enviar el mensaje. Probá de nuevo más tarde.",
+    "sent": "¡Mensaje enviado! Te vamos a responder a la brevedad."
   }
 }

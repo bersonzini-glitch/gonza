@@ -15,7 +15,8 @@
     "primaryLabel": "Primary",
     "mobileLabel": "Mobile",
     "menu": "Menu",
-    "openMenu": "Open menu"
+    "openMenu": "Open menu",
+    "contact": "Contact"
   },
   "userMenu": {
     "signIn": "Sign in",
@@ -37,7 +38,8 @@
     "createProfile": "Create your profile",
     "signIn": "Sign in",
     "copyright": "© {year} ColumnaLATAM. All event and surgeon data comes from verified sources or was submitted as explained on our data sources page.",
-    "emergencyDisclaimer": "This is not an emergency medical service. In an emergency, contact your local emergency services immediately."
+    "emergencyDisclaimer": "This is not an emergency medical service. In an emergency, contact your local emergency services immediately.",
+    "contact": "Contact"
   },
   "eventTypes": {
     "congress": "Congress",
@@ -610,5 +612,28 @@
     "cervical_spine": "Cervical spine",
     "lumbar_spine": "Lumbar spine",
     "scoliosis": "Scoliosis"
+  },
+  "contact": {
+    "metaTitle": "Contact",
+    "metaDescription": "Write to us to suggest a congress, course, or webinar, or with any question about ColumnaLATAM.",
+    "pageTitle": "Contact",
+    "intro": "Want to suggest a congress, course, or webinar, or have a question? Write to us and we'll get back to you soon.",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "messageLabel": "Message",
+    "send": "Send message",
+    "sending": "Sending..."
+  },
+  "contactValidation": {
+    "nameMin": "Name must be at least 2 characters.",
+    "invalidEmail": "Enter a valid email.",
+    "messageMin": "Message must be at least 10 characters."
+  },
+  "contactErrors": {
+    "invalidData": "Check the information you entered.",
+    "tooManyAttempts": "Too many attempts. Try again later.",
+    "notConfigured": "The contact form isn't available right now.",
+    "sendFailed": "Couldn't send the message. Try again later.",
+    "sent": "Message sent! We'll get back to you soon."
   }
 }

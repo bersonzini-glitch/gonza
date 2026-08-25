@@ -15,7 +15,8 @@
     "primaryLabel": "Principal",
     "mobileLabel": "Móvel",
     "menu": "Menu",
-    "openMenu": "Abrir menu"
+    "openMenu": "Abrir menu",
+    "contact": "Contato"
   },
   "userMenu": {
     "signIn": "Entrar",
@@ -37,7 +38,8 @@
     "createProfile": "Crie seu perfil",
     "signIn": "Entrar",
     "copyright": "© {year} ColumnaLATAM. Todos os dados de eventos e cirurgiões vêm de fontes verificadas ou foram enviados conforme explicado em nossa página de fontes de dados.",
-    "emergencyDisclaimer": "Este não é um serviço de emergência médica. Em caso de emergência, entre em contato com os serviços de emergência locais imediatamente."
+    "emergencyDisclaimer": "Este não é um serviço de emergência médica. Em caso de emergência, entre em contato com os serviços de emergência locais imediatamente.",
+    "contact": "Contato"
   },
   "eventTypes": {
     "congress": "Congresso",
@@ -610,5 +612,28 @@
     "cervical_spine": "Coluna cervical",
     "lumbar_spine": "Coluna lombar",
     "scoliosis": "Escoliose"
+  },
+  "contact": {
+    "metaTitle": "Contato",
+    "metaDescription": "Escreva para sugerir um congresso, curso ou webinar, ou para qualquer dúvida sobre a ColumnaLATAM.",
+    "pageTitle": "Contato",
+    "intro": "Quer sugerir um congresso, curso ou webinar, ou tem alguma dúvida? Escreva para nós e respondemos em breve.",
+    "nameLabel": "Nome",
+    "emailLabel": "Email",
+    "messageLabel": "Mensagem",
+    "send": "Enviar mensagem",
+    "sending": "Enviando..."
+  },
+  "contactValidation": {
+    "nameMin": "O nome deve ter pelo menos 2 caracteres.",
+    "invalidEmail": "Digite um email válido.",
+    "messageMin": "A mensagem deve ter pelo menos 10 caracteres."
+  },
+  "contactErrors": {
+    "invalidData": "Revise os dados informados.",
+    "tooManyAttempts": "Muitas tentativas. Tente novamente mais tarde.",
+    "notConfigured": "O formulário de contato não está disponível no momento.",
+    "sendFailed": "Não foi possível enviar a mensagem. Tente novamente mais tarde.",
+    "sent": "Mensagem enviada! Vamos responder em breve."
   }
 }
