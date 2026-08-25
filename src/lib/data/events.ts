@@ -36,6 +36,7 @@ export async function searchEvents(filters: EventSearchInput): Promise<EventSear
   if (filters.country) query = query.eq("country", filters.country);
   if (filters.eventType) query = query.eq("event_type", filters.eventType);
   if (filters.format) query = query.eq("format", filters.format);
+  if (filters.language) query = query.eq("language", filters.language);
   if (filters.topic) query = query.contains("topics", [filters.topic]);
   if (filters.from) query = query.gte("start_date", filters.from);
   if (filters.to) query = query.lte("start_date", filters.to);

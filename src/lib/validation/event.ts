@@ -1,6 +1,10 @@
 import type { useTranslations } from "next-intl";
 import { z } from "zod";
 
+import { LANGUAGE_OPTIONS } from "@/lib/validation/surgeon";
+
+export { LANGUAGE_OPTIONS };
+
 export const EVENT_TYPES = ["congress", "conference", "course", "workshop", "webinar"] as const;
 export const EVENT_FORMATS = ["in_person", "hybrid", "online"] as const;
 export const EVENT_STATUSES = ["pending", "approved", "rejected"] as const;
@@ -69,6 +73,7 @@ export function makeEventSchema(t: Translator) {
       description: z.string().trim().min(30, t("descriptionTooShort")).max(5000),
       eventType: z.enum(EVENT_TYPES),
       format: z.enum(EVENT_FORMATS),
+      language: z.enum(LANGUAGE_OPTIONS),
       status: z.enum(EVENT_STATUSES).default("approved"),
       isFeatured: z.boolean().default(false),
       startDate: isoDate,
@@ -101,6 +106,7 @@ export const eventSearchSchema = z.object({
   country: z.string().trim().max(100).optional(),
   eventType: z.enum(EVENT_TYPES).optional(),
   format: z.enum(EVENT_FORMATS).optional(),
+  language: z.enum(LANGUAGE_OPTIONS).optional(),
   topic: z.string().trim().max(100).optional(),
   from: z
     .string()

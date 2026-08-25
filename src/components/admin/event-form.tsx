@@ -28,6 +28,7 @@ import {
   EVENT_STATUSES,
   EVENT_TOPICS,
   EVENT_TYPES,
+  LANGUAGE_OPTIONS,
   LATAM_COUNTRIES,
   makeEventSchema,
   type EventInput,
@@ -38,6 +39,9 @@ import {
 // back to showing the raw stored value (e.g. the enum key itself).
 const COUNTRY_ITEMS: Record<string, string> = Object.fromEntries(
   LATAM_COUNTRIES.map((c) => [c, c]),
+);
+const LANGUAGE_ITEMS: Record<string, string> = Object.fromEntries(
+  LANGUAGE_OPTIONS.map((l) => [l, l]),
 );
 
 export function EventForm({
@@ -167,6 +171,27 @@ export function EventForm({
               {EVENT_FORMATS.map((f) => (
                 <SelectItem key={f} value={f}>
                   {EVENT_FORMAT_LABELS[f]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="language">{t("languageLabel")}</Label>
+          <Select
+            items={LANGUAGE_ITEMS}
+            value={form.watch("language")}
+            onValueChange={(v) =>
+              form.setValue("language", v as EventInput["language"], { shouldValidate: true })
+            }
+          >
+            <SelectTrigger id="language" className="w-full">
+              <SelectValue placeholder={t("selectLanguage")} />
+            </SelectTrigger>
+            <SelectContent>
+              {LANGUAGE_OPTIONS.map((l) => (
+                <SelectItem key={l} value={l}>
+                  {l}
                 </SelectItem>
               ))}
             </SelectContent>

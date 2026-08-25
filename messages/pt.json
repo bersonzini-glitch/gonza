@@ -98,7 +98,8 @@
     "topicsHeading": "Temas",
     "sourcesHeading": "Fontes de dados",
     "sourceCheckedOn": "· verificado em {date}",
-    "relatedHeading": "Eventos relacionados"
+    "relatedHeading": "Eventos relacionados",
+    "languageLabel": "Idioma"
   },
   "eventFilters": {
     "searchLabel": "Buscar",
@@ -119,7 +120,9 @@
     "sortRecentlyAdded": "Adicionados recentemente",
     "sortAlphabetical": "Alfabético",
     "formAriaLabel": "Filtrar congressos",
-    "includePastLabel": "Mostrar eventos passados"
+    "includePastLabel": "Mostrar eventos passados",
+    "languageLabel": "Idioma",
+    "anyLanguage": "Qualquer idioma"
   },
   "surgeonFilters": {
     "searchLabel": "Buscar por nome",
@@ -503,7 +506,8 @@
     },
     "aiSearchLastRunStarted": "Iniciada em {date}. Isso pode levar alguns minutos — atualize a página mais tarde.",
     "aiSearchLastRunCompleted": "{inserted, plural, one {Em {date}, # evento foi adicionado aguardando revisão.} other {Em {date}, # eventos foram adicionados aguardando revisão.}}",
-    "aiSearchLastRunFailed": "A busca de {date} não pôde ser concluída. Você pode tentar novamente."
+    "aiSearchLastRunFailed": "A busca de {date} não pôde ser concluída. Você pode tentar novamente.",
+    "languageHeader": "Idioma"
   },
   "eventForm": {
     "metaTitleNew": "Novo evento",
@@ -557,7 +561,9 @@
     "deleteEventDescription": "Isso exclui permanentemente o evento e suas fontes.",
     "deleting": "Excluindo…",
     "deletePermanently": "Excluir definitivamente",
-    "eventDeletedToast": "Evento excluído"
+    "eventDeletedToast": "Evento excluído",
+    "languageLabel": "Idioma",
+    "selectLanguage": "Escolha um idioma"
   },
   "eventValidation": {
     "invalidUrl": "Deve ser uma URL http(s) válida",

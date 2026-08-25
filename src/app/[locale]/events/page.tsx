@@ -29,6 +29,7 @@ export default async function EventsPage({
     country: rawParams.country,
     eventType: rawParams.eventType,
     format: rawParams.format,
+    language: rawParams.language,
     topic: rawParams.topic,
     from: rawParams.from,
     to: rawParams.to,

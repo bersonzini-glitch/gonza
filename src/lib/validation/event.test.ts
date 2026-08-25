@@ -12,6 +12,7 @@ const validEvent = {
   description: "A".repeat(40),
   eventType: "congress" as const,
   format: "in_person" as const,
+  language: "Portugués" as const,
   status: "approved" as const,
   isFeatured: false,
   startDate: "2026-06-10",

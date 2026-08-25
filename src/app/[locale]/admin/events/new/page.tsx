@@ -18,6 +18,7 @@ const defaultValues: EventInput = {
   description: "",
   eventType: "congress",
   format: "in_person",
+  language: "Español",
   status: "approved",
   isFeatured: false,
   startDate: "",

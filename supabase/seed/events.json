@@ -29,7 +29,8 @@
         "sourceType": "official_society",
         "notes": ""
       }
-    ]
+    ],
+    "language": "Español"
   },
   {
     "title": "XLII Congreso Latinoamericano de Neurocirugía — CLAN Panamá 2026",
@@ -44,7 +45,10 @@
     "dateNote": "",
     "format": "in_person",
     "eventType": "congress",
-    "topics": ["Neurocirugía", "Cirugía de columna"],
+    "topics": [
+      "Neurocirugía",
+      "Cirugía de columna"
+    ],
     "registrationUrl": "https://esimposio.com/clanpanama2026/registro.php",
     "description": "Congreso Latinoamericano de Neurocirugía que espera reunir a más de 1.000 neurocirujanos y profesionales de la salud de Latinoamérica, el Caribe y otras regiones. Diez módulos temáticos, cursos precongreso y envío libre de trabajos; la cirugía de columna es una de las subespecialidades cubiertas dado el rol co-organizador de la asociación panameña de neurocirugía y cirugía de columna.",
     "sources": [
@@ -54,7 +58,8 @@
         "sourceType": "organizer",
         "notes": ""
       }
-    ]
+    ],
+    "language": "Español"
   },
   {
     "title": "10° Congreso de la Sociedad Dominicana de Cirugía de Columna con V Curso Internacional SILACO",
@@ -87,7 +92,8 @@
         "sourceType": "other",
         "notes": "Cobertura de prensa local, usada porque no se encontró un micrositio oficial del congreso."
       }
-    ]
+    ],
+    "language": "Español"
   },
   {
     "title": "20º Congresso da Sociedade Brasileira de Coluna (CSBC 2026)",
@@ -118,7 +124,8 @@
         "sourceType": "official_society",
         "notes": ""
       }
-    ]
+    ],
+    "language": "Portugués"
   },
   {
     "title": "XXVI Congreso Anual AMCICO 2026",
@@ -133,7 +140,11 @@
     "dateNote": "",
     "format": "in_person",
     "eventType": "congress",
-    "topics": ["Cirugía de columna", "Ortopedia", "Neurocirugía"],
+    "topics": [
+      "Cirugía de columna",
+      "Ortopedia",
+      "Neurocirugía"
+    ],
     "registrationUrl": "",
     "description": "Congreso anual de la Asociación Mexicana de Cirujanos de Columna (AMCICO). AMCICO reúne a cirujanos ortopedistas y neurocirujanos especializados en cirugía de columna, incluyendo a quienes están en formación académica.",
     "sources": [
@@ -143,7 +154,8 @@
         "sourceType": "official_society",
         "notes": ""
       }
-    ]
+    ],
+    "language": "Español"
   },
   {
     "title": "AO Regional Courses Latin America 2026",
@@ -158,7 +170,10 @@
     "dateNote": "Diez actividades educativas a lo largo de la semana; la mayoría de los cursos (incluido el AO Spine Regional Course) se concentran entre el 18 y el 21 de agosto, con un seminario transversal sobre IA el 19 de agosto.",
     "format": "in_person",
     "eventType": "course",
-    "topics": ["Cirugía de columna", "Cirugía mínimamente invasiva"],
+    "topics": [
+      "Cirugía de columna",
+      "Cirugía mínimamente invasiva"
+    ],
     "registrationUrl": "",
     "description": "Tercera edición del evento educativo regional de la AO Foundation en Latinoamérica, que combina diez cursos y un seminario transversal sobre IA en investigación clínica, abarcando trauma, columna, cráneo-maxilofacial, cirugía veterinaria, deportiva y reconstructiva. Se espera la participación de más de 100 docentes internacionales y unos 600 asistentes.",
     "sources": [
@@ -168,7 +183,8 @@
         "sourceType": "official_society",
         "notes": ""
       }
-    ]
+    ],
+    "language": "Español"
   },
   {
     "title": "5° Congreso Regional SCHOT",
@@ -183,7 +199,10 @@
     "dateNote": "Congreso regional general de ortopedia y traumatología, incluido porque la SCHOT mantiene un Comité de Columna permanente que contribuye a su programación científica.",
     "format": "in_person",
     "eventType": "congress",
-    "topics": ["Ortopedia", "Cirugía de columna"],
+    "topics": [
+      "Ortopedia",
+      "Cirugía de columna"
+    ],
     "registrationUrl": "",
     "description": "Congreso regional de la Sociedad Chilena de Ortopedia y Traumatología, con actividades que se extienden hasta La Serena, organizado por la filial regional Centro Norte de la SCHOT.",
     "sources": [
@@ -193,6 +212,7 @@
         "sourceType": "official_society",
         "notes": ""
       }
-    ]
+    ],
+    "language": "Español"
   }
 ]

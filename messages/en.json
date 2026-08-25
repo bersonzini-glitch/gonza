@@ -98,7 +98,8 @@
     "topicsHeading": "Topics",
     "sourcesHeading": "Data sources",
     "sourceCheckedOn": "· checked on {date}",
-    "relatedHeading": "Related events"
+    "relatedHeading": "Related events",
+    "languageLabel": "Language"
   },
   "eventFilters": {
     "searchLabel": "Search",
@@ -119,7 +120,9 @@
     "sortRecentlyAdded": "Recently added",
     "sortAlphabetical": "Alphabetical",
     "formAriaLabel": "Filter conferences",
-    "includePastLabel": "Show past events"
+    "includePastLabel": "Show past events",
+    "languageLabel": "Language",
+    "anyLanguage": "Any language"
   },
   "surgeonFilters": {
     "searchLabel": "Search by name",
@@ -503,7 +506,8 @@
     },
     "aiSearchLastRunStarted": "Started on {date}. This can take a few minutes — refresh the page later.",
     "aiSearchLastRunCompleted": "{inserted, plural, one {On {date}, # event was added pending review.} other {On {date}, # events were added pending review.}}",
-    "aiSearchLastRunFailed": "The search on {date} couldn't complete. You can try again."
+    "aiSearchLastRunFailed": "The search on {date} couldn't complete. You can try again.",
+    "languageHeader": "Language"
   },
   "eventForm": {
     "metaTitleNew": "New event",
@@ -557,7 +561,9 @@
     "deleteEventDescription": "This permanently deletes the event and its sources.",
     "deleting": "Deleting…",
     "deletePermanently": "Delete permanently",
-    "eventDeletedToast": "Event deleted"
+    "eventDeletedToast": "Event deleted",
+    "languageLabel": "Language",
+    "selectLanguage": "Choose a language"
   },
   "eventValidation": {
     "invalidUrl": "Must be a valid http(s) URL",

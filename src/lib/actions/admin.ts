@@ -324,6 +324,7 @@ function eventFieldsFromInput(input: EventInput) {
     description: input.description,
     event_type: input.eventType,
     format: input.format,
+    language: input.language,
     status: input.status,
     is_featured: input.isFeatured,
     start_date: input.startDate,

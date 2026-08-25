@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { eventFormatLabels, eventTypeLabels } from "@/lib/format";
-import { EVENT_TOPICS, LATAM_COUNTRIES } from "@/lib/validation/event";
+import { EVENT_TOPICS, LANGUAGE_OPTIONS, LATAM_COUNTRIES } from "@/lib/validation/event";
 
 const ANY = "__any__";
 
@@ -61,6 +61,10 @@ export function EventFilters() {
   const TOPIC_ITEMS: Record<string, string> = {
     [ANY]: t("anyTopic"),
     ...Object.fromEntries(EVENT_TOPICS.map((topic) => [topic, topic])),
+  };
+  const LANGUAGE_ITEMS: Record<string, string> = {
+    [ANY]: t("anyLanguage"),
+    ...Object.fromEntries(LANGUAGE_OPTIONS.map((l) => [l, l])),
   };
   const SORT_ITEMS: Record<string, string> = Object.fromEntries(
     SORT_OPTIONS.map((o) => [o.value, o.label]),
@@ -186,6 +190,29 @@ export function EventFilters() {
               {Object.entries(EVENT_FORMAT_LABELS).map(([value, label]) => (
                 <SelectItem key={value} value={value}>
                   {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <Label htmlFor="language" className="mb-1.5 block text-xs">
+            {t("languageLabel")}
+          </Label>
+          <Select
+            items={LANGUAGE_ITEMS}
+            value={searchParams.get("language") ?? ANY}
+            onValueChange={(v) => updateParam("language", v)}
+          >
+            <SelectTrigger id="language" className="w-full">
+              <SelectValue placeholder={t("anyLanguage")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ANY}>{t("anyLanguage")}</SelectItem>
+              {LANGUAGE_OPTIONS.map((l) => (
+                <SelectItem key={l} value={l}>
+                  {l}
                 </SelectItem>
               ))}
             </SelectContent>

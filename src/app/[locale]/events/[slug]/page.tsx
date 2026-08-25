@@ -4,6 +4,7 @@ import {
   Download,
   ExternalLink,
   Globe,
+  Languages,
   MapPin,
   Ticket,
 } from "lucide-react";
@@ -30,6 +31,18 @@ import { languageAlternates, localizedPath } from "@/lib/hreflang";
 export const revalidate = 120;
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
+// The event's own language (what it's actually conducted in) is more
+// accurate for structured data than the viewer's UI locale — falls back to
+// the UI locale only if a language somehow isn't one of the known options.
+const EVENT_LANGUAGE_TO_ISO: Record<string, string> = {
+  Español: "es",
+  Portugués: "pt",
+  Inglés: "en",
+  Francés: "fr",
+  Italiano: "it",
+  Alemán: "de",
+};
 
 export async function generateMetadata({
   params,
@@ -107,7 +120,7 @@ export default async function EventDetailPage({
     organizer: { "@type": "Organization", name: event.organizer, url: event.official_url },
     description: event.description,
     url: `${SITE_URL}/events/${event.slug}`,
-    inLanguage: locale,
+    inLanguage: EVENT_LANGUAGE_TO_ISO[event.language] ?? locale,
   };
 
   const timeRange = formatTimeRange(event.start_time, event.end_time, locale);
@@ -172,6 +185,15 @@ export default async function EventDetailPage({
                 {t("organizerLabel")}
               </dt>
               <dd className="text-sm text-foreground">{event.organizer}</dd>
+            </div>
+          </div>
+          <div className="flex gap-2.5">
+            <Languages className="mt-0.5 size-4.5 shrink-0 text-primary" aria-hidden="true" />
+            <div>
+              <dt className="text-xs font-medium text-muted-foreground">
+                {t("languageLabel")}
+              </dt>
+              <dd className="text-sm text-foreground">{event.language}</dd>
             </div>
           </div>
           <div className="flex gap-2.5">

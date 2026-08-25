@@ -21,6 +21,8 @@ export type EventType = "congress" | "conference" | "course" | "workshop" | "web
 
 export type EventFormat = "in_person" | "hybrid" | "online";
 
+export type EventLanguage = "Español" | "Portugués" | "Inglés" | "Francés" | "Italiano" | "Alemán";
+
 export type EventStatus = "pending" | "approved" | "rejected";
 
 export type EventSourceType =
@@ -92,6 +94,7 @@ type EventsRow = {
   organizer: string;
   event_type: EventType;
   format: EventFormat;
+  language: EventLanguage;
   country: string;
   city: string | null;
   venue: string | null;
@@ -190,6 +193,7 @@ export interface Database {
           organizer: string;
           event_type: EventType;
           format: EventFormat;
+          language: EventLanguage;
           country: string;
           start_date: string;
           end_date: string;

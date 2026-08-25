@@ -50,6 +50,7 @@ export default async function AdminEventsPage({ params }: PageProps<"/[locale]/a
               <th className="px-4 py-3">{t("titleHeader")}</th>
               <th className="px-4 py-3">{t("dateHeader")}</th>
               <th className="px-4 py-3">{t("countryHeader")}</th>
+              <th className="px-4 py-3">{t("languageHeader")}</th>
               <th className="px-4 py-3">{t("statusHeader")}</th>
               <th className="px-4 py-3" />
             </tr>
@@ -75,6 +76,7 @@ export default async function AdminEventsPage({ params }: PageProps<"/[locale]/a
                   {formatDateRange(event.start_date, event.end_date, locale)}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{event.country}</td>
+                <td className="px-4 py-3 text-muted-foreground">{event.language}</td>
                 <td className="px-4 py-3">
                   <Badge
                     variant={
@@ -95,7 +97,7 @@ export default async function AdminEventsPage({ params }: PageProps<"/[locale]/a
             ))}
             {events.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">
+                <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">
                   {t("emptyState")}
                 </td>
               </tr>

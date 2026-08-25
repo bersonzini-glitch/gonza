@@ -24,6 +24,7 @@ import type {
   ConsultationFormat,
   Database,
   EventFormat,
+  EventLanguage,
   EventSourceType,
   EventType,
   PrimarySpecialty,
@@ -81,6 +82,7 @@ interface SeedEvent {
   dateNote: string;
   format: EventFormat;
   eventType: EventType;
+  language: EventLanguage;
   topics: string[];
   registrationUrl: string;
   description: string;
@@ -133,6 +135,7 @@ async function seedEvents(supabase: SupabaseClient<Database>) {
           organizer: event.organizer,
           event_type: event.eventType,
           format: event.format,
+          language: event.language,
           country: event.country,
           city: event.city || null,
           venue: event.venue || null,

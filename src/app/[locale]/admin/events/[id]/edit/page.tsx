@@ -31,6 +31,7 @@ export default async function EditEventPage({
     description: event.description,
     eventType: event.event_type,
     format: event.format,
+    language: event.language,
     status: event.status,
     isFeatured: event.is_featured,
     startDate: event.start_date,
