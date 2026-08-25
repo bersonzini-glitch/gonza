@@ -123,6 +123,18 @@ type EventSourcesRow = {
   notes: string | null;
 };
 
+type ScientificSocietiesRow = {
+  id: string;
+  name: string;
+  description: string;
+  country: string;
+  specialties: string[];
+  website_url: string;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 type AdminAuditLogsRow = {
   id: string;
   actor_id: string | null;
@@ -196,6 +208,17 @@ export interface Database {
           source_type: EventSourceType;
         };
         Update: Partial<EventSourcesRow>;
+        Relationships: [];
+      };
+      scientific_societies: {
+        Row: ScientificSocietiesRow;
+        Insert: Partial<ScientificSocietiesRow> & {
+          name: string;
+          description: string;
+          country: string;
+          website_url: string;
+        };
+        Update: Partial<ScientificSocietiesRow>;
         Relationships: [];
       };
       admin_audit_logs: {

@@ -14,6 +14,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { SURGEON_PHOTOS_BUCKET } from "@/lib/supabase/storage";
 import { makeEventSchema, type EventInput } from "@/lib/validation/event";
+import { makeSocietySchema, type SocietyInput } from "@/lib/validation/society";
 import {
   deriveConsultationAvailability,
   makeSurgeonProfileSchema,
@@ -625,5 +626,96 @@ export async function triggerAiEventSearchAction(locale: string): Promise<AdminA
     revalidatePath("/admin/events");
   });
 
+  return { success: true };
+}
+
+// ---------------------------------------------------------------------------
+// Scientific societies
+// ---------------------------------------------------------------------------
+
+function societyFieldsFromInput(input: SocietyInput) {
+  return {
+    name: input.name,
+    description: input.description,
+    country: input.country,
+    specialties: input.specialties,
+    website_url: input.websiteUrl,
+  };
+}
+
+export async function createSocietyAction(
+  locale: string,
+  input: SocietyInput,
+): Promise<AdminActionResult> {
+  const { admin, supabase } = await requireAdminClient();
+  const [tValidation, tErrors] = await Promise.all([
+    getTranslations({ locale, namespace: "societyValidation" }),
+    getTranslations({ locale, namespace: "adminActions" }),
+  ]);
+
+  const parsed = makeSocietySchema(tValidation).safeParse(input);
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
+  const data = parsed.data;
+
+  const { data: society, error } = await supabase
+    .from("scientific_societies")
+    .insert({ ...societyFieldsFromInput(data), created_by: admin.id })
+    .select("id")
+    .single();
+
+  if (error || !society) return { error: error?.message ?? tErrors("createSocietyFailed") };
+
+  await logAdminAction(supabase, "create_society", "scientific_societies", society.id, {
+    admin: admin.username,
+  });
+
+  revalidatePath("/admin/scientific-societies");
+  revalidatePath("/societies");
+  return { success: true };
+}
+
+export async function updateSocietyAction(
+  locale: string,
+  societyId: string,
+  input: SocietyInput,
+): Promise<AdminActionResult> {
+  const { admin, supabase } = await requireAdminClient();
+  const [tValidation, tErrors] = await Promise.all([
+    getTranslations({ locale, namespace: "societyValidation" }),
+    getTranslations({ locale, namespace: "adminActions" }),
+  ]);
+
+  const parsed = makeSocietySchema(tValidation).safeParse(input);
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
+  const data = parsed.data;
+
+  const { error } = await supabase
+    .from("scientific_societies")
+    .update(societyFieldsFromInput(data))
+    .eq("id", societyId);
+
+  if (error) return { error: error.message ?? tErrors("updateSocietyFailed") };
+
+  await logAdminAction(supabase, "update_society", "scientific_societies", societyId, {
+    admin: admin.username,
+  });
+
+  revalidatePath("/admin/scientific-societies");
+  revalidatePath("/societies");
+  return { success: true };
+}
+
+export async function deleteSocietyAction(societyId: string): Promise<AdminActionResult> {
+  const { admin, supabase } = await requireAdminClient();
+
+  await logAdminAction(supabase, "delete_society", "scientific_societies", societyId, {
+    admin: admin.username,
+  });
+
+  const { error } = await supabase.from("scientific_societies").delete().eq("id", societyId);
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin/scientific-societies");
+  revalidatePath("/societies");
   return { success: true };
 }

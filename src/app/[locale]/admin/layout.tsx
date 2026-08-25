@@ -1,4 +1,4 @@
-import { CalendarRange, LayoutDashboard, ScrollText, Users } from "lucide-react";
+import { Building2, CalendarRange, LayoutDashboard, ScrollText, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
@@ -15,6 +15,12 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     { href: "/admin", label: t("navOverview"), icon: LayoutDashboard, exact: true },
     { href: "/admin/surgeons", label: t("navSurgeonQueue"), icon: Users, exact: false },
     { href: "/admin/events", label: t("navEvents"), icon: CalendarRange, exact: false },
+    {
+      href: "/admin/scientific-societies",
+      label: t("navSocieties"),
+      icon: Building2,
+      exact: false,
+    },
     { href: "/admin/audit-log", label: t("navAuditLog"), icon: ScrollText, exact: false },
   ] as const;
 

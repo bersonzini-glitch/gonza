@@ -10,13 +10,14 @@
   },
   "nav": {
     "events": "Conferences",
-    "surgeons": "Surgeon directory",
-    "about": "About us & sources",
+    "surgeons": "Surgeons",
+    "about": "About",
     "primaryLabel": "Primary",
     "mobileLabel": "Mobile",
     "menu": "Menu",
     "openMenu": "Open menu",
-    "contact": "Contact"
+    "contact": "Contact",
+    "societies": "Societies"
   },
   "userMenu": {
     "signIn": "Sign in",
@@ -39,7 +40,8 @@
     "signIn": "Sign in",
     "copyright": "© {year} ColumnaLATAM. All event and surgeon data comes from verified sources or was submitted as explained on our data sources page.",
     "emergencyDisclaimer": "This is not an emergency medical service. In an emergency, contact your local emergency services immediately.",
-    "contact": "Contact"
+    "contact": "Contact",
+    "societies": "Scientific societies"
   },
   "eventTypes": {
     "congress": "Congress",
@@ -416,7 +418,8 @@
     "navOverview": "Overview",
     "navSurgeonQueue": "Surgeon queue",
     "navEvents": "Events",
-    "navAuditLog": "Audit log"
+    "navAuditLog": "Audit log",
+    "navSocieties": "Scientific societies"
   },
   "adminOverview": {
     "metaTitle": "Admin overview",
@@ -594,7 +597,9 @@
     "eventApprovedToast": "Event approved.",
     "eventRejectedToast": "Event rejected.",
     "aiSearchFailedToStart": "Couldn't start the search: {message}",
-    "aiSearchNotConfigured": "ANTHROPIC_API_KEY isn't configured, so AI search can't run."
+    "aiSearchNotConfigured": "ANTHROPIC_API_KEY isn't configured, so AI search can't run.",
+    "createSocietyFailed": "Couldn't create the society.",
+    "updateSocietyFailed": "Couldn't update the society."
   },
   "subspecialties": {
     "degenerative_spine": "Degenerative spine",
@@ -635,5 +640,72 @@
     "notConfigured": "The contact form isn't available right now.",
     "sendFailed": "Couldn't send the message. Try again later.",
     "sent": "Message sent! We'll get back to you soon."
+  },
+  "societiesPage": {
+    "metaTitle": "Scientific societies",
+    "metaDescription": "Directory of spine and pain scientific societies by country: neurosurgery, orthopedics/trauma, pain/anesthesiology, and rheumatology.",
+    "heading": "Scientific societies",
+    "intro": "Spine and pain scientific societies, by country — neurosurgery, orthopedics/trauma, pain/anesthesiology, and rheumatology. Each entry links to the society's official web presence.",
+    "resultsCount": "{count, plural, one {# society} other {# societies}}",
+    "emptyHeading": "No societies found",
+    "emptyBody": "Try different filters or clear your search.",
+    "clearFilters": "Clear filters",
+    "paginationLabel": "Societies pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {totalPages}"
+  },
+  "societyFilters": {
+    "formAriaLabel": "Filter scientific societies",
+    "searchLabel": "Search societies",
+    "searchPlaceholder": "Search by name...",
+    "apply": "Search",
+    "countryLabel": "Country",
+    "anyCountry": "Any country",
+    "specialtyLabel": "Specialty",
+    "anySpecialty": "Any specialty"
+  },
+  "societyCard": {
+    "visitSite": "Visit {hostname}"
+  },
+  "societyValidation": {
+    "nameMin": "Name must be at least 2 characters.",
+    "descriptionMin": "Description must be at least 10 characters.",
+    "countryRequired": "Enter the country.",
+    "specialtiesRequired": "Choose at least one specialty.",
+    "invalidUrl": "Enter a valid URL (with http:// or https://)."
+  },
+  "societyForm": {
+    "metaTitleNew": "New scientific society",
+    "metaTitleEdit": "Edit scientific society",
+    "headingNew": "New scientific society",
+    "headingEdit": "Edit scientific society",
+    "nameLabel": "Name",
+    "descriptionLabel": "Description",
+    "countryLabel": "Country",
+    "countryPlaceholder": "E.g. Argentina, International",
+    "websiteUrlLabel": "Official website",
+    "specialtiesLabel": "Specialties",
+    "addSpecialtyPlaceholder": "Add another specialty...",
+    "add": "Add",
+    "saving": "Saving...",
+    "saveSociety": "Save society",
+    "savedToast": "Society saved.",
+    "deleteSociety": "Delete society",
+    "deleteSocietyTitle": "Delete this society?",
+    "deleteSocietyDescription": "This can't be undone. The society will no longer appear in the public directory.",
+    "deleting": "Deleting...",
+    "deletePermanently": "Delete permanently",
+    "societyDeletedToast": "Society deleted."
+  },
+  "adminSocietiesPage": {
+    "metaTitle": "Manage scientific societies",
+    "heading": "Scientific societies",
+    "newSociety": "New society",
+    "countLabel": "{count, plural, one {# society} other {# societies}} in the directory.",
+    "nameHeader": "Name",
+    "countryHeader": "Country",
+    "specialtiesHeader": "Specialties",
+    "emptyState": "No societies yet."
   }
 }

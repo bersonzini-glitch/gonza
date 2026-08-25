@@ -11,6 +11,7 @@ export async function SiteFooter() {
       links: [
         { href: "/events", label: t("searchEvents") },
         { href: "/surgeons", label: t("surgeonDirectory") },
+        { href: "/societies", label: t("societies") },
       ],
     },
     {

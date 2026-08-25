@@ -104,6 +104,26 @@ export async function getEventForAdmin(id: string): Promise<EventWithSources | n
   return (data as unknown as EventWithSources) ?? null;
 }
 
+export async function listSocietiesForAdmin() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("scientific_societies")
+    .select("*")
+    .order("country", { ascending: true })
+    .order("name", { ascending: true });
+  return data ?? [];
+}
+
+export async function getSocietyForAdmin(id: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("scientific_societies")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  return data;
+}
+
 export async function listAuditLogs(limit = 100) {
   const supabase = await createClient();
   const { data } = await supabase

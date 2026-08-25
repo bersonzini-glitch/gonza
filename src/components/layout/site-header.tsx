@@ -28,7 +28,7 @@ export async function SiteHeader() {
           </span>
         </Link>
 
-        <nav aria-label={t("primaryLabel")} className="hidden items-center gap-1 md:flex">
+        <nav aria-label={t("primaryLabel")} className="hidden items-center gap-1 lg:flex">
           {NAV_LINKS.map((link) => (
             <NavLink
               key={link.href}
@@ -44,7 +44,7 @@ export async function SiteHeader() {
         <div className="flex items-center gap-1.5">
           <LanguageToggle />
           <ThemeToggle />
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <UserMenu profile={profile} />
           </div>
           <MobileNav profile={profile} />

@@ -10,13 +10,14 @@
   },
   "nav": {
     "events": "Congresos",
-    "surgeons": "Directorio de cirujanos",
-    "about": "Sobre nosotros y fuentes",
+    "surgeons": "Cirujanos",
+    "about": "Sobre nosotros",
     "primaryLabel": "Principal",
     "mobileLabel": "Móvil",
     "menu": "Menú",
     "openMenu": "Abrir menú",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "societies": "Sociedades"
   },
   "userMenu": {
     "signIn": "Iniciar sesión",
@@ -39,7 +40,8 @@
     "signIn": "Iniciar sesión",
     "copyright": "© {year} ColumnaLATAM. Todos los datos de eventos y cirujanos provienen de fuentes verificadas o fueron enviados según se explica en nuestra página de fuentes de datos.",
     "emergencyDisclaimer": "No es un servicio de emergencias médicas. Ante una emergencia, contactá a los servicios de emergencia locales de inmediato.",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "societies": "Sociedades científicas"
   },
   "eventTypes": {
     "congress": "Congreso",
@@ -416,7 +418,8 @@
     "navOverview": "Resumen",
     "navSurgeonQueue": "Cola de cirujanos",
     "navEvents": "Eventos",
-    "navAuditLog": "Historial de auditoría"
+    "navAuditLog": "Historial de auditoría",
+    "navSocieties": "Sociedades científicas"
   },
   "adminOverview": {
     "metaTitle": "Resumen de administración",
@@ -594,7 +597,9 @@
     "eventApprovedToast": "Evento aprobado.",
     "eventRejectedToast": "Evento rechazado.",
     "aiSearchFailedToStart": "No se pudo iniciar la búsqueda: {message}",
-    "aiSearchNotConfigured": "Falta configurar ANTHROPIC_API_KEY para poder buscar con IA."
+    "aiSearchNotConfigured": "Falta configurar ANTHROPIC_API_KEY para poder buscar con IA.",
+    "createSocietyFailed": "No se pudo crear la sociedad.",
+    "updateSocietyFailed": "No se pudo actualizar la sociedad."
   },
   "subspecialties": {
     "degenerative_spine": "Columna degenerativa",
@@ -635,5 +640,72 @@
     "notConfigured": "El formulario de contacto no está disponible en este momento.",
     "sendFailed": "No se pudo enviar el mensaje. Probá de nuevo más tarde.",
     "sent": "¡Mensaje enviado! Te vamos a responder a la brevedad."
+  },
+  "societiesPage": {
+    "metaTitle": "Sociedades científicas",
+    "metaDescription": "Directorio de sociedades científicas de columna vertebral y dolor por país: neurocirugía, traumatología, dolor/anestesiología y reumatología.",
+    "heading": "Sociedades científicas",
+    "intro": "Sociedades científicas de columna vertebral y dolor, por país — neurocirugía, traumatología, dolor/anestesiología y reumatología. Cada entrada enlaza a la presencia web oficial de la sociedad.",
+    "resultsCount": "{count, plural, one {# sociedad} other {# sociedades}}",
+    "emptyHeading": "No se encontraron sociedades",
+    "emptyBody": "Probá con otros filtros o limpiá la búsqueda.",
+    "clearFilters": "Limpiar filtros",
+    "paginationLabel": "Paginación de sociedades",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "pageOf": "Página {page} de {totalPages}"
+  },
+  "societyFilters": {
+    "formAriaLabel": "Filtrar sociedades científicas",
+    "searchLabel": "Buscar sociedades",
+    "searchPlaceholder": "Buscar por nombre...",
+    "apply": "Buscar",
+    "countryLabel": "País",
+    "anyCountry": "Cualquier país",
+    "specialtyLabel": "Especialidad",
+    "anySpecialty": "Cualquier especialidad"
+  },
+  "societyCard": {
+    "visitSite": "Visitar {hostname}"
+  },
+  "societyValidation": {
+    "nameMin": "El nombre debe tener al menos 2 caracteres.",
+    "descriptionMin": "La descripción debe tener al menos 10 caracteres.",
+    "countryRequired": "Ingresá el país.",
+    "specialtiesRequired": "Elegí al menos una especialidad.",
+    "invalidUrl": "Ingresá una URL válida (con http:// o https://)."
+  },
+  "societyForm": {
+    "metaTitleNew": "Nueva sociedad científica",
+    "metaTitleEdit": "Editar sociedad científica",
+    "headingNew": "Nueva sociedad científica",
+    "headingEdit": "Editar sociedad científica",
+    "nameLabel": "Nombre",
+    "descriptionLabel": "Descripción",
+    "countryLabel": "País",
+    "countryPlaceholder": "Ej: Argentina, Internacional",
+    "websiteUrlLabel": "Sitio web oficial",
+    "specialtiesLabel": "Especialidades",
+    "addSpecialtyPlaceholder": "Agregar otra especialidad...",
+    "add": "Agregar",
+    "saving": "Guardando...",
+    "saveSociety": "Guardar sociedad",
+    "savedToast": "Sociedad guardada.",
+    "deleteSociety": "Eliminar sociedad",
+    "deleteSocietyTitle": "¿Eliminar esta sociedad?",
+    "deleteSocietyDescription": "Esta acción no se puede deshacer. La sociedad va a dejar de aparecer en el directorio público.",
+    "deleting": "Eliminando...",
+    "deletePermanently": "Eliminar definitivamente",
+    "societyDeletedToast": "Sociedad eliminada."
+  },
+  "adminSocietiesPage": {
+    "metaTitle": "Gestionar sociedades científicas",
+    "heading": "Sociedades científicas",
+    "newSociety": "Nueva sociedad",
+    "countLabel": "{count, plural, one {# sociedad} other {# sociedades}} en el directorio.",
+    "nameHeader": "Nombre",
+    "countryHeader": "País",
+    "specialtiesHeader": "Especialidades",
+    "emptyState": "Todavía no hay sociedades cargadas."
   }
 }
