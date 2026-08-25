@@ -599,7 +599,8 @@
     "aiSearchFailedToStart": "Couldn't start the search: {message}",
     "aiSearchNotConfigured": "ANTHROPIC_API_KEY isn't configured, so AI search can't run.",
     "createSocietyFailed": "Couldn't create the society.",
-    "updateSocietyFailed": "Couldn't update the society."
+    "updateSocietyFailed": "Couldn't update the society.",
+    "aiSearchDisabled": "AI event search is currently disabled."
   },
   "subspecialties": {
     "degenerative_spine": "Degenerative spine",

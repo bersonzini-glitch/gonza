@@ -599,7 +599,8 @@
     "aiSearchFailedToStart": "Não foi possível iniciar a busca: {message}",
     "aiSearchNotConfigured": "ANTHROPIC_API_KEY não está configurada, então a busca com IA não pode rodar.",
     "createSocietyFailed": "Não foi possível criar a sociedade.",
-    "updateSocietyFailed": "Não foi possível atualizar a sociedade."
+    "updateSocietyFailed": "Não foi possível atualizar a sociedade.",
+    "aiSearchDisabled": "A busca de eventos com IA está desativada no momento."
   },
   "subspecialties": {
     "degenerative_spine": "Coluna degenerativa",

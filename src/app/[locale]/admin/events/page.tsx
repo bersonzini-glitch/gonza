@@ -3,12 +3,11 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
-import { AiEventSearchButton } from "@/components/admin/ai-event-search-button";
 import { EventReviewActions } from "@/components/admin/event-review-actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDateRange } from "@/lib/format";
-import { getLatestAiEventSearchRun, listEventsForAdmin } from "@/lib/data/admin";
+import { listEventsForAdmin } from "@/lib/data/admin";
 
 export async function generateMetadata({
   params,
@@ -20,25 +19,9 @@ export async function generateMetadata({
 
 export const dynamic = "force-dynamic";
 
-// The AI search's own web-research call can run well past typical
-// serverless defaults; this raises the ceiling for the Server Actions
-// invoked from this page (see triggerAiEventSearchAction in
-// lib/actions/admin.ts). Vercel clamps this to whatever the project's
-// plan allows, so it's safe to ask for more than is guaranteed.
-export const maxDuration = 300;
-
-const AI_SEARCH_BADGE_VARIANT = {
-  started: "outline",
-  completed: "secondary",
-  failed: "destructive",
-} as const;
-
 export default async function AdminEventsPage({ params }: PageProps<"/[locale]/admin/events">) {
   const { locale } = await params;
-  const [events, latestSearch] = await Promise.all([
-    listEventsForAdmin(),
-    getLatestAiEventSearchRun(),
-  ]);
+  const events = await listEventsForAdmin();
   const [t, tStatus] = await Promise.all([
     getTranslations({ locale, namespace: "adminEventsPage" }),
     getTranslations({ locale, namespace: "adminEventStatus" }),
@@ -53,37 +36,12 @@ export default async function AdminEventsPage({ params }: PageProps<"/[locale]/a
             {t("countLabel", { count: events.length })}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <AiEventSearchButton />
-          <Button asChild>
-            <Link href="/admin/events/new">
-              <Plus className="size-4" /> {t("newEvent")}
-            </Link>
-          </Button>
-        </div>
+        <Button asChild>
+          <Link href="/admin/events/new">
+            <Plus className="size-4" /> {t("newEvent")}
+          </Link>
+        </Button>
       </div>
-
-      {latestSearch && (
-        <div className="surface-flat flex items-center gap-2 px-4 py-3 text-sm">
-          <Badge variant={AI_SEARCH_BADGE_VARIANT[latestSearch.status]}>
-            {t(`aiSearchStatus.${latestSearch.status}`)}
-          </Badge>
-          <span className="text-muted-foreground">
-            {latestSearch.status === "completed"
-              ? t("aiSearchLastRunCompleted", {
-                  inserted: Number(latestSearch.metadata.inserted ?? 0),
-                  date: new Date(latestSearch.createdAt).toLocaleString(locale),
-                })
-              : latestSearch.status === "failed"
-                ? t("aiSearchLastRunFailed", {
-                    date: new Date(latestSearch.createdAt).toLocaleString(locale),
-                  })
-                : t("aiSearchLastRunStarted", {
-                    date: new Date(latestSearch.createdAt).toLocaleString(locale),
-                  })}
-          </span>
-        </div>
-      )}
 
       <div className="surface-flat overflow-x-auto">
         <table className="w-full min-w-[720px] text-sm">
