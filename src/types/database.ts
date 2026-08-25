@@ -242,6 +242,10 @@ export interface Database {
         Args: { check_username: string };
         Returns: boolean;
       };
+      is_email_available: {
+        Args: { check_email: string };
+        Returns: boolean;
+      };
       check_rate_limit: {
         Args: {
           p_identifier: string;

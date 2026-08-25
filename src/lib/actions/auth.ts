@@ -80,6 +80,13 @@ export async function signUpAction(
     return { error: tErrors("usernameTaken") };
   }
 
+  const { data: emailAvailable } = await supabase.rpc("is_email_available", {
+    check_email: parsed.data.email,
+  });
+  if (emailAvailable === false) {
+    return { error: tErrors("alreadyRegistered") };
+  }
+
   const h = await headers();
   const origin = `${h.get("x-forwarded-proto") ?? "https"}://${h.get("host")}`;
 
