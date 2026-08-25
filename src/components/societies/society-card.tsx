@@ -1,6 +1,7 @@
 import { ExternalLink, Globe2 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
+import { ExpandableDescription } from "@/components/societies/expandable-description";
 import { Badge } from "@/components/ui/badge";
 import type { ScientificSocietyRow } from "@/lib/data/societies";
 
@@ -24,7 +25,7 @@ export async function SocietyCard({ society }: { society: ScientificSocietyRow }
         </p>
       </div>
 
-      <p className="text-sm text-muted-foreground">{society.description}</p>
+      <ExpandableDescription text={society.description} />
 
       <div className="flex flex-wrap gap-1.5">
         {society.specialties.map((s) => (

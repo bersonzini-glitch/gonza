@@ -14,7 +14,7 @@ type Translator = ReturnType<typeof useTranslations<"societyValidation">>;
 export function makeSocietySchema(t: Translator) {
   return z.object({
     name: z.string().trim().min(2, t("nameMin")).max(200),
-    description: z.string().trim().min(10, t("descriptionMin")).max(2000),
+    description: z.string().trim().min(10, t("descriptionMin")).max(4000),
     country: z.string().trim().min(2, t("countryRequired")).max(100),
     specialties: z
       .array(z.string().trim().min(1).max(60))

@@ -667,7 +667,9 @@
     "anySpecialty": "Cualquier especialidad"
   },
   "societyCard": {
-    "visitSite": "Visitar {hostname}"
+    "visitSite": "Visitar {hostname}",
+    "readMore": "Leer más",
+    "readLess": "Leer menos"
   },
   "societyValidation": {
     "nameMin": "El nombre debe tener al menos 2 caracteres.",

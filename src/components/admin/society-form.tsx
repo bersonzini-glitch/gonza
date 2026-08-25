@@ -78,7 +78,7 @@ export function SocietyForm({
         </div>
         <div className="space-y-1.5 sm:col-span-2">
           <Label htmlFor="description">{t("descriptionLabel")}</Label>
-          <Textarea id="description" rows={4} {...form.register("description")} />
+          <Textarea id="description" rows={10} {...form.register("description")} />
           {form.formState.errors.description && (
             <p className="text-xs text-destructive">{form.formState.errors.description.message}</p>
           )}
