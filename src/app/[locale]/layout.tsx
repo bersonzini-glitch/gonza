@@ -60,6 +60,7 @@ export async function generateMetadata({
       type: "website",
       siteName: "ColumnaLATAM",
       locale: OG_LOCALES[locale as keyof typeof OG_LOCALES] ?? OG_LOCALES.es,
+      images: [{ url: `${SITE_URL}/api/og`, width: 1200, height: 630, alt: "ColumnaLATAM" }],
     },
     twitter: {
       card: "summary_large_image",

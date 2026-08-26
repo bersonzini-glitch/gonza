@@ -65,6 +65,7 @@ export async function generateMetadata({
       description,
       type: "article",
       url: `${SITE_URL}/events/${event.slug}`,
+      images: [{ url: `${SITE_URL}/api/og`, width: 1200, height: 630, alt: "ColumnaLATAM" }],
     },
   };
 }
@@ -118,9 +119,15 @@ export default async function EventDetailPage({
             },
           },
     organizer: { "@type": "Organization", name: event.organizer, url: event.official_url },
+    // No performer distinct from the organizing body for a medical
+    // conference/course — reusing it here (rather than omitting the field)
+    // is what satisfies Google's Event rich-result check without inventing
+    // a person/act that doesn't exist for this kind of event.
+    performer: { "@type": "Organization", name: event.organizer, url: event.official_url },
     description: event.description,
     url: `${SITE_URL}/events/${event.slug}`,
     inLanguage: EVENT_LANGUAGE_TO_ISO[event.language] ?? locale,
+    image: [`${SITE_URL}/api/og`],
   };
 
   const timeRange = formatTimeRange(event.start_time, event.end_time, locale);
