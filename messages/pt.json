@@ -672,10 +672,10 @@
     "specialtyLabel": "Especialidade",
     "anySpecialty": "Qualquer especialidade"
   },
-  "societyCard": {
-    "visitSite": "Visitar {hostname}",
-    "readMore": "Ler mais",
-    "readLess": "Ler menos"
+  "societyDetail": {
+    "officialSite": "Site oficial",
+    "aboutHeading": "Sobre esta sociedade",
+    "relatedHeading": "Sociedades relacionadas"
   },
   "societyValidation": {
     "nameMin": "O nome deve ter pelo menos 2 caracteres.",

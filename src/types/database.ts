@@ -128,6 +128,7 @@ type EventSourcesRow = {
 
 type ScientificSocietiesRow = {
   id: string;
+  slug: string;
   name: string;
   description: string;
   country: string;
@@ -217,6 +218,7 @@ export interface Database {
       scientific_societies: {
         Row: ScientificSocietiesRow;
         Insert: Partial<ScientificSocietiesRow> & {
+          slug: string;
           name: string;
           description: string;
           country: string;

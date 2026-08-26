@@ -39,6 +39,31 @@ export async function searchSocieties(filters: SocietySearchInput): Promise<Soci
   return { societies: data ?? [], total: count ?? 0, page: filters.page, pageSize: PAGE_SIZE };
 }
 
+export async function getSocietyBySlug(slug: string): Promise<ScientificSocietyRow | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("scientific_societies")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+  return data ?? null;
+}
+
+export async function getRelatedSocieties(
+  society: ScientificSocietyRow,
+  limit = 3,
+): Promise<ScientificSocietyRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("scientific_societies")
+    .select("*")
+    .neq("id", society.id)
+    .eq("country", society.country)
+    .order("name", { ascending: true })
+    .limit(limit);
+  return data ?? [];
+}
+
 /**
  * Distinct countries actually present in the table, for the filter
  * dropdown — societies span far beyond LATAM (unlike events/surgeons), so

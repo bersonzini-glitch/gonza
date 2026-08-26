@@ -672,10 +672,10 @@
     "specialtyLabel": "Specialty",
     "anySpecialty": "Any specialty"
   },
-  "societyCard": {
-    "visitSite": "Visit {hostname}",
-    "readMore": "Read more",
-    "readLess": "Read less"
+  "societyDetail": {
+    "officialSite": "Official site",
+    "aboutHeading": "About this society",
+    "relatedHeading": "Related societies"
   },
   "societyValidation": {
     "nameMin": "Name must be at least 2 characters.",

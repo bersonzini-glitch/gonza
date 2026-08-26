@@ -1,49 +1,36 @@
-import { ExternalLink, Globe2 } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { Globe2 } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 
-import { ExpandableDescription } from "@/components/societies/expandable-description";
 import { Badge } from "@/components/ui/badge";
 import type { ScientificSocietyRow } from "@/lib/data/societies";
 
-export async function SocietyCard({ society }: { society: ScientificSocietyRow }) {
-  const t = await getTranslations("societyCard");
-  const hostname = (() => {
-    try {
-      return new URL(society.website_url).hostname.replace(/^www\./, "");
-    } catch {
-      return society.website_url;
-    }
-  })();
-
+export function SocietyCard({ society }: { society: ScientificSocietyRow }) {
   return (
-    <div className="flex h-full flex-col gap-3 rounded-xl border border-border bg-card p-5">
+    <Link
+      href={`/societies/${society.slug}`}
+      className="group flex h-full flex-col gap-3 rounded-xl border border-border bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md focus-visible:-translate-y-0.5 focus-visible:border-primary/40 focus-visible:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
       <div>
-        <h3 className="font-heading text-base font-semibold text-foreground">{society.name}</h3>
+        <h3 className="font-heading text-base font-semibold text-foreground group-hover:text-primary">
+          {society.name}
+        </h3>
         <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
           <Globe2 className="size-3.5 shrink-0" aria-hidden="true" />
           {society.country}
         </p>
       </div>
 
-      <ExpandableDescription text={society.description} />
+      <p className="line-clamp-4 whitespace-pre-line text-sm text-muted-foreground">
+        {society.description}
+      </p>
 
-      <div className="flex flex-wrap gap-1.5">
+      <div className="mt-auto flex flex-wrap gap-1.5">
         {society.specialties.map((s) => (
           <Badge key={s} variant="secondary">
             {s}
           </Badge>
         ))}
       </div>
-
-      <a
-        href={society.website_url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-auto flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-      >
-        <ExternalLink className="size-3.5 shrink-0" aria-hidden="true" />
-        {t("visitSite", { hostname })}
-      </a>
-    </div>
+    </Link>
   );
 }

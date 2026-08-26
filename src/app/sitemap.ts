@@ -30,9 +30,10 @@ function entry(
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const admin = createAdminClient();
 
-  const [{ data: events }, { data: surgeons }] = await Promise.all([
+  const [{ data: events }, { data: surgeons }, { data: societies }] = await Promise.all([
     admin.from("events").select("slug, updated_at").eq("status", "approved"),
     admin.from("surgeon_profiles").select("slug, updated_at").eq("status", "approved"),
+    admin.from("scientific_societies").select("slug, updated_at"),
   ]);
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -63,5 +64,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
   );
 
-  return [...staticPages, ...eventPages, ...surgeonPages];
+  const societyPages: MetadataRoute.Sitemap = (societies ?? []).map((s) =>
+    entry(`/societies/${s.slug}`, {
+      lastModified: s.updated_at,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    }),
+  );
+
+  return [...staticPages, ...eventPages, ...surgeonPages, ...societyPages];
 }

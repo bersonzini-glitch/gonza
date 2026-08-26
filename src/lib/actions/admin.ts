@@ -534,9 +534,11 @@ export async function createSocietyAction(
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
   const data = parsed.data;
 
+  const slug = `${slugify(data.name)}-${randomUUID().slice(0, 6)}`;
+
   const { data: society, error } = await supabase
     .from("scientific_societies")
-    .insert({ ...societyFieldsFromInput(data), created_by: admin.id })
+    .insert({ ...societyFieldsFromInput(data), slug, created_by: admin.id })
     .select("id")
     .single();
 
@@ -566,12 +568,14 @@ export async function updateSocietyAction(
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
   const data = parsed.data;
 
-  const { error } = await supabase
+  const { data: society, error } = await supabase
     .from("scientific_societies")
     .update(societyFieldsFromInput(data))
-    .eq("id", societyId);
+    .eq("id", societyId)
+    .select("slug")
+    .single();
 
-  if (error) return { error: error.message ?? tErrors("updateSocietyFailed") };
+  if (error || !society) return { error: error?.message ?? tErrors("updateSocietyFailed") };
 
   await logAdminAction(supabase, "update_society", "scientific_societies", societyId, {
     admin: admin.username,
@@ -579,6 +583,7 @@ export async function updateSocietyAction(
 
   revalidatePath("/admin/scientific-societies");
   revalidatePath("/societies");
+  revalidatePath(`/societies/${society.slug}`);
   return { success: true };
 }
 
