@@ -738,7 +738,9 @@
     "descriptionMin": "La descripción debe tener al menos 10 caracteres.",
     "countryRequired": "Ingresá el país.",
     "specialtiesRequired": "Elegí al menos una especialidad.",
-    "invalidUrl": "Ingresá una URL válida (con http:// o https://)."
+    "invalidUrl": "Ingresá una URL válida (con http:// o https://).",
+    "slugTooLong": "La dirección es muy larga",
+    "slugInvalid": "Usá solo minúsculas, números y guiones, sin espacios ni acentos (mínimo 3 caracteres)"
   },
   "societyForm": {
     "metaTitleNew": "Nueva sociedad científica",
@@ -746,6 +748,9 @@
     "headingNew": "Nueva sociedad científica",
     "headingEdit": "Editar sociedad científica",
     "nameLabel": "Nombre",
+    "permalinkLabel": "Dirección de la sociedad (permalink)",
+    "permalinkHint": "Si la cambiás, el enlace anterior deja de funcionar. Usá solo minúsculas, números y guiones.",
+    "viewPublished": "Ver sitio publicado",
     "descriptionLabel": "Descripción",
     "countryLabel": "País",
     "countryPlaceholder": "Ej: Argentina, Internacional",

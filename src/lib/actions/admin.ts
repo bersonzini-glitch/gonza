@@ -653,14 +653,26 @@ export async function updateSocietyAction(
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
   const data = parsed.data;
 
+  const { data: current } = await supabase
+    .from("scientific_societies")
+    .select("slug")
+    .eq("id", societyId)
+    .single();
+
+  const slugChanged = !!data.slug && !!current && data.slug !== current.slug;
+
   const { data: society, error } = await supabase
     .from("scientific_societies")
-    .update(societyFieldsFromInput(data))
+    .update({ ...societyFieldsFromInput(data), ...(slugChanged ? { slug: data.slug } : {}) })
     .eq("id", societyId)
     .select("slug")
     .single();
 
-  if (error || !society) return { error: error?.message ?? tErrors("updateSocietyFailed") };
+  if (error) {
+    if (error.code === "23505") return { error: tErrors("slugTaken") };
+    return { error: error.message };
+  }
+  if (!society) return { error: tErrors("updateSocietyFailed") };
 
   await logAdminAction(supabase, "update_society", "scientific_societies", societyId, {
     admin: admin.username,
@@ -669,6 +681,9 @@ export async function updateSocietyAction(
   revalidatePath("/admin/scientific-societies");
   revalidatePath("/societies");
   revalidatePath(`/societies/${society.slug}`);
+  if (slugChanged && current) {
+    revalidatePath(`/societies/${current.slug}`);
+  }
   return { success: true };
 }
 

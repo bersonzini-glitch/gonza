@@ -738,7 +738,9 @@
     "descriptionMin": "Description must be at least 10 characters.",
     "countryRequired": "Enter the country.",
     "specialtiesRequired": "Choose at least one specialty.",
-    "invalidUrl": "Enter a valid URL (with http:// or https://)."
+    "invalidUrl": "Enter a valid URL (with http:// or https://).",
+    "slugTooLong": "Address is too long",
+    "slugInvalid": "Use only lowercase letters, numbers and hyphens, no spaces or accents (minimum 3 characters)"
   },
   "societyForm": {
     "metaTitleNew": "New scientific society",
@@ -746,6 +748,9 @@
     "headingNew": "New scientific society",
     "headingEdit": "Edit scientific society",
     "nameLabel": "Name",
+    "permalinkLabel": "Society URL (permalink)",
+    "permalinkHint": "If you change it, the previous link stops working. Use only lowercase letters, numbers, and hyphens.",
+    "viewPublished": "View published site",
     "descriptionLabel": "Description",
     "countryLabel": "Country",
     "countryPlaceholder": "E.g. Argentina, International",
