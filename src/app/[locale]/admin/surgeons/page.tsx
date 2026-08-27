@@ -4,7 +4,7 @@ import { Link } from "@/i18n/navigation";
 
 import { Badge } from "@/components/ui/badge";
 import { primarySpecialtyLabels } from "@/lib/format";
-import { listSurgeonsForAdmin } from "@/lib/data/admin";
+import { listSurgeonsForAdmin, listUnstartedUsersForAdmin } from "@/lib/data/admin";
 
 export async function generateMetadata({
   params,
@@ -34,12 +34,15 @@ export default async function AdminSurgeonsPage({
   const specialty = typeof rawParams.specialty === "string" ? rawParams.specialty : undefined;
   const q = typeof rawParams.q === "string" ? rawParams.q : undefined;
 
-  const surgeons = await listSurgeonsForAdmin({
-    status: status as never,
-    country,
-    specialty: specialty as never,
-    q,
-  });
+  const [surgeons, unstartedUsers] = await Promise.all([
+    listSurgeonsForAdmin({
+      status: status as never,
+      country,
+      specialty: specialty as never,
+      q,
+    }),
+    listUnstartedUsersForAdmin(),
+  ]);
 
   const [t, tStatus, tSpecialties] = await Promise.all([
     getTranslations({ locale, namespace: "adminSurgeonsPage" }),
@@ -56,6 +59,55 @@ export default async function AdminSurgeonsPage({
           {t("subtitle", { count: surgeons.length })}
         </p>
       </div>
+
+      {unstartedUsers.length > 0 && (
+        <div className="surface-flat overflow-x-auto">
+          <div className="border-b border-border px-4 py-3">
+            <h3 className="text-sm font-semibold text-foreground">
+              {t("unstartedHeading", { count: unstartedUsers.length })}
+            </h3>
+            <p className="mt-0.5 text-xs text-muted-foreground">{t("unstartedSubtitle")}</p>
+          </div>
+          <table className="w-full min-w-[560px] text-sm">
+            <thead className="border-b border-border bg-secondary/40 text-left text-xs font-medium tracking-wide text-muted-foreground uppercase">
+              <tr>
+                <th className="px-4 py-3">{t("unstartedUserHeader")}</th>
+                <th className="px-4 py-3">{t("unstartedEmailHeader")}</th>
+                <th className="px-4 py-3">{t("unstartedRegisteredHeader")}</th>
+                <th className="px-4 py-3">{t("unstartedProgressHeader")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {unstartedUsers.map((u) => (
+                <tr key={u.id} className="border-b border-border last:border-0 hover:bg-secondary/30">
+                  <td className="px-4 py-3">
+                    <span className="font-medium text-foreground">
+                      {u.full_name ?? u.username}
+                    </span>
+                    <span className="ml-1.5 text-xs text-muted-foreground">@{u.username}</span>
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">{u.email ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {new Date(u.created_at).toLocaleDateString(locale)}
+                  </td>
+                  <td className="px-4 py-3">
+                    {u.draftSurgeonId ? (
+                      <Link
+                        href={`/admin/surgeons/${u.draftSurgeonId}`}
+                        className="text-primary hover:underline"
+                      >
+                        {t("unstartedDraftBadge")}
+                      </Link>
+                    ) : (
+                      <Badge variant="outline">{t("unstartedNoneBadge")}</Badge>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <form
         className="surface-flat flex flex-wrap items-end gap-3 p-3"

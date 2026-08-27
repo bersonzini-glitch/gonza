@@ -470,7 +470,15 @@
     "statusHeader": "Status",
     "submittedHeader": "Submitted",
     "demoTag": "(demo)",
-    "emptyState": "No surgeon profile matches these filters."
+    "emptyState": "No surgeon profile matches these filters.",
+    "unstartedHeading": "Registered accounts without a submitted profile ({count, plural, one {# account} other {# accounts}})",
+    "unstartedSubtitle": "Signed up on the site but haven't submitted a surgeon profile for review yet.",
+    "unstartedUserHeader": "User",
+    "unstartedEmailHeader": "Email",
+    "unstartedRegisteredHeader": "Registered",
+    "unstartedProgressHeader": "Progress",
+    "unstartedDraftBadge": "View draft",
+    "unstartedNoneBadge": "Not started"
   },
   "adminSurgeonDetail": {
     "metaTitle": "Review surgeon profile",

@@ -1,5 +1,6 @@
 import "server-only";
 
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/types/database";
 import type { SurgeonWithRelations } from "@/lib/data/surgeons";
@@ -69,6 +70,65 @@ export async function listSurgeonsForAdmin(
   }
 
   return surgeons;
+}
+
+export interface UnstartedUserRow {
+  id: string;
+  username: string;
+  full_name: string | null;
+  email: string | null;
+  created_at: string;
+  draftSurgeonId: string | null;
+}
+
+/**
+ * Accounts that signed up but never got a submitted surgeon profile —
+ * either they never started one at all, or they saved a draft and stopped.
+ * Invisible from listSurgeonsForAdmin() alone, since that only reads
+ * surgeon_profiles rows and someone who never opened the dashboard form
+ * has none. Email comes from auth.users (not exposed via RLS/PostgREST to
+ * anyone, admin included), so this is one of the few call sites allowed to
+ * reach for the service-role client — safe here because this function is
+ * only ever called from the already-admin-gated /admin/surgeons route.
+ */
+export async function listUnstartedUsersForAdmin(): Promise<UnstartedUserRow[]> {
+  const supabase = await createClient();
+
+  const [{ data: profiles }, { data: surgeons }] = await Promise.all([
+    supabase.from("profiles").select("id, username, full_name, created_at").eq("role", "user"),
+    supabase.from("surgeon_profiles").select("id, user_id, status"),
+  ]);
+
+  const draftSurgeonIdByUser = new Map(
+    (surgeons ?? []).filter((s) => s.status === "draft").map((s) => [s.user_id, s.id]),
+  );
+  const hasAnySurgeonProfile = new Set((surgeons ?? []).map((s) => s.user_id));
+
+  const pending = (profiles ?? []).filter(
+    (p) => !hasAnySurgeonProfile.has(p.id) || draftSurgeonIdByUser.has(p.id),
+  );
+  if (pending.length === 0) return [];
+
+  const admin = createAdminClient();
+  const emailById = new Map<string, string>();
+  const perPage = 200;
+  for (let page = 1; ; page++) {
+    const { data, error } = await admin.auth.admin.listUsers({ page, perPage });
+    if (error || !data) break;
+    for (const u of data.users) if (u.email) emailById.set(u.id, u.email);
+    if (data.users.length < perPage) break;
+  }
+
+  return pending
+    .map((p) => ({
+      id: p.id,
+      username: p.username,
+      full_name: p.full_name,
+      email: emailById.get(p.id) ?? null,
+      created_at: p.created_at,
+      draftSurgeonId: draftSurgeonIdByUser.get(p.id) ?? null,
+    }))
+    .sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
 }
 
 export async function getSurgeonForAdmin(id: string): Promise<SurgeonWithRelations | null> {

@@ -470,7 +470,15 @@
     "statusHeader": "Estado",
     "submittedHeader": "Enviado",
     "demoTag": "(demo)",
-    "emptyState": "Ningún perfil de cirujano coincide con estos filtros."
+    "emptyState": "Ningún perfil de cirujano coincide con estos filtros.",
+    "unstartedHeading": "Cuentas registradas sin perfil enviado ({count, plural, one {# cuenta} other {# cuentas}})",
+    "unstartedSubtitle": "Se inscribieron en el sitio pero todavía no enviaron un perfil de cirujano a revisión.",
+    "unstartedUserHeader": "Usuario",
+    "unstartedEmailHeader": "Email",
+    "unstartedRegisteredHeader": "Registrado",
+    "unstartedProgressHeader": "Progreso",
+    "unstartedDraftBadge": "Ver borrador",
+    "unstartedNoneBadge": "Sin iniciar"
   },
   "adminSurgeonDetail": {
     "metaTitle": "Revisar perfil de cirujano",
