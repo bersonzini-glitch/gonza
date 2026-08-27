@@ -11,6 +11,36 @@ import { Button } from "@/components/ui/button";
 import { uploadSurgeonPhotoAction } from "@/lib/actions/surgeon";
 import { PHOTO_ALLOWED_TYPES, PHOTO_MAX_BYTES } from "@/lib/validation/surgeon";
 
+// Profile photos only ever render as a small avatar (biggest instance is
+// the 80px dashboard preview), so there's no reason to upload — and then
+// serve, on every future page view — a multi-megabyte original straight
+// off someone's phone. Downscaling client-side before the upload shrinks
+// what gets stored once, instead of what gets transferred every time.
+const MAX_PHOTO_DIMENSION = 512;
+const JPEG_QUALITY = 0.85;
+
+async function resizeForUpload(file: File): Promise<File> {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, MAX_PHOTO_DIMENSION / Math.max(bitmap.width, bitmap.height));
+  const width = Math.round(bitmap.width * scale);
+  const height = Math.round(bitmap.height * scale);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("2D canvas context unavailable");
+  ctx.drawImage(bitmap, 0, 0, width, height);
+  bitmap.close();
+
+  const blob = await new Promise<Blob | null>((resolve) =>
+    canvas.toBlob(resolve, "image/jpeg", JPEG_QUALITY),
+  );
+  if (!blob) throw new Error("Canvas failed to encode image");
+
+  return new File([blob], file.name.replace(/\.\w+$/, ".jpg"), { type: "image/jpeg" });
+}
+
 export function PhotoUpload({
   surgeonId,
   hasPhoto,
@@ -48,7 +78,7 @@ export function PhotoUpload({
     .join("")
     .toUpperCase();
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     setError(null);
@@ -62,8 +92,17 @@ export function PhotoUpload({
       return;
     }
 
+    let uploadFile = file;
+    try {
+      uploadFile = await resizeForUpload(file);
+    } catch {
+      // Best-effort optimization — if the browser can't decode/encode the
+      // image for any reason, fall back to uploading it as-is rather than
+      // blocking the upload.
+    }
+
     const formData = new FormData();
-    formData.set("photo", file);
+    formData.set("photo", uploadFile);
 
     startTransition(async () => {
       const result = await uploadAction(formData);
