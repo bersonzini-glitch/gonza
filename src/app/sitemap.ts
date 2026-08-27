@@ -5,6 +5,13 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
+// Without this, Next prerenders sitemap.xml once per deploy — new events,
+// societies, or surgeon approvals wouldn't show up until the next code
+// change happened to trigger a redeploy, which is misleading for a route
+// whose whole job is to reflect current content. An hour keeps it fresh
+// enough for Search Console without hitting the DB on every crawl.
+export const revalidate = 3600;
+
 // Spanish (the default locale) has no URL prefix — see localePrefix:
 // "as-needed" in src/i18n/routing.ts — so its canonical URL is the bare
 // path, while English/Portuguese get a /en or /pt prefix.
