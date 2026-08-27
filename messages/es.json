@@ -478,7 +478,13 @@
     "unstartedRegisteredHeader": "Registrado",
     "unstartedProgressHeader": "Progreso",
     "unstartedDraftBadge": "Ver borrador",
-    "unstartedNoneBadge": "Sin iniciar"
+    "unstartedNoneBadge": "Sin iniciar",
+    "unstartedActionsHeader": "Acciones",
+    "deleteUserTitle": "Eliminar esta cuenta permanentemente",
+    "deleteUserDescription": "Se elimina la cuenta de {name} (y su borrador de perfil, si tiene uno) de forma permanente. Esta acción no se puede deshacer.",
+    "deletePermanently": "Eliminar definitivamente",
+    "deleting": "Eliminando…",
+    "userDeletedToast": "Cuenta eliminada."
   },
   "adminSurgeonDetail": {
     "metaTitle": "Revisar perfil de cirujano",

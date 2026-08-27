@@ -148,6 +148,61 @@ export async function deleteSurgeonAction(surgeonId: string): Promise<AdminActio
   return { success: true };
 }
 
+/**
+ * Deletes a registered account that never got a submitted surgeon
+ * profile — see listUnstartedUsersForAdmin() in src/lib/data/admin.ts for
+ * exactly which accounts that is (no profile row at all, or a draft one
+ * never sent for review). Re-checks that condition here rather than
+ * trusting the id the client sent, in case the account submitted a real
+ * profile between page load and this click.
+ *
+ * Removing the auth.users row is enough on its own: profiles cascades
+ * from auth.users, and surgeon_profiles (plus its specialties/locations
+ * rows) cascades from profiles — see the `on delete cascade` references in
+ * supabase/migrations/20260822000300_profiles.sql and
+ * .../20260822000400_surgeon_profiles.sql. Deleting via auth.users also
+ * requires the service-role client, since auth.admin.deleteUser() isn't
+ * reachable through the regular RLS-scoped client.
+ */
+export async function deleteUnstartedUserAction(userId: string): Promise<AdminActionResult> {
+  const { admin, supabase } = await requireAdminClient();
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("username")
+    .eq("id", userId)
+    .maybeSingle();
+
+  const { data: surgeon } = await supabase
+    .from("surgeon_profiles")
+    .select("photo_path, status")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (surgeon && surgeon.status !== "draft") {
+    return { error: "Esta cuenta ya tiene un perfil enviado — refrescá la página." };
+  }
+
+  // Written before the delete so the log entry survives even though the
+  // row it references will be gone.
+  await logAdminAction(supabase, "delete_unstarted_user", "profiles", userId, {
+    admin: admin.username,
+    username: profile?.username,
+  });
+
+  const serviceClient = createAdminClient();
+
+  if (surgeon?.photo_path) {
+    await serviceClient.storage.from(SURGEON_PHOTOS_BUCKET).remove([surgeon.photo_path]);
+  }
+
+  const { error } = await serviceClient.auth.admin.deleteUser(userId);
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin/surgeons");
+  return { success: true };
+}
+
 export async function adminUpdateSurgeonProfileAction(
   locale: string,
   surgeonId: string,

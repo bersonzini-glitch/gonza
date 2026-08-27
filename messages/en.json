@@ -478,7 +478,13 @@
     "unstartedRegisteredHeader": "Registered",
     "unstartedProgressHeader": "Progress",
     "unstartedDraftBadge": "View draft",
-    "unstartedNoneBadge": "Not started"
+    "unstartedNoneBadge": "Not started",
+    "unstartedActionsHeader": "Actions",
+    "deleteUserTitle": "Permanently delete this account",
+    "deleteUserDescription": "This permanently deletes {name}'s account (and their draft profile, if any). This action can't be undone.",
+    "deletePermanently": "Delete permanently",
+    "deleting": "Deleting…",
+    "userDeletedToast": "Account deleted."
   },
   "adminSurgeonDetail": {
     "metaTitle": "Review surgeon profile",

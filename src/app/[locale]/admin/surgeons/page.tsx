@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
+import { DeleteUnstartedUserButton } from "@/components/admin/delete-unstarted-user-button";
 import { Badge } from "@/components/ui/badge";
 import { primarySpecialtyLabels } from "@/lib/format";
 import { listSurgeonsForAdmin, listUnstartedUsersForAdmin } from "@/lib/data/admin";
@@ -68,13 +69,16 @@ export default async function AdminSurgeonsPage({
             </h3>
             <p className="mt-0.5 text-xs text-muted-foreground">{t("unstartedSubtitle")}</p>
           </div>
-          <table className="w-full min-w-[560px] text-sm">
+          <table className="w-full min-w-[640px] text-sm">
             <thead className="border-b border-border bg-secondary/40 text-left text-xs font-medium tracking-wide text-muted-foreground uppercase">
               <tr>
                 <th className="px-4 py-3">{t("unstartedUserHeader")}</th>
                 <th className="px-4 py-3">{t("unstartedEmailHeader")}</th>
                 <th className="px-4 py-3">{t("unstartedRegisteredHeader")}</th>
                 <th className="px-4 py-3">{t("unstartedProgressHeader")}</th>
+                <th className="px-4 py-3">
+                  <span className="sr-only">{t("unstartedActionsHeader")}</span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -101,6 +105,12 @@ export default async function AdminSurgeonsPage({
                     ) : (
                       <Badge variant="outline">{t("unstartedNoneBadge")}</Badge>
                     )}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <DeleteUnstartedUserButton
+                      userId={u.id}
+                      displayName={u.full_name ?? u.username}
+                    />
                   </td>
                 </tr>
               ))}
