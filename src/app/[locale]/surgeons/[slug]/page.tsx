@@ -88,7 +88,7 @@ export default async function SurgeonProfilePage({
   const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
   const SUBSPECIALTY_LABELS = subspecialtyLabels(tSubspecialties);
 
-  const photoUrl = surgeonPhotoUrl(surgeon.id, Boolean(surgeon.photo_path));
+  const photoUrl = surgeonPhotoUrl(surgeon.id, surgeon.photo_path);
   const primaryLocation =
     surgeon.surgeon_locations.find((l) => l.is_primary) ?? surgeon.surgeon_locations[0];
 

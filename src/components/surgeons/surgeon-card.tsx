@@ -27,7 +27,7 @@ export async function SurgeonCard({ surgeon }: { surgeon: SurgeonWithRelations }
 
   const primaryLocation =
     surgeon.surgeon_locations.find((l) => l.is_primary) ?? surgeon.surgeon_locations[0];
-  const photoUrl = surgeonPhotoUrl(surgeon.id, Boolean(surgeon.photo_path));
+  const photoUrl = surgeonPhotoUrl(surgeon.id, surgeon.photo_path);
 
   return (
     <Link
