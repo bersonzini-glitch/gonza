@@ -458,14 +458,26 @@ export async function updateEventAction(
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
   const data = parsed.data;
 
+  const { data: current } = await supabase
+    .from("events")
+    .select("slug")
+    .eq("id", eventId)
+    .single();
+
+  const slugChanged = !!data.slug && !!current && data.slug !== current.slug;
+
   const { data: event, error } = await supabase
     .from("events")
-    .update(eventFieldsFromInput(data))
+    .update({ ...eventFieldsFromInput(data), ...(slugChanged ? { slug: data.slug } : {}) })
     .eq("id", eventId)
     .select("slug")
     .single();
 
-  if (error || !event) return { error: error?.message ?? tErrors("updateEventFailed") };
+  if (error) {
+    if (error.code === "23505") return { error: tErrors("slugTaken") };
+    return { error: error.message };
+  }
+  if (!event) return { error: tErrors("updateEventFailed") };
 
   await supabase.from("event_sources").delete().eq("event_id", eventId);
   const { error: sourcesError } = await supabase.from("event_sources").insert(
@@ -484,6 +496,9 @@ export async function updateEventAction(
   revalidatePath("/admin/events");
   revalidatePath("/events");
   revalidatePath(`/events/${event.slug}`);
+  if (slugChanged && current) {
+    revalidatePath(`/events/${current.slug}`);
+  }
   return { success: true };
 }
 

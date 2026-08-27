@@ -577,7 +577,10 @@
     "deletePermanently": "Excluir definitivamente",
     "eventDeletedToast": "Evento excluído",
     "languageLabel": "Idioma",
-    "selectLanguage": "Escolha um idioma"
+    "selectLanguage": "Escolha um idioma",
+    "permalinkLabel": "Endereço do evento (permalink)",
+    "permalinkHint": "Se você alterar, o link anterior deixa de funcionar. Use apenas letras minúsculas, números e hífens.",
+    "viewPublished": "Ver site publicado"
   },
   "eventValidation": {
     "invalidUrl": "Deve ser uma URL http(s) válida",
@@ -587,7 +590,9 @@
     "descriptionTooShort": "A descrição deve ter pelo menos 30 caracteres",
     "topicsRequired": "Adicione pelo menos um tema",
     "sourcesRequired": "Adicione pelo menos uma fonte de dados",
-    "endDateBeforeStart": "A data de término deve ser igual ou posterior à data de início"
+    "endDateBeforeStart": "A data de término deve ser igual ou posterior à data de início",
+    "slugTooLong": "O endereço é muito longo",
+    "slugInvalid": "Use apenas letras minúsculas, números e hífens, sem espaços ou acentos (mínimo de 3 caracteres)"
   },
   "adminActions": {
     "approveFailed": "Não foi possível aprovar o perfil.",

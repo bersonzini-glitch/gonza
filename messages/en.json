@@ -577,7 +577,10 @@
     "deletePermanently": "Delete permanently",
     "eventDeletedToast": "Event deleted",
     "languageLabel": "Language",
-    "selectLanguage": "Choose a language"
+    "selectLanguage": "Choose a language",
+    "permalinkLabel": "Event URL (permalink)",
+    "permalinkHint": "If you change it, the previous link stops working. Use only lowercase letters, numbers, and hyphens.",
+    "viewPublished": "View published site"
   },
   "eventValidation": {
     "invalidUrl": "Must be a valid http(s) URL",
@@ -587,7 +590,9 @@
     "descriptionTooShort": "Description must be at least 30 characters",
     "topicsRequired": "Add at least one topic",
     "sourcesRequired": "Add at least one data source",
-    "endDateBeforeStart": "End date must be on or after the start date"
+    "endDateBeforeStart": "End date must be on or after the start date",
+    "slugTooLong": "The URL is too long",
+    "slugInvalid": "Use only lowercase letters, numbers, and hyphens, no spaces or accents (minimum 3 characters)"
   },
   "adminActions": {
     "approveFailed": "Couldn't approve the profile.",

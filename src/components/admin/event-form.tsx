@@ -34,6 +34,9 @@ import {
   type EventInput,
 } from "@/lib/validation/event";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const SITE_HOST = SITE_URL.replace(/^https?:\/\//, "");
+
 // Base UI's <Select.Value> only resolves a label for the current value from
 // an explicit `items` map passed to <Select.Root> — without it, it falls
 // back to showing the raw stored value (e.g. the enum key itself).
@@ -123,6 +126,24 @@ export function EventForm({
             <p className="text-xs text-destructive">{form.formState.errors.title.message}</p>
           )}
         </div>
+        {!!defaultValues.slug && (
+          <div className="space-y-1.5 sm:col-span-2">
+            <Label htmlFor="slug">{t("permalinkLabel")}</Label>
+            <div className="flex items-center gap-1 rounded-lg border border-input bg-transparent pl-2.5 has-[[aria-invalid=true]]:border-destructive has-[[aria-invalid=true]]:ring-3 has-[[aria-invalid=true]]:ring-destructive/20">
+              <span className="shrink-0 text-sm text-muted-foreground">{SITE_HOST}/events/</span>
+              <Input
+                id="slug"
+                className="border-0 pl-0 focus-visible:ring-0"
+                aria-invalid={!!form.formState.errors.slug}
+                {...form.register("slug")}
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">{t("permalinkHint")}</p>
+            {form.formState.errors.slug && (
+              <p className="text-xs text-destructive">{form.formState.errors.slug.message}</p>
+            )}
+          </div>
+        )}
         <div className="space-y-1.5 sm:col-span-2">
           <Label htmlFor="description">{t("descriptionLabel")}</Label>
           <Textarea id="description" rows={5} {...form.register("description")} />

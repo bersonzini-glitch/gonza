@@ -55,6 +55,8 @@ export const LATAM_COUNTRIES = [
 
 type Translator = ReturnType<typeof useTranslations<"eventValidation">>;
 
+const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+
 export function makeEventSchema(t: Translator) {
   const urlField = z.url({ protocol: /^https?$/, message: t("invalidUrl") });
   const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, t("invalidDateFormat"));
@@ -70,6 +72,18 @@ export function makeEventSchema(t: Translator) {
   return z
     .object({
       title: z.string().trim().min(5, t("titleTooShort")).max(200),
+      // Empty/omitted means "don't change it" — the field is only shown
+      // once an event (and therefore a public URL) already exists.
+      slug: z
+        .string()
+        .trim()
+        .toLowerCase()
+        .max(100, t("slugTooLong"))
+        .optional()
+        .or(z.literal(""))
+        .refine((v) => !v || (v.length >= 3 && SLUG_PATTERN.test(v)), {
+          message: t("slugInvalid"),
+        }),
       description: z.string().trim().min(30, t("descriptionTooShort")).max(5000),
       eventType: z.enum(EVENT_TYPES),
       format: z.enum(EVENT_FORMATS),
