@@ -7,7 +7,7 @@ import { getTranslations } from "next-intl/server";
 
 import { logAdminAction } from "@/lib/audit";
 import { requireAdmin } from "@/lib/auth/session";
-import { slugify } from "@/lib/slug";
+import { insertWithUniqueSlug } from "@/lib/slug";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { SURGEON_PHOTOS_BUCKET } from "@/lib/supabase/storage";
@@ -414,13 +414,16 @@ export async function createEventAction(
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
   const data = parsed.data;
 
-  const slug = `${slugify(data.title)}-${randomUUID().slice(0, 6)}`;
-
-  const { data: event, error } = await supabase
-    .from("events")
-    .insert({ ...eventFieldsFromInput(data), slug, created_by: admin.id })
-    .select("id, slug")
-    .single();
+  const { data: event, error } = await insertWithUniqueSlug<{ id: string; slug: string }>(
+    data.title,
+    async (slug) => {
+      return await supabase
+        .from("events")
+        .insert({ ...eventFieldsFromInput(data), slug, created_by: admin.id })
+        .select("id, slug")
+        .single();
+    },
+  );
 
   if (error || !event) return { error: error?.message ?? tErrors("createEventFailed") };
 
@@ -604,13 +607,16 @@ export async function createSocietyAction(
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
   const data = parsed.data;
 
-  const slug = `${slugify(data.name)}-${randomUUID().slice(0, 6)}`;
-
-  const { data: society, error } = await supabase
-    .from("scientific_societies")
-    .insert({ ...societyFieldsFromInput(data), slug, created_by: admin.id })
-    .select("id")
-    .single();
+  const { data: society, error } = await insertWithUniqueSlug<{ id: string }>(
+    data.name,
+    async (slug) => {
+      return await supabase
+        .from("scientific_societies")
+        .insert({ ...societyFieldsFromInput(data), slug, created_by: admin.id })
+        .select("id")
+        .single();
+    },
+  );
 
   if (error || !society) return { error: error?.message ?? tErrors("createSocietyFailed") };
 

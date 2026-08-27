@@ -7,7 +7,7 @@ import { getTranslations } from "next-intl/server";
 
 import { getCurrentProfile } from "@/lib/auth/session";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { slugify } from "@/lib/slug";
+import { insertWithUniqueSlug } from "@/lib/slug";
 import { createClient } from "@/lib/supabase/server";
 import { SURGEON_PHOTOS_BUCKET } from "@/lib/supabase/storage";
 import {
@@ -94,12 +94,16 @@ export async function saveSurgeonProfileAction(
       return { error: tErrors("saveFailed", { message: error.message }) };
     }
   } else {
-    const slug = `${slugify(data.fullName)}-${randomUUID().slice(0, 6)}`;
-    const { data: inserted, error } = await supabase
-      .from("surgeon_profiles")
-      .insert({ ...baseFields, user_id: profile.id, slug, status: "draft" })
-      .select("id")
-      .single();
+    const { data: inserted, error } = await insertWithUniqueSlug<{ id: string }>(
+      data.fullName,
+      async (slug) => {
+        return await supabase
+          .from("surgeon_profiles")
+          .insert({ ...baseFields, user_id: profile.id, slug, status: "draft" })
+          .select("id")
+          .single();
+      },
+    );
     if (error || !inserted) {
       return { error: tErrors("createFailed", { message: error?.message ?? "" }) };
     }
