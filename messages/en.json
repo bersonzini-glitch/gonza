@@ -421,6 +421,7 @@
     "navOverview": "Overview",
     "navSurgeonQueue": "Surgeon queue",
     "navEvents": "Events",
+    "navEmail": "Send email",
     "navAuditLog": "Audit log",
     "navSocieties": "Scientific societies"
   },
@@ -626,6 +627,42 @@
     "createSocietyFailed": "Couldn't create the society.",
     "updateSocietyFailed": "Couldn't update the society.",
     "aiSearchDisabled": "AI event search is currently disabled."
+  },
+  "adminEmailForm": {
+    "metaTitle": "Send email — Admin",
+    "heading": "Send email",
+    "subheading": "Send an email in the same visual style as the site, to a single person or to several recipients at once.",
+    "modeLabel": "Send type",
+    "modeSingle": "Single recipient",
+    "modeBulk": "Bulk send",
+    "recipientEmailLabel": "Recipient email",
+    "audienceLabel": "Recipients",
+    "audienceApprovedSurgeons": "Surgeons with an approved profile",
+    "audienceCustom": "Custom list",
+    "customRecipientsLabel": "Email list",
+    "customRecipientsPlaceholder": "one@example.com, other@example.com",
+    "customRecipientsHint": "Separate emails with commas, semicolons, or one per line.",
+    "subjectLabel": "Subject",
+    "messageLabel": "Message",
+    "messageHint": "Leave a blank line between paragraphs to separate them.",
+    "send": "Send",
+    "sending": "Sending…",
+    "sentToast": "Sent to {count, plural, one {# recipient} other {# recipients}}."
+  },
+  "adminEmailValidation": {
+    "subjectRequired": "The subject must be at least 3 characters",
+    "subjectTooLong": "The subject is too long",
+    "messageTooShort": "The message must be at least 10 characters",
+    "messageTooLong": "The message is too long",
+    "recipientEmailInvalid": "Enter a valid email",
+    "customRecipientsRequired": "Enter at least one valid email"
+  },
+  "adminEmailActions": {
+    "invalidData": "Invalid data",
+    "tooManySends": "You've sent too many emails. Wait a bit before trying again.",
+    "notConfigured": "Email sending isn't configured (missing RESEND_API_KEY).",
+    "noRecipients": "There are no recipients for this send.",
+    "sendFailed": "Couldn't send the email."
   },
   "subspecialties": {
     "degenerative_spine": "Degenerative spine",

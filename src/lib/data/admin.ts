@@ -131,6 +131,42 @@ export async function listUnstartedUsersForAdmin(): Promise<UnstartedUserRow[]> 
     .sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
 }
 
+export interface ApprovedSurgeonEmailRow {
+  id: string;
+  fullName: string;
+  email: string;
+}
+
+/**
+ * Login emails (not the optional public `contact_email`) for every approved
+ * surgeon, for the admin "emailing" feature — same service-role
+ * auth.admin.listUsers() pattern as listUnstartedUsersForAdmin(), since
+ * auth.users isn't reachable via RLS/PostgREST even to admins.
+ */
+export async function listApprovedSurgeonEmailsForAdmin(): Promise<ApprovedSurgeonEmailRow[]> {
+  const supabase = await createClient();
+  const { data: surgeons } = await supabase
+    .from("surgeon_profiles")
+    .select("user_id, full_name")
+    .eq("status", "approved");
+
+  if (!surgeons || surgeons.length === 0) return [];
+
+  const admin = createAdminClient();
+  const emailById = new Map<string, string>();
+  const perPage = 200;
+  for (let page = 1; ; page++) {
+    const { data, error } = await admin.auth.admin.listUsers({ page, perPage });
+    if (error || !data) break;
+    for (const u of data.users) if (u.email) emailById.set(u.id, u.email);
+    if (data.users.length < perPage) break;
+  }
+
+  return surgeons
+    .map((s) => ({ id: s.user_id, fullName: s.full_name, email: emailById.get(s.user_id) ?? "" }))
+    .filter((s) => s.email.length > 0);
+}
+
 export async function getSurgeonForAdmin(id: string): Promise<SurgeonWithRelations | null> {
   const supabase = await createClient();
   const { data } = await supabase

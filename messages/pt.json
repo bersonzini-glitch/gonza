@@ -422,7 +422,8 @@
     "navSurgeonQueue": "Fila de cirurgiões",
     "navEvents": "Eventos",
     "navAuditLog": "Histórico de auditoria",
-    "navSocieties": "Sociedades científicas"
+    "navSocieties": "Sociedades científicas",
+    "navEmail": "Enviar email"
   },
   "adminOverview": {
     "metaTitle": "Resumo de administração",
@@ -626,6 +627,42 @@
     "createSocietyFailed": "Não foi possível criar a sociedade.",
     "updateSocietyFailed": "Não foi possível atualizar a sociedade.",
     "aiSearchDisabled": "A busca de eventos com IA está desativada no momento."
+  },
+  "adminEmailForm": {
+    "metaTitle": "Enviar email — Administração",
+    "heading": "Enviar email",
+    "subheading": "Envie um email com o mesmo estilo visual do site, para uma pessoa específica ou para vários destinatários de uma vez.",
+    "modeLabel": "Tipo de envio",
+    "modeSingle": "Um destinatário",
+    "modeBulk": "Envio em massa",
+    "recipientEmailLabel": "Email do destinatário",
+    "audienceLabel": "Destinatários",
+    "audienceApprovedSurgeons": "Cirurgiões com perfil aprovado",
+    "audienceCustom": "Lista personalizada",
+    "customRecipientsLabel": "Lista de emails",
+    "customRecipientsPlaceholder": "um@exemplo.com, outro@exemplo.com",
+    "customRecipientsHint": "Separe os emails com vírgulas, ponto e vírgula ou um por linha.",
+    "subjectLabel": "Assunto",
+    "messageLabel": "Mensagem",
+    "messageHint": "Deixe uma linha em branco entre parágrafos para separá-los.",
+    "send": "Enviar",
+    "sending": "Enviando…",
+    "sentToast": "Enviado para {count, plural, one {# destinatário} other {# destinatários}}."
+  },
+  "adminEmailValidation": {
+    "subjectRequired": "O assunto deve ter pelo menos 3 caracteres",
+    "subjectTooLong": "O assunto é muito longo",
+    "messageTooShort": "A mensagem deve ter pelo menos 10 caracteres",
+    "messageTooLong": "A mensagem é muito longa",
+    "recipientEmailInvalid": "Digite um email válido",
+    "customRecipientsRequired": "Digite pelo menos um email válido"
+  },
+  "adminEmailActions": {
+    "invalidData": "Dados inválidos",
+    "tooManySends": "Você fez muitos envios. Espere um pouco antes de tentar novamente.",
+    "notConfigured": "O envio de emails não está configurado (falta RESEND_API_KEY).",
+    "noRecipients": "Não há destinatários para este envio.",
+    "sendFailed": "Não foi possível enviar o email."
   },
   "subspecialties": {
     "degenerative_spine": "Coluna degenerativa",

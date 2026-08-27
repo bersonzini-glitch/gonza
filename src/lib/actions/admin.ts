@@ -4,13 +4,22 @@ import { randomUUID } from "node:crypto";
 
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
+import { Resend } from "resend";
 
 import { logAdminAction } from "@/lib/audit";
 import { requireAdmin } from "@/lib/auth/session";
+import { listApprovedSurgeonEmailsForAdmin } from "@/lib/data/admin";
+import { renderBrandedEmailHtml, textToParagraphsHtml } from "@/lib/email/template";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { insertWithUniqueSlug } from "@/lib/slug";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { SURGEON_PHOTOS_BUCKET } from "@/lib/supabase/storage";
+import {
+  makeAdminEmailSchema,
+  parseEmailList,
+  type AdminEmailInput,
+} from "@/lib/validation/admin-email";
 import { makeEventSchema, type EventInput } from "@/lib/validation/event";
 import { makeSocietySchema, type SocietyInput } from "@/lib/validation/society";
 import {
@@ -676,4 +685,110 @@ export async function deleteSocietyAction(societyId: string): Promise<AdminActio
   revalidatePath("/admin/scientific-societies");
   revalidatePath("/societies");
   return { success: true };
+}
+
+// ---------------------------------------------------------------------------
+// Admin emailing
+// ---------------------------------------------------------------------------
+
+export interface AdminEmailActionResult {
+  error?: string;
+  success?: boolean;
+  recipientCount?: number;
+}
+
+const ADMIN_EMAIL_FROM = process.env.ADMIN_EMAIL_FROM ?? "ColumnaLATAM <onboarding@resend.dev>";
+// Recipients reply to the admin's own inbox rather than the noreply sender.
+const ADMIN_EMAIL_REPLY_TO = process.env.CONTACT_FORM_TO_EMAIL || undefined;
+
+export async function sendAdminEmailAction(
+  locale: string,
+  data: AdminEmailInput,
+): Promise<AdminEmailActionResult> {
+  const [tValidation, tErrors] = await Promise.all([
+    getTranslations({ locale, namespace: "adminEmailValidation" }),
+    getTranslations({ locale, namespace: "adminEmailActions" }),
+  ]);
+
+  const { admin, supabase } = await requireAdminClient();
+
+  const parsed = makeAdminEmailSchema(tValidation).safeParse(data);
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? tErrors("invalidData") };
+  const input = parsed.data;
+
+  const allowed = await checkRateLimit(supabase, admin.id, "admin-email-send", 20, 3600);
+  if (!allowed) return { error: tErrors("tooManySends") };
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error("Admin email send is not configured: missing RESEND_API_KEY.");
+    return { error: tErrors("notConfigured") };
+  }
+
+  let recipients: string[];
+  if (input.mode === "single") {
+    recipients = input.recipientEmail ? [input.recipientEmail] : [];
+  } else if (input.audience === "custom") {
+    recipients = parseEmailList(input.customRecipients ?? "");
+  } else {
+    recipients = (await listApprovedSurgeonEmailsForAdmin()).map((s) => s.email);
+  }
+
+  if (recipients.length === 0) return { error: tErrors("noRecipients") };
+
+  const html = renderBrandedEmailHtml({
+    heading: input.subject,
+    bodyHtml: textToParagraphsHtml(input.message),
+  });
+
+  try {
+    const resend = new Resend(apiKey);
+    if (recipients.length === 1) {
+      const { error } = await resend.emails.send({
+        from: ADMIN_EMAIL_FROM,
+        to: recipients[0],
+        replyTo: ADMIN_EMAIL_REPLY_TO,
+        subject: input.subject,
+        html,
+      });
+      if (error) {
+        console.error("Resend failed to send admin email:", error);
+        return { error: tErrors("sendFailed") };
+      }
+    } else {
+      // One independent email per recipient in a single batch call, so no
+      // recipient sees anyone else's address (unlike a shared to/cc/bcc
+      // list). Resend caps a batch at 100 emails, hence the chunking.
+      const BATCH_SIZE = 100;
+      for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
+        const chunk = recipients.slice(i, i + BATCH_SIZE);
+        const { error } = await resend.batch.send(
+          chunk.map((to) => ({
+            from: ADMIN_EMAIL_FROM,
+            to,
+            replyTo: ADMIN_EMAIL_REPLY_TO,
+            subject: input.subject,
+            html,
+          })),
+        );
+        if (error) {
+          console.error("Resend failed to send admin email batch:", error);
+          return { error: tErrors("sendFailed") };
+        }
+      }
+    }
+  } catch (err) {
+    console.error("sendAdminEmailAction failed unexpectedly:", err);
+    return { error: tErrors("sendFailed") };
+  }
+
+  await logAdminAction(supabase, "send_admin_email", "admin_email", null, {
+    admin: admin.username,
+    mode: input.mode,
+    audience: input.mode === "bulk" ? input.audience : null,
+    recipientCount: recipients.length,
+    subject: input.subject,
+  });
+
+  return { success: true, recipientCount: recipients.length };
 }

@@ -1,4 +1,4 @@
-import { Building2, CalendarRange, LayoutDashboard, ScrollText, Users } from "lucide-react";
+import { Building2, CalendarRange, LayoutDashboard, Mail, ScrollText, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
@@ -21,6 +21,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
       icon: Building2,
       exact: false,
     },
+    { href: "/admin/email", label: t("navEmail"), icon: Mail, exact: false },
     { href: "/admin/audit-log", label: t("navAuditLog"), icon: ScrollText, exact: false },
   ] as const;
 
