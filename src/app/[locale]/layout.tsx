@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -34,6 +35,7 @@ const fraunces = Fraunces({
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 const OG_LOCALES = { es: "es_419", en: "en_US", pt: "pt_BR" } as const;
 
@@ -119,6 +121,9 @@ export default async function LocaleLayout({
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
+      {GA_MEASUREMENT_ID && process.env.NODE_ENV === "production" && (
+        <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />
+      )}
     </html>
   );
 }
