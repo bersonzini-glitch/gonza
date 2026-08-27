@@ -6,6 +6,7 @@ const TEXT_MUTED = "#a3a9b3";
 const ACCENT = "#005358";
 const SERIF = "Georgia,'Times New Roman',serif";
 const SANS = "Helvetica,Arial,sans-serif";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 function escapeHtml(input: string): string {
   return input
@@ -64,7 +65,7 @@ export function renderBrandedEmailHtml({
 <div style="background-color:${BRAND_BG};padding:40px 20px;font-family:${SANS};">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;margin:0 auto;">
 <tr><td style="padding-bottom:28px;text-align:center;">
-<span style="font-family:${SERIF};font-size:20px;font-weight:700;color:${TEXT_DARK};">Columna<span style="color:${ACCENT};">LATAM</span></span>
+<a href="${SITE_URL}" style="font-family:${SERIF};font-size:20px;font-weight:700;color:${TEXT_DARK};text-decoration:none;">Columna<span style="color:${ACCENT};">LATAM</span></a>
 </td></tr>
 <tr><td bgcolor="#ffffff" style="background-color:#ffffff;border:1px solid ${CARD_BORDER};border-radius:16px;padding:40px 32px;">
 <h1 style="font-family:${SERIF};font-size:24px;font-weight:700;color:${TEXT_DARK};margin:0 0 16px;">${escapeHtml(heading)}</h1>
