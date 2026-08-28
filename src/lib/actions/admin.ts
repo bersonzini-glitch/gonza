@@ -713,8 +713,7 @@ export interface AdminEmailActionResult {
 }
 
 const ADMIN_EMAIL_FROM = process.env.ADMIN_EMAIL_FROM ?? "ColumnaLATAM <onboarding@resend.dev>";
-// Recipients reply to the admin's own inbox rather than the noreply sender.
-const ADMIN_EMAIL_REPLY_TO = process.env.CONTACT_FORM_TO_EMAIL || undefined;
+const ADMIN_EMAIL_REPLY_TO = process.env.ADMIN_EMAIL_REPLY_TO ?? "noreply@columnalatam.org";
 
 export async function sendAdminEmailAction(
   locale: string,
