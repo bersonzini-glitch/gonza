@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { useState, useTransition } from "react";
 
+import { SearchDisclosure } from "@/components/shared/search-disclosure";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -53,82 +54,90 @@ export function SocietyFilters({ countries }: { countries: string[] }) {
     updateParam("q", q || null);
   }
 
+  const hasActiveFilters = Array.from(searchParams.keys()).some((k) => k !== "page");
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      aria-label={t("formAriaLabel")}
-      className="space-y-4 rounded-xl border border-border bg-card p-4 sm:p-5"
+    <SearchDisclosure
+      label={t("openSearch")}
+      hideLabel={t("hideSearch")}
+      startOpen={hasActiveFilters}
     >
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <div className="relative flex-1">
-          <Search
-            className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-            aria-hidden="true"
-          />
-          <Label htmlFor="q" className="sr-only">
-            {t("searchLabel")}
-          </Label>
-          <Input
-            id="q"
-            type="search"
-            placeholder={t("searchPlaceholder")}
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        <Button type="submit" disabled={isPending}>
-          {t("apply")}
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <Label htmlFor="country" className="mb-1.5 block text-xs">
-            {t("countryLabel")}
-          </Label>
-          <Select
-            items={COUNTRY_ITEMS}
-            value={searchParams.get("country") ?? ANY}
-            onValueChange={(v) => updateParam("country", v)}
-          >
-            <SelectTrigger id="country" className="w-full">
-              <SelectValue placeholder={t("anyCountry")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ANY}>{t("anyCountry")}</SelectItem>
-              {countries.map((c) => (
-                <SelectItem key={c} value={c}>
-                  {c}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      <form
+        onSubmit={handleSubmit}
+        aria-label={t("formAriaLabel")}
+        className="space-y-4 rounded-xl border border-border bg-card p-4 sm:p-5"
+      >
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <div className="relative flex-1">
+            <Search
+              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Label htmlFor="q" className="sr-only">
+              {t("searchLabel")}
+            </Label>
+            <Input
+              id="q"
+              type="search"
+              placeholder={t("searchPlaceholder")}
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          <Button type="submit" disabled={isPending}>
+            {t("apply")}
+          </Button>
         </div>
 
-        <div>
-          <Label htmlFor="specialty" className="mb-1.5 block text-xs">
-            {t("specialtyLabel")}
-          </Label>
-          <Select
-            items={SPECIALTY_ITEMS}
-            value={searchParams.get("specialty") ?? ANY}
-            onValueChange={(v) => updateParam("specialty", v)}
-          >
-            <SelectTrigger id="specialty" className="w-full">
-              <SelectValue placeholder={t("anySpecialty")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ANY}>{t("anySpecialty")}</SelectItem>
-              {SOCIETY_SPECIALTIES.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {s}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label htmlFor="country" className="mb-1.5 block text-xs">
+              {t("countryLabel")}
+            </Label>
+            <Select
+              items={COUNTRY_ITEMS}
+              value={searchParams.get("country") ?? ANY}
+              onValueChange={(v) => updateParam("country", v)}
+            >
+              <SelectTrigger id="country" className="w-full">
+                <SelectValue placeholder={t("anyCountry")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ANY}>{t("anyCountry")}</SelectItem>
+                {countries.map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {c}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="specialty" className="mb-1.5 block text-xs">
+              {t("specialtyLabel")}
+            </Label>
+            <Select
+              items={SPECIALTY_ITEMS}
+              value={searchParams.get("specialty") ?? ANY}
+              onValueChange={(v) => updateParam("specialty", v)}
+            >
+              <SelectTrigger id="specialty" className="w-full">
+                <SelectValue placeholder={t("anySpecialty")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ANY}>{t("anySpecialty")}</SelectItem>
+                {SOCIETY_SPECIALTIES.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {s}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </SearchDisclosure>
   );
 }

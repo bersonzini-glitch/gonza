@@ -122,12 +122,16 @@
     "formAriaLabel": "Filter conferences",
     "includePastLabel": "Show past events",
     "languageLabel": "Language",
-    "anyLanguage": "Any language"
+    "anyLanguage": "Any language",
+    "openSearch": "Search conferences",
+    "hideSearch": "Hide search"
   },
   "surgeonFilters": {
     "searchLabel": "Search by name",
     "searchPlaceholder": "Search by name…",
     "apply": "Apply",
+    "openSearch": "Search surgeons",
+    "hideSearch": "Hide search",
     "countryLabel": "Country",
     "anyCountry": "Any country",
     "specialtyLabel": "Specialty",
@@ -726,7 +730,9 @@
     "countryLabel": "Country",
     "anyCountry": "Any country",
     "specialtyLabel": "Specialty",
-    "anySpecialty": "Any specialty"
+    "anySpecialty": "Any specialty",
+    "openSearch": "Search societies",
+    "hideSearch": "Hide search"
   },
   "societyDetail": {
     "officialSite": "Official site",

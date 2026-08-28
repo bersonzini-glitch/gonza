@@ -122,12 +122,16 @@
     "formAriaLabel": "Filtrar congressos",
     "includePastLabel": "Mostrar eventos passados",
     "languageLabel": "Idioma",
-    "anyLanguage": "Qualquer idioma"
+    "anyLanguage": "Qualquer idioma",
+    "openSearch": "Buscar congressos",
+    "hideSearch": "Ocultar busca"
   },
   "surgeonFilters": {
     "searchLabel": "Buscar por nome",
     "searchPlaceholder": "Buscar por nome…",
     "apply": "Aplicar",
+    "openSearch": "Buscar cirurgiões",
+    "hideSearch": "Ocultar busca",
     "countryLabel": "País",
     "anyCountry": "Qualquer país",
     "specialtyLabel": "Especialidade",
@@ -726,7 +730,9 @@
     "countryLabel": "País",
     "anyCountry": "Qualquer país",
     "specialtyLabel": "Especialidade",
-    "anySpecialty": "Qualquer especialidade"
+    "anySpecialty": "Qualquer especialidade",
+    "openSearch": "Buscar sociedades",
+    "hideSearch": "Ocultar busca"
   },
   "societyDetail": {
     "officialSite": "Site oficial",

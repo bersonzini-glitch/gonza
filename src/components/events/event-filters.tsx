@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { useState, useTransition } from "react";
 
+import { SearchDisclosure } from "@/components/shared/search-disclosure";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -95,212 +96,220 @@ export function EventFilters() {
     startTransition(() => router.push(`/events?${params.toString()}`));
   }
 
+  const hasActiveFilters = Array.from(searchParams.keys()).some((k) => k !== "page");
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      aria-label={t("formAriaLabel")}
-      className="space-y-4 rounded-xl border border-border bg-card p-4 sm:p-5"
+    <SearchDisclosure
+      label={t("openSearch")}
+      hideLabel={t("hideSearch")}
+      startOpen={hasActiveFilters}
     >
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <div className="flex-1">
-          <Label htmlFor="q" className="sr-only">
-            {t("searchLabel")}
-          </Label>
-          <div className="relative">
-            <Search
-              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-              aria-hidden="true"
-            />
+      <form
+        onSubmit={handleSubmit}
+        aria-label={t("formAriaLabel")}
+        className="space-y-4 rounded-xl border border-border bg-card p-4 sm:p-5"
+      >
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <div className="flex-1">
+            <Label htmlFor="q" className="sr-only">
+              {t("searchLabel")}
+            </Label>
+            <div className="relative">
+              <Search
+                className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Input
+                id="q"
+                type="search"
+                placeholder={t("searchPlaceholder")}
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          </div>
+          <Button type="submit" disabled={isPending}>
+            {t("apply")}
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label htmlFor="country" className="mb-1.5 block text-xs">
+              {t("countryLabel")}
+            </Label>
+            <Select
+              items={COUNTRY_ITEMS}
+              value={searchParams.get("country") ?? ANY}
+              onValueChange={(v) => updateParam("country", v)}
+            >
+              <SelectTrigger id="country" className="w-full">
+                <SelectValue placeholder={t("anyCountry")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ANY}>{t("anyCountry")}</SelectItem>
+                {LATAM_COUNTRIES.map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {c}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="eventType" className="mb-1.5 block text-xs">
+              {t("eventTypeLabel")}
+            </Label>
+            <Select
+              items={EVENT_TYPE_ITEMS}
+              value={searchParams.get("eventType") ?? ANY}
+              onValueChange={(v) => updateParam("eventType", v)}
+            >
+              <SelectTrigger id="eventType" className="w-full">
+                <SelectValue placeholder={t("anyType")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ANY}>{t("anyType")}</SelectItem>
+                {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="format" className="mb-1.5 block text-xs">
+              {t("formatLabel")}
+            </Label>
+            <Select
+              items={FORMAT_ITEMS}
+              value={searchParams.get("format") ?? ANY}
+              onValueChange={(v) => updateParam("format", v)}
+            >
+              <SelectTrigger id="format" className="w-full">
+                <SelectValue placeholder={t("anyFormat")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ANY}>{t("anyFormat")}</SelectItem>
+                {Object.entries(EVENT_FORMAT_LABELS).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="language" className="mb-1.5 block text-xs">
+              {t("languageLabel")}
+            </Label>
+            <Select
+              items={LANGUAGE_ITEMS}
+              value={searchParams.get("language") ?? ANY}
+              onValueChange={(v) => updateParam("language", v)}
+            >
+              <SelectTrigger id="language" className="w-full">
+                <SelectValue placeholder={t("anyLanguage")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ANY}>{t("anyLanguage")}</SelectItem>
+                {LANGUAGE_OPTIONS.map((l) => (
+                  <SelectItem key={l} value={l}>
+                    {l}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="topic" className="mb-1.5 block text-xs">
+              {t("topicLabel")}
+            </Label>
+            <Select
+              items={TOPIC_ITEMS}
+              value={searchParams.get("topic") ?? ANY}
+              onValueChange={(v) => updateParam("topic", v)}
+            >
+              <SelectTrigger id="topic" className="w-full">
+                <SelectValue placeholder={t("anyTopic")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ANY}>{t("anyTopic")}</SelectItem>
+                {EVENT_TOPICS.map((topic) => (
+                  <SelectItem key={topic} value={topic}>
+                    {topic}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="from" className="mb-1.5 block text-xs">
+              {t("fromLabel")}
+            </Label>
             <Input
-              id="q"
-              type="search"
-              placeholder={t("searchPlaceholder")}
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              className="pl-9"
+              id="from"
+              type="date"
+              value={from}
+              onChange={(e) => setFrom(e.target.value)}
+              onBlur={handleSubmit}
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="to" className="mb-1.5 block text-xs">
+              {t("toLabel")}
+            </Label>
+            <Input
+              id="to"
+              type="date"
+              value={to}
+              onChange={(e) => setTo(e.target.value)}
+              onBlur={handleSubmit}
             />
           </div>
         </div>
-        <Button type="submit" disabled={isPending}>
-          {t("apply")}
-        </Button>
-      </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <Label htmlFor="country" className="mb-1.5 block text-xs">
-            {t("countryLabel")}
+        <div className="flex items-center justify-between border-t border-border pt-3">
+          <Label htmlFor="includePast" className="text-sm font-normal">
+            {t("includePastLabel")}
           </Label>
-          <Select
-            items={COUNTRY_ITEMS}
-            value={searchParams.get("country") ?? ANY}
-            onValueChange={(v) => updateParam("country", v)}
-          >
-            <SelectTrigger id="country" className="w-full">
-              <SelectValue placeholder={t("anyCountry")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ANY}>{t("anyCountry")}</SelectItem>
-              {LATAM_COUNTRIES.map((c) => (
-                <SelectItem key={c} value={c}>
-                  {c}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <Label htmlFor="eventType" className="mb-1.5 block text-xs">
-            {t("eventTypeLabel")}
-          </Label>
-          <Select
-            items={EVENT_TYPE_ITEMS}
-            value={searchParams.get("eventType") ?? ANY}
-            onValueChange={(v) => updateParam("eventType", v)}
-          >
-            <SelectTrigger id="eventType" className="w-full">
-              <SelectValue placeholder={t("anyType")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ANY}>{t("anyType")}</SelectItem>
-              {Object.entries(EVENT_TYPE_LABELS).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <Label htmlFor="format" className="mb-1.5 block text-xs">
-            {t("formatLabel")}
-          </Label>
-          <Select
-            items={FORMAT_ITEMS}
-            value={searchParams.get("format") ?? ANY}
-            onValueChange={(v) => updateParam("format", v)}
-          >
-            <SelectTrigger id="format" className="w-full">
-              <SelectValue placeholder={t("anyFormat")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ANY}>{t("anyFormat")}</SelectItem>
-              {Object.entries(EVENT_FORMAT_LABELS).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <Label htmlFor="language" className="mb-1.5 block text-xs">
-            {t("languageLabel")}
-          </Label>
-          <Select
-            items={LANGUAGE_ITEMS}
-            value={searchParams.get("language") ?? ANY}
-            onValueChange={(v) => updateParam("language", v)}
-          >
-            <SelectTrigger id="language" className="w-full">
-              <SelectValue placeholder={t("anyLanguage")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ANY}>{t("anyLanguage")}</SelectItem>
-              {LANGUAGE_OPTIONS.map((l) => (
-                <SelectItem key={l} value={l}>
-                  {l}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <Label htmlFor="topic" className="mb-1.5 block text-xs">
-            {t("topicLabel")}
-          </Label>
-          <Select
-            items={TOPIC_ITEMS}
-            value={searchParams.get("topic") ?? ANY}
-            onValueChange={(v) => updateParam("topic", v)}
-          >
-            <SelectTrigger id="topic" className="w-full">
-              <SelectValue placeholder={t("anyTopic")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ANY}>{t("anyTopic")}</SelectItem>
-              {EVENT_TOPICS.map((topic) => (
-                <SelectItem key={topic} value={topic}>
-                  {topic}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <Label htmlFor="from" className="mb-1.5 block text-xs">
-            {t("fromLabel")}
-          </Label>
-          <Input
-            id="from"
-            type="date"
-            value={from}
-            onChange={(e) => setFrom(e.target.value)}
-            onBlur={handleSubmit}
+          <Switch
+            id="includePast"
+            checked={searchParams.get("includePast") === "true"}
+            onCheckedChange={(checked) => toggleParam("includePast", checked)}
           />
         </div>
 
-        <div>
-          <Label htmlFor="to" className="mb-1.5 block text-xs">
-            {t("toLabel")}
+        <div className="flex items-center justify-between gap-3 border-t border-border pt-3">
+          <Label htmlFor="sort" className="text-xs text-muted-foreground">
+            {t("sortLabel")}
           </Label>
-          <Input
-            id="to"
-            type="date"
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
-            onBlur={handleSubmit}
-          />
+          <Select
+            items={SORT_ITEMS}
+            value={searchParams.get("sort") ?? "soonest"}
+            onValueChange={(v) => updateParam("sort", v)}
+          >
+            <SelectTrigger id="sort" className="w-48">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {SORT_OPTIONS.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-      </div>
-
-      <div className="flex items-center justify-between border-t border-border pt-3">
-        <Label htmlFor="includePast" className="text-sm font-normal">
-          {t("includePastLabel")}
-        </Label>
-        <Switch
-          id="includePast"
-          checked={searchParams.get("includePast") === "true"}
-          onCheckedChange={(checked) => toggleParam("includePast", checked)}
-        />
-      </div>
-
-      <div className="flex items-center justify-between gap-3 border-t border-border pt-3">
-        <Label htmlFor="sort" className="text-xs text-muted-foreground">
-          {t("sortLabel")}
-        </Label>
-        <Select
-          items={SORT_ITEMS}
-          value={searchParams.get("sort") ?? "soonest"}
-          onValueChange={(v) => updateParam("sort", v)}
-        >
-          <SelectTrigger id="sort" className="w-48">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {SORT_OPTIONS.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>
-                {opt.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-    </form>
+      </form>
+    </SearchDisclosure>
   );
 }
