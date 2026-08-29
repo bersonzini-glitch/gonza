@@ -33,6 +33,8 @@ type ProfilesRow = {
   username: string;
   full_name: string | null;
   role: ProfileRole;
+  notify_new_events: boolean;
+  notify_suggested_invitations: boolean;
   created_at: string;
   updated_at: string;
 };

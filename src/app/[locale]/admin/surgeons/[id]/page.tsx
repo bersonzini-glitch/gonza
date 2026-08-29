@@ -60,6 +60,12 @@ export default async function AdminSurgeonDetailPage({
       city: l.city,
       isPrimary: l.is_primary,
     })),
+    // Not shown on this form (showNotificationPreferences={false} below) —
+    // these are the surgeon's own communication preferences, not profile
+    // content the admin edits, and adminUpdateSurgeonProfileAction never
+    // reads them, so the placeholder values here are never persisted.
+    notifyNewEvents: true,
+    notifySuggestedInvitations: true,
   };
 
   return (
@@ -113,6 +119,7 @@ export default async function AdminSurgeonDetailPage({
         <SurgeonProfileForm
           defaultValues={defaultValues}
           action={adminUpdateSurgeonProfileAction.bind(null, locale, surgeon.id)}
+          showNotificationPreferences={false}
         />
       </div>
     </div>

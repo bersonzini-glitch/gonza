@@ -26,6 +26,8 @@ export function makeAdminEmailSchema(t: Translator) {
       recipientEmail: z.string().trim().optional().or(z.literal("")),
       audience: z.enum(ADMIN_EMAIL_AUDIENCES),
       customRecipients: z.string().trim().optional().or(z.literal("")),
+      filterNotifyNewEvents: z.boolean().default(false),
+      filterNotifySuggestedInvitations: z.boolean().default(false),
       subject: z.string().trim().min(3, t("subjectRequired")).max(150, t("subjectTooLong")),
       message: z.string().trim().min(10, t("messageTooShort")).max(5000, t("messageTooLong")),
     })

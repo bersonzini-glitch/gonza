@@ -82,6 +82,8 @@ export default async function DashboardPage({ params }: PageProps<"/[locale]/das
           city: l.city,
           isPrimary: l.is_primary,
         })),
+        notifyNewEvents: profile.notify_new_events,
+        notifySuggestedInvitations: profile.notify_suggested_invitations,
       }
     : {
         fullName: profile.full_name ?? "",
@@ -101,6 +103,8 @@ export default async function DashboardPage({ params }: PageProps<"/[locale]/das
         contactEmail: "",
         contactPhone: "",
         locations: [{ country: "", city: "", isPrimary: true }],
+        notifyNewEvents: profile.notify_new_events,
+        notifySuggestedInvitations: profile.notify_suggested_invitations,
       };
 
   const statusMeta = surgeon ? STATUS_META[surgeon.status] : null;

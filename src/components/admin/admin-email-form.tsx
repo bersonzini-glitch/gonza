@@ -9,6 +9,7 @@ import { toast } from "sonner";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -32,6 +33,8 @@ const defaultValues: AdminEmailInput = {
   recipientEmail: "",
   audience: "approved_surgeons",
   customRecipients: "",
+  filterNotifyNewEvents: false,
+  filterNotifySuggestedInvitations: false,
   subject: "",
   message: "",
 };
@@ -130,6 +133,31 @@ export function AdminEmailForm({
               </SelectContent>
             </Select>
           </div>
+          {audience === "approved_surgeons" && (
+            <div className="space-y-2 rounded-lg border border-border p-3">
+              <p className="text-xs font-medium text-muted-foreground">
+                {t("preferenceFiltersLabel")}
+              </p>
+              <label className="flex items-center gap-2 text-sm">
+                <Checkbox
+                  checked={form.watch("filterNotifyNewEvents")}
+                  onCheckedChange={(checked) =>
+                    form.setValue("filterNotifyNewEvents", checked === true)
+                  }
+                />
+                {t("filterNotifyNewEventsLabel")}
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <Checkbox
+                  checked={form.watch("filterNotifySuggestedInvitations")}
+                  onCheckedChange={(checked) =>
+                    form.setValue("filterNotifySuggestedInvitations", checked === true)
+                  }
+                />
+                {t("filterNotifySuggestedInvitationsLabel")}
+              </label>
+            </div>
+          )}
           {audience === "custom" && (
             <div className="space-y-1.5">
               <Label htmlFor="customRecipients">{t("customRecipientsLabel")}</Label>

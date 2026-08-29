@@ -277,7 +277,9 @@
     "newPassword": "Nova senha",
     "confirmNewPassword": "Confirme a nova senha",
     "updating": "Atualizando…",
-    "updatePassword": "Atualizar senha"
+    "updatePassword": "Atualizar senha",
+    "notifyNewEventsLabel": "Quero receber aviso de novos eventos incluídos",
+    "notifySuggestedInvitationsLabel": "Quero receber convites sugeridos"
   },
   "authValidation": {
     "usernameMin": "O usuário deve ter pelo menos 3 caracteres",
@@ -352,7 +354,10 @@
     "profileSavedToast": "Perfil salvo",
     "saving": "Salvando…",
     "saveProfile": "Salvar perfil",
-    "saveProfileBeforeReview": "Salvar perfil antes da revisão"
+    "saveProfileBeforeReview": "Salvar perfil antes da revisão",
+    "notificationsHeading": "Notificações",
+    "notifyNewEventsLabel": "Quero receber aviso de novos eventos incluídos",
+    "notifySuggestedInvitationsLabel": "Quero receber convites sugeridos"
   },
   "surgeonValidation": {
     "fullNameTooShort": "O nome completo é muito curto",
@@ -643,6 +648,9 @@
     "audienceLabel": "Destinatários",
     "audienceApprovedSurgeons": "Cirurgiões com perfil aprovado",
     "audienceCustom": "Lista personalizada",
+    "preferenceFiltersLabel": "Filtrar por preferências (opcional)",
+    "filterNotifyNewEventsLabel": "Somente quem quer avisos de novos eventos",
+    "filterNotifySuggestedInvitationsLabel": "Somente quem quer convites sugeridos",
     "customRecipientsLabel": "Lista de emails",
     "customRecipientsPlaceholder": "um@exemplo.com, outro@exemplo.com",
     "customRecipientsHint": "Separe os emails com vírgulas, ponto e vírgula ou um por linha.",

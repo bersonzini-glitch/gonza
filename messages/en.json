@@ -277,7 +277,9 @@
     "newPassword": "New password",
     "confirmNewPassword": "Confirm new password",
     "updating": "Updating…",
-    "updatePassword": "Update password"
+    "updatePassword": "Update password",
+    "notifyNewEventsLabel": "I want to receive notice of new events added",
+    "notifySuggestedInvitationsLabel": "I want to receive suggested invitations"
   },
   "authValidation": {
     "usernameMin": "Username must be at least 3 characters",
@@ -352,7 +354,10 @@
     "profileSavedToast": "Profile saved",
     "saving": "Saving…",
     "saveProfile": "Save profile",
-    "saveProfileBeforeReview": "Save profile before review"
+    "saveProfileBeforeReview": "Save profile before review",
+    "notificationsHeading": "Notifications",
+    "notifyNewEventsLabel": "I want to receive notice of new events added",
+    "notifySuggestedInvitationsLabel": "I want to receive suggested invitations"
   },
   "surgeonValidation": {
     "fullNameTooShort": "Full name is too short",
@@ -643,6 +648,9 @@
     "audienceLabel": "Recipients",
     "audienceApprovedSurgeons": "Surgeons with an approved profile",
     "audienceCustom": "Custom list",
+    "preferenceFiltersLabel": "Filter by preferences (optional)",
+    "filterNotifyNewEventsLabel": "Only those who want new event notices",
+    "filterNotifySuggestedInvitationsLabel": "Only those who want suggested invitations",
     "customRecipientsLabel": "Email list",
     "customRecipientsPlaceholder": "one@example.com, other@example.com",
     "customRecipientsHint": "Separate emails with commas, semicolons, or one per line.",

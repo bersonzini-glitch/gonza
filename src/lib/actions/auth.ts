@@ -94,7 +94,12 @@ export async function signUpAction(
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
-      data: { username: parsed.data.username, full_name: parsed.data.fullName },
+      data: {
+        username: parsed.data.username,
+        full_name: parsed.data.fullName,
+        notify_new_events: formData.get("notifyNewEvents") === "on",
+        notify_suggested_invitations: formData.get("notifySuggestedInvitations") === "on",
+      },
       emailRedirectTo: `${origin}/auth/callback`,
     },
   });

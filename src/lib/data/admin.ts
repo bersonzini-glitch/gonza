@@ -137,20 +137,51 @@ export interface ApprovedSurgeonEmailRow {
   email: string;
 }
 
+export interface ApprovedSurgeonEmailFilters {
+  notifyNewEvents?: boolean;
+  notifySuggestedInvitations?: boolean;
+}
+
 /**
  * Login emails (not the optional public `contact_email`) for every approved
  * surgeon, for the admin "emailing" feature — same service-role
  * auth.admin.listUsers() pattern as listUnstartedUsersForAdmin(), since
- * auth.users isn't reachable via RLS/PostgREST even to admins.
+ * auth.users isn't reachable via RLS/PostgREST even to admins. The two
+ * filters narrow the result to accounts that opted into that notification
+ * (see profiles.notify_new_events / notify_suggested_invitations) — surgeons
+ * with no matching profiles row are excluded rather than assumed opted-in.
  */
-export async function listApprovedSurgeonEmailsForAdmin(): Promise<ApprovedSurgeonEmailRow[]> {
+export async function listApprovedSurgeonEmailsForAdmin(
+  filters: ApprovedSurgeonEmailFilters = {},
+): Promise<ApprovedSurgeonEmailRow[]> {
   const supabase = await createClient();
-  const { data: surgeons } = await supabase
+  const { data: allSurgeons } = await supabase
     .from("surgeon_profiles")
     .select("user_id, full_name")
     .eq("status", "approved");
 
-  if (!surgeons || surgeons.length === 0) return [];
+  if (!allSurgeons || allSurgeons.length === 0) return [];
+
+  let surgeons = allSurgeons;
+  if (filters.notifyNewEvents || filters.notifySuggestedInvitations) {
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("id, notify_new_events, notify_suggested_invitations")
+      .in(
+        "id",
+        allSurgeons.map((s) => s.user_id),
+      );
+    const preferencesById = new Map((profiles ?? []).map((p) => [p.id, p]));
+    surgeons = allSurgeons.filter((s) => {
+      const prefs = preferencesById.get(s.user_id);
+      if (!prefs) return false;
+      if (filters.notifyNewEvents && !prefs.notify_new_events) return false;
+      if (filters.notifySuggestedInvitations && !prefs.notify_suggested_invitations) return false;
+      return true;
+    });
+  }
+
+  if (surgeons.length === 0) return [];
 
   const admin = createAdminClient();
   const emailById = new Map<string, string>();

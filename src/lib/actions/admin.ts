@@ -745,7 +745,12 @@ export async function sendAdminEmailAction(
   } else if (input.audience === "custom") {
     recipients = parseEmailList(input.customRecipients ?? "");
   } else {
-    recipients = (await listApprovedSurgeonEmailsForAdmin()).map((s) => s.email);
+    recipients = (
+      await listApprovedSurgeonEmailsForAdmin({
+        notifyNewEvents: input.filterNotifyNewEvents,
+        notifySuggestedInvitations: input.filterNotifySuggestedInvitations,
+      })
+    ).map((s) => s.email);
   }
 
   if (recipients.length === 0) return { error: tErrors("noRecipients") };

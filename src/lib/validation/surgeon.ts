@@ -106,6 +106,8 @@ export function makeSurgeonProfileSchema(t: Translator) {
     contactEmail: z.union([z.email({ message: t("invalidEmail") }), z.literal("")]).optional(),
     contactPhone: z.string().trim().max(40).optional().or(z.literal("")),
     locations: z.array(makeSurgeonLocationSchema(t)).min(1, t("locationsRequired")).max(10),
+    notifyNewEvents: z.boolean().default(true),
+    notifySuggestedInvitations: z.boolean().default(true),
   });
 }
 

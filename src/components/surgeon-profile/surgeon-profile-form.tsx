@@ -47,6 +47,7 @@ export function SurgeonProfileForm({
   onSaved,
   action,
   awaitingFirstSubmission = false,
+  showNotificationPreferences = true,
 }: {
   defaultValues: SurgeonProfileFormValues;
   onSaved?: () => void;
@@ -60,6 +61,14 @@ export function SurgeonProfileForm({
    * doesn't apply.
    */
   awaitingFirstSubmission?: boolean;
+  /**
+   * These two fields are a personal communication preference stored on
+   * `profiles`, not profile content — shown on the surgeon's own dashboard,
+   * but hidden on the admin review form, which only ever writes to
+   * `surgeon_profiles` and has no business changing what a surgeon opted
+   * into.
+   */
+  showNotificationPreferences?: boolean;
 }) {
   const router = useRouter();
   const [customTag, setCustomTag] = useState("");
@@ -620,6 +629,32 @@ export function SurgeonProfileForm({
           </div>
         </div>
       </section>
+
+      {showNotificationPreferences && (
+        <section className="space-y-3">
+          <h2 className="font-heading text-lg font-semibold text-foreground">
+            {t("notificationsHeading")}
+          </h2>
+          <label className="flex items-start gap-2 text-sm">
+            <Checkbox
+              checked={form.watch("notifyNewEvents")}
+              onCheckedChange={(checked) => form.setValue("notifyNewEvents", checked === true)}
+              className="mt-0.5"
+            />
+            {t("notifyNewEventsLabel")}
+          </label>
+          <label className="flex items-start gap-2 text-sm">
+            <Checkbox
+              checked={form.watch("notifySuggestedInvitations")}
+              onCheckedChange={(checked) =>
+                form.setValue("notifySuggestedInvitations", checked === true)
+              }
+              className="mt-0.5"
+            />
+            {t("notifySuggestedInvitationsLabel")}
+          </label>
+        </section>
+      )}
 
       {serverError && (
         <Alert variant="destructive">

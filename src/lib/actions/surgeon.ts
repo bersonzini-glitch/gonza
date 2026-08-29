@@ -139,6 +139,15 @@ export async function saveSurgeonProfileAction(
   );
   if (insertLocationsError) return { error: insertLocationsError.message };
 
+  const { error: preferencesError } = await supabase
+    .from("profiles")
+    .update({
+      notify_new_events: data.notifyNewEvents,
+      notify_suggested_invitations: data.notifySuggestedInvitations,
+    })
+    .eq("id", profile.id);
+  if (preferencesError) return { error: preferencesError.message };
+
   revalidatePath("/dashboard");
   if (previousSlug) {
     revalidatePath(`/surgeons/${previousSlug}`);

@@ -6,6 +6,7 @@ import { useActionState } from "react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signUpAction, type AuthActionState } from "@/lib/actions/auth";
@@ -55,6 +56,17 @@ export function SignUpForm() {
           minLength={8}
         />
         <p className="text-xs text-muted-foreground">{t("passwordHint")}</p>
+      </div>
+
+      <div className="space-y-2 border-t border-border pt-4">
+        <label className="flex items-start gap-2 text-sm">
+          <Checkbox name="notifyNewEvents" defaultChecked className="mt-0.5" />
+          {t("notifyNewEventsLabel")}
+        </label>
+        <label className="flex items-start gap-2 text-sm">
+          <Checkbox name="notifySuggestedInvitations" defaultChecked className="mt-0.5" />
+          {t("notifySuggestedInvitationsLabel")}
+        </label>
       </div>
 
       {state.error && (
