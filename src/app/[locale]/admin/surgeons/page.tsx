@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { DeleteUnstartedUserButton } from "@/components/admin/delete-unstarted-user-button";
+import { InviteUnstartedUserButton } from "@/components/admin/invite-unstarted-user-button";
 import { Badge } from "@/components/ui/badge";
 import { primarySpecialtyLabels } from "@/lib/format";
 import { listSurgeonsForAdmin, listUnstartedUsersForAdmin } from "@/lib/data/admin";
@@ -106,7 +107,8 @@ export default async function AdminSurgeonsPage({
                       <Badge variant="outline">{t("unstartedNoneBadge")}</Badge>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-right whitespace-nowrap">
+                    <InviteUnstartedUserButton userId={u.id} />
                     <DeleteUnstartedUserButton
                       userId={u.id}
                       displayName={u.full_name ?? u.username}

@@ -80,6 +80,47 @@ async function sendSurgeonApprovedEmail(userId: string, fullName: string, slug: 
   }
 }
 
+/**
+ * Sends the branded invite email to a registered account that hasn't
+ * submitted a surgeon profile yet. Unlike sendSurgeonApprovedEmail(), a
+ * send failure here IS surfaced to the caller — inviting is the entire
+ * point of this action, so the admin needs to know if it didn't go out.
+ */
+async function sendUnstartedUserInviteEmail(
+  userId: string,
+  fullName: string,
+): Promise<{ error?: string }> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return { error: "Falta configurar RESEND_API_KEY." };
+
+  const { data, error } = await createAdminClient().auth.admin.getUserById(userId);
+  const email = data?.user?.email;
+  if (error || !email) return { error: "No se pudo obtener el email de la cuenta." };
+
+  const dashboardUrl = `${SITE_URL}/dashboard`;
+  const html = renderBrandedEmailHtml({
+    heading: "Te está esperando tu perfil en ColumnaLATAM",
+    bodyHtml: textToParagraphsHtml(
+      `Hola ${fullName || ""},\n\n` +
+        "Vimos que creaste una cuenta en ColumnaLATAM, el directorio de congresos y cirujanos de columna en Latinoamérica, pero todavía no completaste ni enviaste tu perfil.\n\n" +
+        "Terminarlo lleva solo unos minutos: entrá a tu cuenta y enviá tu perfil para que nuestro equipo lo revise y lo publique en el directorio.",
+    ),
+    ctaButton: { label: "Completar mi perfil", url: dashboardUrl },
+  });
+
+  const resend = new Resend(apiKey);
+  const { error: sendError } = await resend.emails.send({
+    from: ADMIN_EMAIL_FROM,
+    to: email,
+    replyTo: ADMIN_EMAIL_REPLY_TO,
+    subject: "Completá tu perfil en ColumnaLATAM",
+    html,
+  });
+  if (sendError) return { error: sendError.message ?? "Resend no pudo enviar el email." };
+
+  return {};
+}
+
 export interface AdminActionResult {
   error?: string;
   success?: boolean;
@@ -262,6 +303,42 @@ export async function deleteUnstartedUserAction(userId: string): Promise<AdminAc
   if (error) return { error: error.message };
 
   revalidatePath("/admin/surgeons");
+  return { success: true };
+}
+
+/**
+ * Sends a branded reminder email to a registered account that hasn't
+ * submitted a surgeon profile yet, inviting them to finish and send it.
+ * Re-checks the "unstarted" condition server-side (same rule as
+ * listUnstartedUsersForAdmin()) rather than trusting the client.
+ */
+export async function inviteUnstartedUserAction(userId: string): Promise<AdminActionResult> {
+  const { admin, supabase } = await requireAdminClient();
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name, username")
+    .eq("id", userId)
+    .maybeSingle();
+  if (!profile) return { error: "No se encontró esa cuenta." };
+
+  const { data: surgeon } = await supabase
+    .from("surgeon_profiles")
+    .select("status")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (surgeon && surgeon.status !== "draft") {
+    return { error: "Esta cuenta ya tiene un perfil enviado — refrescá la página." };
+  }
+
+  const result = await sendUnstartedUserInviteEmail(userId, profile.full_name ?? profile.username);
+  if (result.error) return { error: result.error };
+
+  await logAdminAction(supabase, "invite_unstarted_user", "profiles", userId, {
+    admin: admin.username,
+    username: profile.username,
+  });
+
   return { success: true };
 }
 
