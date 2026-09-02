@@ -30,6 +30,56 @@ import {
   type SurgeonProfileFormValues,
 } from "@/lib/validation/surgeon";
 
+const ADMIN_EMAIL_FROM = process.env.ADMIN_EMAIL_FROM ?? "ColumnaLATAM <onboarding@resend.dev>";
+const ADMIN_EMAIL_REPLY_TO = process.env.ADMIN_EMAIL_REPLY_TO ?? "noreply@columnalatam.org";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
+/**
+ * Best-effort welcome email once a surgeon profile goes live — never lets a
+ * send failure surface as an approval failure, since the approval itself
+ * already succeeded in the DB by the time this runs.
+ */
+async function sendSurgeonApprovedEmail(userId: string, fullName: string, slug: string) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error("Surgeon-approved email not sent: missing RESEND_API_KEY.");
+    return;
+  }
+
+  try {
+    const { data, error } = await createAdminClient().auth.admin.getUserById(userId);
+    const email = data?.user?.email;
+    if (error || !email) {
+      console.error("Surgeon-approved email not sent: couldn't resolve the account email.", error);
+      return;
+    }
+
+    const profileUrl = `${SITE_URL}/surgeons/${slug}`;
+    const html = renderBrandedEmailHtml({
+      heading: "¡Tu perfil ya está publicado!",
+      bodyHtml: textToParagraphsHtml(
+        `Hola ${fullName || ""},\n\n` +
+          "Buenas noticias: revisamos tu perfil en ColumnaLATAM y ya está aprobado y visible en el directorio público.\n\n" +
+          "Este es el enlace a tu perfil — compartilo con colegas, pacientes o en tus redes cuando quieras:",
+      ),
+      ctaButton: { label: "Ver mi perfil", url: profileUrl },
+    });
+
+    const resend = new Resend(apiKey);
+    const { error: sendError } = await resend.emails.send({
+      from: ADMIN_EMAIL_FROM,
+      to: email,
+      replyTo: ADMIN_EMAIL_REPLY_TO,
+      subject: "Tu perfil en ColumnaLATAM ya está publicado",
+      html,
+    });
+    if (sendError) console.error("Resend failed to send the surgeon-approved email:", sendError);
+  } catch (err) {
+    console.error("sendSurgeonApprovedEmail failed unexpectedly:", err);
+  }
+}
+
 export interface AdminActionResult {
   error?: string;
   success?: boolean;
@@ -60,7 +110,7 @@ export async function approveSurgeonAction(
       last_verified_at: new Date().toISOString().slice(0, 10),
     })
     .eq("id", surgeonId)
-    .select("slug")
+    .select("slug, user_id, full_name")
     .single();
 
   if (error || !surgeon) return { error: error?.message ?? tErrors("approveFailed") };
@@ -72,6 +122,9 @@ export async function approveSurgeonAction(
   revalidatePath("/admin/surgeons");
   revalidatePath("/surgeons");
   revalidatePath(`/surgeons/${surgeon.slug}`);
+
+  await sendSurgeonApprovedEmail(surgeon.user_id, surgeon.full_name, surgeon.slug);
+
   return { success: true };
 }
 
@@ -711,9 +764,6 @@ export interface AdminEmailActionResult {
   success?: boolean;
   recipientCount?: number;
 }
-
-const ADMIN_EMAIL_FROM = process.env.ADMIN_EMAIL_FROM ?? "ColumnaLATAM <onboarding@resend.dev>";
-const ADMIN_EMAIL_REPLY_TO = process.env.ADMIN_EMAIL_REPLY_TO ?? "noreply@columnalatam.org";
 
 export async function sendAdminEmailAction(
   locale: string,

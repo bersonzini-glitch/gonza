@@ -48,10 +48,17 @@ export function textToParagraphsHtml(text: string): string {
 export function renderBrandedEmailHtml({
   heading,
   bodyHtml,
+  ctaButton,
 }: {
   heading: string;
   bodyHtml: string;
+  ctaButton?: { label: string; url: string };
 }): string {
+  const ctaHtml = ctaButton
+    ? `<div style="text-align:center;margin:8px 0 20px;">
+<a href="${escapeHtml(ctaButton.url)}" style="display:inline-block;background-color:${ACCENT};color:#ffffff;font-family:${SANS};font-size:14px;font-weight:700;text-decoration:none;padding:12px 28px;border-radius:8px;">${escapeHtml(ctaButton.label)}</a>
+</div>`
+    : "";
   return `<!doctype html>
 <html lang="es">
 <head>
@@ -70,6 +77,7 @@ export function renderBrandedEmailHtml({
 <tr><td bgcolor="#ffffff" style="background-color:#ffffff;border:1px solid ${CARD_BORDER};border-radius:16px;padding:40px 32px;">
 <h1 style="font-family:${SERIF};font-size:24px;font-weight:700;color:${TEXT_DARK};margin:0 0 16px;">${escapeHtml(heading)}</h1>
 ${bodyHtml}
+${ctaHtml}
 </td></tr>
 <tr><td style="padding-top:24px;text-align:center;">
 <p style="font-family:${SANS};font-size:12px;color:${TEXT_MUTED};margin:0;">ColumnaLATAM · Directorio de congresos y cirujanos de columna en Latinoamérica</p>
