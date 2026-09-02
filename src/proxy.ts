@@ -17,12 +17,12 @@ export const config = {
      * Run on every request except static assets, image optimization files,
      * and the handful of root-level routes that intentionally live outside
      * [locale] (metadata files, generated icons, the Supabase auth
-     * callback, the photo proxy) — next-intl's middleware doesn't know
-     * these aren't locale-prefixable pages and would otherwise rewrite
-     * them to a non-existent /es/... route, 404ing them. Everything else
-     * still runs through so the auth cookie is refreshed on normal
-     * navigations.
+     * callback, the photo proxy, .well-known/ static files like
+     * security.txt) — next-intl's middleware doesn't know these aren't
+     * locale-prefixable pages and would otherwise rewrite them to a
+     * non-existent /es/... route, 404ing them. Everything else still runs
+     * through so the auth cookie is refreshed on normal navigations.
      */
-    "/((?!_next/static|_next/image|favicon.ico|icon$|apple-icon$|sitemap.xml|robots.txt|api/|auth/|.*\\.(?:svg|png|jpg|jpeg|webp|ico)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|icon$|apple-icon$|sitemap.xml|robots.txt|api/|auth/|\\.well-known/|.*\\.(?:svg|png|jpg|jpeg|webp|ico)$).*)",
   ],
 };
