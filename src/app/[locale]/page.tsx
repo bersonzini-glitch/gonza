@@ -1,4 +1,4 @@
-import { CalendarSearch, MapPinned, ShieldCheck, Sparkles } from "lucide-react";
+import { CalendarSearch, MapPinned, ShieldCheck, Sparkles, Users } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -75,8 +75,11 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
           <FadeIn delay={0.15}>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Button variant="outline" asChild>
-                <Link href="/surgeons">{t("viewSurgeonDirectory")}</Link>
+              <Button variant="outline" size="lg" className="w-full gap-2 sm:w-auto" asChild>
+                <Link href="/surgeons">
+                  <Users className="size-4" aria-hidden="true" />
+                  {t("viewSurgeonDirectory")}
+                </Link>
               </Button>
               <Button variant="ghost" asChild>
                 <Link href="/about">{t("howWeVerify")}</Link>
