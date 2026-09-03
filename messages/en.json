@@ -647,6 +647,7 @@
     "modeLabel": "Send type",
     "modeSingle": "Single recipient",
     "modeBulk": "Bulk send",
+    "modeInvite": "Invitation to join",
     "recipientEmailLabel": "Recipient email",
     "audienceLabel": "Recipients",
     "audienceApprovedSurgeons": "Surgeons with an approved profile",
@@ -657,6 +658,8 @@
     "customRecipientsLabel": "Email list",
     "customRecipientsPlaceholder": "one@example.com, other@example.com",
     "customRecipientsHint": "Separate emails with commas, semicolons, or one per line.",
+    "inviteRecipientsLabel": "Emails to invite",
+    "inviteContentHint": "The invitation email's content is fixed — you only choose who receives it.",
     "subjectLabel": "Subject",
     "messageLabel": "Message",
     "messageHint": "Leave a blank line between paragraphs to separate them.",
@@ -670,7 +673,8 @@
     "messageTooShort": "The message must be at least 10 characters",
     "messageTooLong": "The message is too long",
     "recipientEmailInvalid": "Enter a valid email",
-    "customRecipientsRequired": "Enter at least one valid email"
+    "customRecipientsRequired": "Enter at least one valid email",
+    "inviteRecipientsRequired": "Enter at least one valid email"
   },
   "adminEmailActions": {
     "invalidData": "Invalid data",

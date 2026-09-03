@@ -647,6 +647,7 @@
     "modeLabel": "Tipo de envio",
     "modeSingle": "Um destinatário",
     "modeBulk": "Envio em massa",
+    "modeInvite": "Convite para participar",
     "recipientEmailLabel": "Email do destinatário",
     "audienceLabel": "Destinatários",
     "audienceApprovedSurgeons": "Cirurgiões com perfil aprovado",
@@ -657,6 +658,8 @@
     "customRecipientsLabel": "Lista de emails",
     "customRecipientsPlaceholder": "um@exemplo.com, outro@exemplo.com",
     "customRecipientsHint": "Separe os emails com vírgulas, ponto e vírgula ou um por linha.",
+    "inviteRecipientsLabel": "Emails para convidar",
+    "inviteContentHint": "O conteúdo do email de convite é fixo — você só escolhe para quem enviar.",
     "subjectLabel": "Assunto",
     "messageLabel": "Mensagem",
     "messageHint": "Deixe uma linha em branco entre parágrafos para separá-los.",
@@ -670,7 +673,8 @@
     "messageTooShort": "A mensagem deve ter pelo menos 10 caracteres",
     "messageTooLong": "A mensagem é muito longa",
     "recipientEmailInvalid": "Digite um email válido",
-    "customRecipientsRequired": "Digite pelo menos um email válido"
+    "customRecipientsRequired": "Digite pelo menos um email válido",
+    "inviteRecipientsRequired": "Digite pelo menos um email válido"
   },
   "adminEmailActions": {
     "invalidData": "Dados inválidos",

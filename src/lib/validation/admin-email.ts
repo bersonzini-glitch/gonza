@@ -1,7 +1,7 @@
 import type { useTranslations } from "next-intl";
 import { z } from "zod";
 
-export const ADMIN_EMAIL_MODES = ["single", "bulk"] as const;
+export const ADMIN_EMAIL_MODES = ["single", "bulk", "invite"] as const;
 export const ADMIN_EMAIL_AUDIENCES = ["approved_surgeons", "custom"] as const;
 
 type Translator = ReturnType<typeof useTranslations<"adminEmailValidation">>;
@@ -26,12 +26,24 @@ export function makeAdminEmailSchema(t: Translator) {
       recipientEmail: z.string().trim().optional().or(z.literal("")),
       audience: z.enum(ADMIN_EMAIL_AUDIENCES),
       customRecipients: z.string().trim().optional().or(z.literal("")),
+      inviteRecipients: z.string().trim().optional().or(z.literal("")),
       filterNotifyNewEvents: z.boolean().default(false),
       filterNotifySuggestedInvitations: z.boolean().default(false),
-      subject: z.string().trim().min(3, t("subjectRequired")).max(150, t("subjectTooLong")),
-      message: z.string().trim().min(10, t("messageTooShort")).max(5000, t("messageTooLong")),
+      subject: z.string().trim().optional().or(z.literal("")),
+      message: z.string().trim().optional().or(z.literal("")),
     })
     .superRefine((data, ctx) => {
+      if (data.mode === "invite") {
+        if (parseEmailList(data.inviteRecipients ?? "").length === 0) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["inviteRecipients"],
+            message: t("inviteRecipientsRequired"),
+          });
+        }
+        return;
+      }
+
       if (data.mode === "single") {
         if (!emailSchema.safeParse(data.recipientEmail).success) {
           ctx.addIssue({
@@ -46,6 +58,20 @@ export function makeAdminEmailSchema(t: Translator) {
           path: ["customRecipients"],
           message: t("customRecipientsRequired"),
         });
+      }
+
+      const subject = data.subject ?? "";
+      if (subject.length < 3) {
+        ctx.addIssue({ code: "custom", path: ["subject"], message: t("subjectRequired") });
+      } else if (subject.length > 150) {
+        ctx.addIssue({ code: "custom", path: ["subject"], message: t("subjectTooLong") });
+      }
+
+      const message = data.message ?? "";
+      if (message.length < 10) {
+        ctx.addIssue({ code: "custom", path: ["message"], message: t("messageTooShort") });
+      } else if (message.length > 5000) {
+        ctx.addIssue({ code: "custom", path: ["message"], message: t("messageTooLong") });
       }
     });
 }

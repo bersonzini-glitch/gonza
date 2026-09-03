@@ -33,6 +33,7 @@ const defaultValues: AdminEmailInput = {
   recipientEmail: "",
   audience: "approved_surgeons",
   customRecipients: "",
+  inviteRecipients: "",
   filterNotifyNewEvents: false,
   filterNotifySuggestedInvitations: false,
   subject: "",
@@ -51,6 +52,7 @@ export function AdminEmailForm({
   const MODE_LABELS: Record<(typeof ADMIN_EMAIL_MODES)[number], string> = {
     single: t("modeSingle"),
     bulk: t("modeBulk"),
+    invite: t("modeInvite"),
   };
   const AUDIENCE_LABELS: Record<(typeof ADMIN_EMAIL_AUDIENCES)[number], string> = {
     approved_surgeons: t("audienceApprovedSurgeons"),
@@ -111,6 +113,23 @@ export function AdminEmailForm({
               {form.formState.errors.recipientEmail.message}
             </p>
           )}
+        </div>
+      ) : mode === "invite" ? (
+        <div className="space-y-1.5">
+          <Label htmlFor="inviteRecipients">{t("inviteRecipientsLabel")}</Label>
+          <Textarea
+            id="inviteRecipients"
+            rows={4}
+            placeholder={t("customRecipientsPlaceholder")}
+            {...form.register("inviteRecipients")}
+          />
+          <p className="text-xs text-muted-foreground">{t("customRecipientsHint")}</p>
+          {form.formState.errors.inviteRecipients && (
+            <p className="text-xs text-destructive">
+              {form.formState.errors.inviteRecipients.message}
+            </p>
+          )}
+          <p className="text-xs text-muted-foreground">{t("inviteContentHint")}</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -178,22 +197,26 @@ export function AdminEmailForm({
         </div>
       )}
 
-      <div className="space-y-1.5">
-        <Label htmlFor="subject">{t("subjectLabel")}</Label>
-        <Input id="subject" {...form.register("subject")} />
-        {form.formState.errors.subject && (
-          <p className="text-xs text-destructive">{form.formState.errors.subject.message}</p>
-        )}
-      </div>
+      {mode !== "invite" && (
+        <>
+          <div className="space-y-1.5">
+            <Label htmlFor="subject">{t("subjectLabel")}</Label>
+            <Input id="subject" {...form.register("subject")} />
+            {form.formState.errors.subject && (
+              <p className="text-xs text-destructive">{form.formState.errors.subject.message}</p>
+            )}
+          </div>
 
-      <div className="space-y-1.5">
-        <Label htmlFor="message">{t("messageLabel")}</Label>
-        <Textarea id="message" rows={10} {...form.register("message")} />
-        <p className="text-xs text-muted-foreground">{t("messageHint")}</p>
-        {form.formState.errors.message && (
-          <p className="text-xs text-destructive">{form.formState.errors.message.message}</p>
-        )}
-      </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="message">{t("messageLabel")}</Label>
+            <Textarea id="message" rows={10} {...form.register("message")} />
+            <p className="text-xs text-muted-foreground">{t("messageHint")}</p>
+            {form.formState.errors.message && (
+              <p className="text-xs text-destructive">{form.formState.errors.message.message}</p>
+            )}
+          </div>
+        </>
+      )}
 
       {serverError && (
         <Alert variant="destructive">

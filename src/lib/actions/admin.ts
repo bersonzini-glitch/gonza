@@ -867,25 +867,40 @@ export async function sendAdminEmailAction(
   }
 
   let recipients: string[];
-  if (input.mode === "single") {
-    recipients = input.recipientEmail ? [input.recipientEmail] : [];
-  } else if (input.audience === "custom") {
-    recipients = parseEmailList(input.customRecipients ?? "");
+  let subject: string;
+  let html: string;
+
+  if (input.mode === "invite") {
+    recipients = parseEmailList(input.inviteRecipients ?? "");
+    subject = "Invitación a formar parte de ColumnaLATAM";
+    html = renderBrandedEmailHtml({
+      heading: subject,
+      bodyHtml: textToParagraphsHtml(
+        "Estimado Dr.,\n\n¿Quiere formar parte del directorio de cirujanos de columna?",
+      ),
+      ctaButton: { label: "Sumarme al directorio", url: `${SITE_URL}/sign-up` },
+    });
   } else {
-    recipients = (
-      await listApprovedSurgeonEmailsForAdmin({
-        notifyNewEvents: input.filterNotifyNewEvents,
-        notifySuggestedInvitations: input.filterNotifySuggestedInvitations,
-      })
-    ).map((s) => s.email);
+    if (input.mode === "single") {
+      recipients = input.recipientEmail ? [input.recipientEmail] : [];
+    } else if (input.audience === "custom") {
+      recipients = parseEmailList(input.customRecipients ?? "");
+    } else {
+      recipients = (
+        await listApprovedSurgeonEmailsForAdmin({
+          notifyNewEvents: input.filterNotifyNewEvents,
+          notifySuggestedInvitations: input.filterNotifySuggestedInvitations,
+        })
+      ).map((s) => s.email);
+    }
+    subject = input.subject ?? "";
+    html = renderBrandedEmailHtml({
+      heading: subject,
+      bodyHtml: textToParagraphsHtml(input.message ?? ""),
+    });
   }
 
   if (recipients.length === 0) return { error: tErrors("noRecipients") };
-
-  const html = renderBrandedEmailHtml({
-    heading: input.subject,
-    bodyHtml: textToParagraphsHtml(input.message),
-  });
 
   try {
     const resend = new Resend(apiKey);
@@ -894,7 +909,7 @@ export async function sendAdminEmailAction(
         from: ADMIN_EMAIL_FROM,
         to: recipients[0],
         replyTo: ADMIN_EMAIL_REPLY_TO,
-        subject: input.subject,
+        subject,
         html,
       });
       if (error) {
@@ -913,7 +928,7 @@ export async function sendAdminEmailAction(
             from: ADMIN_EMAIL_FROM,
             to,
             replyTo: ADMIN_EMAIL_REPLY_TO,
-            subject: input.subject,
+            subject,
             html,
           })),
         );
@@ -933,7 +948,7 @@ export async function sendAdminEmailAction(
     mode: input.mode,
     audience: input.mode === "bulk" ? input.audience : null,
     recipientCount: recipients.length,
-    subject: input.subject,
+    subject,
   });
 
   return { success: true, recipientCount: recipients.length };
