@@ -84,7 +84,8 @@
     "disclaimer": "Este perfil é apenas informativo e não constitui aconselhamento médico nem endosso. Sempre verifique as credenciais diretamente com o cirurgião ou sua instituição.",
     "readFullDisclaimer": "Leia nosso aviso legal completo",
     "metaDescription": "{specialty} verificado no diretório ColumnaLATAM.",
-    "telemedicineAvailable": "Telemedicina disponível"
+    "telemedicineAvailable": "Telemedicina disponível",
+    "adminEdit": "Editar"
   },
   "eventDetail": {
     "dateLabel": "Data",
@@ -99,7 +100,8 @@
     "sourcesHeading": "Fontes de dados",
     "sourceCheckedOn": "· verificado em {date}",
     "relatedHeading": "Eventos relacionados",
-    "languageLabel": "Idioma"
+    "languageLabel": "Idioma",
+    "adminEdit": "Editar"
   },
   "eventFilters": {
     "searchLabel": "Buscar",

@@ -7,6 +7,7 @@ import {
   Link2,
   Mail,
   MapPin,
+  Pencil,
   Phone,
   Video,
 } from "lucide-react";
@@ -19,6 +20,8 @@ import { FadeIn } from "@/components/shared/fade-in";
 import { ShareButton } from "@/components/shared/share-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { getCurrentProfile } from "@/lib/auth/session";
 import {
   formatDate,
   primarySpecialtyLabels,
@@ -79,14 +82,16 @@ export default async function SurgeonProfilePage({
 
   if (!surgeon || surgeon.status !== "approved") notFound();
 
-  const [t, tNav, tSpecialties, tSubspecialties] = await Promise.all([
+  const [t, tNav, tSpecialties, tSubspecialties, profile] = await Promise.all([
     getTranslations("surgeonProfile"),
     getTranslations("nav"),
     getTranslations("specialties"),
     getTranslations("subspecialties"),
+    getCurrentProfile(),
   ]);
   const PRIMARY_SPECIALTY_LABELS = primarySpecialtyLabels(tSpecialties);
   const SUBSPECIALTY_LABELS = subspecialtyLabels(tSubspecialties);
+  const isAdmin = profile?.role === "admin";
 
   const photoUrl = surgeonPhotoUrl(surgeon.id, surgeon.photo_path);
   const primaryLocation =
@@ -152,8 +157,16 @@ export default async function SurgeonProfilePage({
               )}
             </div>
 
-            <div className="mt-4">
+            <div className="mt-4 flex flex-wrap items-center gap-2">
               <ShareButton title={surgeon.full_name} url={`${SITE_URL}/surgeons/${surgeon.slug}`} />
+              {isAdmin && (
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={`/admin/surgeons/${surgeon.id}`}>
+                    <Pencil className="size-4" aria-hidden="true" />
+                    {t("adminEdit")}
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
         </div>

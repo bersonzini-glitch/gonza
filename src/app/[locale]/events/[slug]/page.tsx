@@ -6,6 +6,7 @@ import {
   Globe,
   Languages,
   MapPin,
+  Pencil,
   Ticket,
 } from "lucide-react";
 import type { Metadata } from "next";
@@ -18,6 +19,7 @@ import { FadeIn } from "@/components/shared/fade-in";
 import { ShareButton } from "@/components/shared/share-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getCurrentProfile } from "@/lib/auth/session";
 import {
   eventFormatLabels,
   eventTypeLabels,
@@ -83,15 +85,17 @@ export default async function EventDetailPage({
     getRelatedEvents(event),
   ]);
 
-  const [t, tCommon, tNav, tEventTypes, tEventFormats] = await Promise.all([
+  const [t, tCommon, tNav, tEventTypes, tEventFormats, profile] = await Promise.all([
     getTranslations("eventDetail"),
     getTranslations("common"),
     getTranslations("nav"),
     getTranslations("eventTypes"),
     getTranslations("eventFormats"),
+    getCurrentProfile(),
   ]);
   const EVENT_TYPE_LABELS = eventTypeLabels(tEventTypes);
   const EVENT_FORMAT_LABELS = eventFormatLabels(tEventFormats);
+  const isAdmin = profile?.role === "admin";
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -238,6 +242,14 @@ export default async function EventDetailPage({
             </a>
           </Button>
           <ShareButton title={event.title} url={`${SITE_URL}/events/${event.slug}`} />
+          {isAdmin && (
+            <Button variant="outline" asChild>
+              <Link href={`/admin/events/${event.id}/edit`}>
+                <Pencil className="size-4" aria-hidden="true" />
+                {t("adminEdit")}
+              </Link>
+            </Button>
+          )}
         </div>
 
         <div className="prose prose-neutral dark:prose-invert mt-10 max-w-none">

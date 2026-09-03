@@ -84,7 +84,8 @@
     "disclaimer": "This profile is for informational purposes only and does not constitute medical advice or an endorsement. Always verify credentials directly with the surgeon or their institution.",
     "readFullDisclaimer": "Read our full legal disclaimer",
     "metaDescription": "{specialty} verified in the ColumnaLATAM directory.",
-    "telemedicineAvailable": "Telemedicine available"
+    "telemedicineAvailable": "Telemedicine available",
+    "adminEdit": "Edit"
   },
   "eventDetail": {
     "dateLabel": "Date",
@@ -99,7 +100,8 @@
     "sourcesHeading": "Data sources",
     "sourceCheckedOn": "· checked on {date}",
     "relatedHeading": "Related events",
-    "languageLabel": "Language"
+    "languageLabel": "Language",
+    "adminEdit": "Edit"
   },
   "eventFilters": {
     "searchLabel": "Search",
