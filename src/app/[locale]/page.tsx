@@ -75,7 +75,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
           <FadeIn delay={0.15}>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Button variant="outline" size="lg" className="w-full gap-2 sm:w-auto" asChild>
+              <Button size="lg" className="h-12 w-full gap-2 sm:w-auto" asChild>
                 <Link href="/surgeons">
                   <Users className="size-4" aria-hidden="true" />
                   {t("viewSurgeonDirectory")}
