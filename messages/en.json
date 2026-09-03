@@ -9,7 +9,7 @@
     "featured": "Featured"
   },
   "nav": {
-    "events": "Conferences",
+    "events": "Events",
     "surgeons": "Surgeons",
     "about": "About",
     "primaryLabel": "Primary",
@@ -30,7 +30,7 @@
   "footer": {
     "tagline": "An independent directory of spine surgery conferences and verified surgeons across Latin America. For informational purposes only — not a substitute for professional medical advice.",
     "discoverHeading": "Discover",
-    "searchEvents": "Search conferences",
+    "searchEvents": "Search events",
     "surgeonDirectory": "Surgeon directory",
     "aboutHeading": "About",
     "aboutUs": "Who we are & our sources",
@@ -119,11 +119,11 @@
     "sortSoonest": "Soonest",
     "sortRecentlyAdded": "Recently added",
     "sortAlphabetical": "Alphabetical",
-    "formAriaLabel": "Filter conferences",
+    "formAriaLabel": "Filter events",
     "includePastLabel": "Show past events",
     "languageLabel": "Language",
     "anyLanguage": "Any language",
-    "openSearch": "Search conferences",
+    "openSearch": "Search events",
     "hideSearch": "Hide search"
   },
   "surgeonFilters": {
@@ -143,21 +143,21 @@
     "formAriaLabel": "Filter surgeons"
   },
   "home": {
-    "metaTitle": "Spine surgery conferences and verified surgeon directory in Latin America",
+    "metaTitle": "Spine surgery events and verified surgeon directory in Latin America",
     "heroBadge": "Latin America · Spine surgery",
-    "heroTitle": "Find every spine surgery conference and verified surgeon in Latin America",
+    "heroTitle": "Find every spine surgery event and verified surgeon in Latin America",
     "heroSubtitle": "A trusted editorial index of upcoming conferences, courses and workshops, plus a searchable directory of orthopedic and neurosurgical spine specialists across Latin America.",
-    "searchAriaLabel": "Search conferences",
-    "searchLabel": "Search conferences by name, organizer, city or topic",
+    "searchAriaLabel": "Search events",
+    "searchLabel": "Search events by name, organizer, city or topic",
     "searchPlaceholder": "Search by event name, organizer, city or topic…",
-    "searchButton": "Search conferences",
+    "searchButton": "Search events",
     "viewSurgeonDirectory": "Browse the surgeon directory",
     "howWeVerify": "How we verify our data",
-    "featuredEventBadge": "Featured conference",
+    "featuredEventBadge": "Featured event",
     "viewDetails": "View details",
-    "upcomingHeading": "Upcoming conferences",
+    "upcomingHeading": "Upcoming events",
     "viewAll": "View all",
-    "noEventsYet": "No conferences published yet. Check back soon.",
+    "noEventsYet": "No events published yet. Check back soon.",
     "exploreByCountry": "Explore by country",
     "dataSourcesHeading": "Where our data comes from",
     "dataSourcesBody": "Every conference listed here comes from official pages run by societies, hospitals, universities, or event organizers — never invented. Each source is documented and reviewed periodically, with a visible “last verified” date on every event page.",
@@ -167,11 +167,11 @@
     "exploreDirectory": "Explore the directory"
   },
   "eventsPage": {
-    "metaTitle": "Spine surgery conferences in Latin America",
+    "metaTitle": "Spine surgery events in Latin America",
     "metaDescription": "Search and filter upcoming spine surgery conferences, courses, workshops and webinars in Latin America by country, date, format and topic.",
-    "heading": "Spine surgery conferences in Latin America",
+    "heading": "Spine surgery events in Latin America",
     "resultsCount": "{count, plural, one {# verified event} other {# verified events}} from official sources.",
-    "emptyHeading": "No conferences match your filters",
+    "emptyHeading": "No events match your filters",
     "emptyBody": "Try widening the date range or removing a filter.",
     "clearFilters": "Clear all filters",
     "paginationLabel": "Pagination",
@@ -198,7 +198,7 @@
     "metaDescription": "How ColumnaLATAM sources spine surgery conference data and verifies surgeon profiles in Latin America.",
     "pageTitle": "About ColumnaLATAM",
     "intro": "ColumnaLATAM is an independent editorial directory of spine surgery conferences and verified spine surgeons in Latin America. We built it because information about spine events and specialists in the region is scattered across dozens of society sites, hospital pages and social media — we bring it together in one reliable place.",
-    "methodologyHeading": "Conference data methodology",
+    "methodologyHeading": "Event data methodology",
     "methodologyP1": "Every congress, conference, course, workshop or webinar listed here comes from a real, public source — a society's official page, a hospital or university's continuing medical education calendar, an event organizer's own site, or an open public RSS feed/API. We never invent events, dates, organizers or URLs.",
     "methodologyP2": "Every event page lists its data source(s) and a “last verified” date. When a source only publishes a month/year, or states an event is annual with dates not yet announced, we say so explicitly (via a date note) instead of inventing a specific day.",
     "methodologyP3": "The event submission process is deliberately simple and auditable: administrators add and periodically re-verify events through the admin panel, and every event links to at least one source you can check yourself. We don't scrape sites that prohibit it, bypass access controls, or generate abusive request volumes against any source.",
@@ -243,7 +243,7 @@
     "heading": "Page not found",
     "body": "The page you're looking for doesn't exist or may have been moved.",
     "goHome": "Go home",
-    "viewEvents": "View conferences"
+    "viewEvents": "View events"
   },
   "auth": {
     "signInTitle": "Sign in",

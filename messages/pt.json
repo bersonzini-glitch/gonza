@@ -9,7 +9,7 @@
     "featured": "Destaque"
   },
   "nav": {
-    "events": "Congressos",
+    "events": "Eventos",
     "surgeons": "Cirurgiões",
     "about": "Sobre nós",
     "primaryLabel": "Principal",
@@ -30,7 +30,7 @@
   "footer": {
     "tagline": "Um diretório independente de congressos de cirurgia da coluna e cirurgiões verificados na América Latina. Apenas informativo — não substitui o aconselhamento médico profissional.",
     "discoverHeading": "Descobrir",
-    "searchEvents": "Buscar congressos",
+    "searchEvents": "Buscar eventos",
     "surgeonDirectory": "Diretório de cirurgiões",
     "aboutHeading": "Sobre nós",
     "aboutUs": "Quem somos e nossas fontes",
@@ -119,11 +119,11 @@
     "sortSoonest": "Mais próximos",
     "sortRecentlyAdded": "Adicionados recentemente",
     "sortAlphabetical": "Alfabético",
-    "formAriaLabel": "Filtrar congressos",
+    "formAriaLabel": "Filtrar eventos",
     "includePastLabel": "Mostrar eventos passados",
     "languageLabel": "Idioma",
     "anyLanguage": "Qualquer idioma",
-    "openSearch": "Buscar congressos",
+    "openSearch": "Buscar eventos",
     "hideSearch": "Ocultar busca"
   },
   "surgeonFilters": {
@@ -143,21 +143,21 @@
     "formAriaLabel": "Filtrar cirurgiões"
   },
   "home": {
-    "metaTitle": "Congressos de cirurgia da coluna e diretório de cirurgiões verificados na América Latina",
+    "metaTitle": "Eventos de cirurgia da coluna e diretório de cirurgiões verificados na América Latina",
     "heroBadge": "América Latina · Cirurgia da coluna",
-    "heroTitle": "Encontre todos os congressos de coluna e cirurgiões verificados na América Latina",
+    "heroTitle": "Encontre todos os eventos de coluna e cirurgiões verificados na América Latina",
     "heroSubtitle": "Um índice editorial confiável de próximos congressos, cursos e workshops, além de um diretório pesquisável de especialistas ortopedistas e neurocirurgiões da coluna em toda a América Latina.",
-    "searchAriaLabel": "Buscar congressos",
-    "searchLabel": "Buscar congressos por nome, organizador, cidade ou tema",
+    "searchAriaLabel": "Buscar eventos",
+    "searchLabel": "Buscar eventos por nome, organizador, cidade ou tema",
     "searchPlaceholder": "Busque pelo nome do evento, organizador, cidade ou tema…",
-    "searchButton": "Buscar congressos",
+    "searchButton": "Buscar eventos",
     "viewSurgeonDirectory": "Ver o diretório de cirurgiões",
     "howWeVerify": "Como verificamos nossos dados",
-    "featuredEventBadge": "Congresso em destaque",
+    "featuredEventBadge": "Evento em destaque",
     "viewDetails": "Ver detalhes",
-    "upcomingHeading": "Próximos congressos",
+    "upcomingHeading": "Próximos eventos",
     "viewAll": "Ver todos",
-    "noEventsYet": "Ainda não há congressos publicados. Volte em breve.",
+    "noEventsYet": "Ainda não há eventos publicados. Volte em breve.",
     "exploreByCountry": "Explorar por país",
     "dataSourcesHeading": "De onde vêm nossos dados",
     "dataSourcesBody": "Todos os congressos listados aqui vêm de páginas oficiais de sociedades, hospitais, universidades ou organizadores de eventos — nunca são inventados. Cada fonte é documentada e revisada periodicamente, com uma data visível de “última verificação” em cada página de evento.",
@@ -167,11 +167,11 @@
     "exploreDirectory": "Explorar o diretório"
   },
   "eventsPage": {
-    "metaTitle": "Congressos de cirurgia da coluna na América Latina",
+    "metaTitle": "Eventos de cirurgia da coluna na América Latina",
     "metaDescription": "Busque e filtre próximos congressos, cursos, workshops e webinars de cirurgia da coluna na América Latina por país, data, modalidade e tema.",
-    "heading": "Congressos de cirurgia da coluna na América Latina",
+    "heading": "Eventos de cirurgia da coluna na América Latina",
     "resultsCount": "{count, plural, one {# evento verificado} other {# eventos verificados}} de fontes oficiais.",
-    "emptyHeading": "Nenhum congresso corresponde aos seus filtros",
+    "emptyHeading": "Nenhum evento corresponde aos seus filtros",
     "emptyBody": "Tente ampliar o intervalo de datas ou remover algum filtro.",
     "clearFilters": "Limpar todos os filtros",
     "paginationLabel": "Paginação",
@@ -198,7 +198,7 @@
     "metaDescription": "Como a ColumnaLATAM obtém os dados de congressos de coluna e verifica os perfis de cirurgiões na América Latina.",
     "pageTitle": "Sobre a ColumnaLATAM",
     "intro": "A ColumnaLATAM é um diretório editorial independente de congressos de cirurgia da coluna e cirurgiões de coluna verificados na América Latina. Criamos porque as informações sobre eventos e especialistas em coluna na região estão dispersas em dezenas de sites de sociedades, páginas de hospitais e redes sociais — nós as reunimos em um único lugar confiável.",
-    "methodologyHeading": "Metodologia dos dados de congressos",
+    "methodologyHeading": "Metodologia dos dados de eventos",
     "methodologyP1": "Todo congresso, conferência, curso, workshop ou webinar listado aqui vem de uma fonte real e pública — a página oficial de uma sociedade, um calendário de educação médica continuada de um hospital ou universidade, o site próprio de um organizador de eventos, ou um feed RSS/API pública aberta. Nunca inventamos eventos, datas, organizadores ou URLs.",
     "methodologyP2": "Cada página de evento lista sua(s) fonte(s) de dados e uma data de “última verificação”. Quando uma fonte publica apenas mês/ano, ou diz que um evento é anual com datas ainda não anunciadas, indicamos isso explicitamente (por meio de uma nota de data) em vez de inventar um dia específico.",
     "methodologyP3": "O processo de cadastro de eventos é propositalmente simples e auditável: os administradores adicionam e reverificam periodicamente os eventos pelo painel de administração, e cada evento aponta para pelo menos uma fonte que você mesmo pode conferir. Não fazemos scraping de sites que o proíbem, não contornamos controles de acesso nem geramos volumes abusivos de solicitações contra nenhuma fonte.",
@@ -243,7 +243,7 @@
     "heading": "Página não encontrada",
     "body": "A página que você procura não existe ou pode ter sido movida.",
     "goHome": "Ir para o início",
-    "viewEvents": "Ver congressos"
+    "viewEvents": "Ver eventos"
   },
   "auth": {
     "signInTitle": "Entrar",

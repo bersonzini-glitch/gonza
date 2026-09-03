@@ -56,7 +56,7 @@ export async function GET() {
           </div>
         </div>
         <div style={{ display: "flex", marginTop: 28, fontSize: 30, color: "#6b7078" }}>
-          Congresos de cirugía de columna en Latinoamérica
+          Eventos de cirugía de columna en Latinoamérica
         </div>
       </div>
     ),

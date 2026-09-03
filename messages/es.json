@@ -9,7 +9,7 @@
     "featured": "Destacado"
   },
   "nav": {
-    "events": "Congresos",
+    "events": "Eventos",
     "surgeons": "Cirujanos",
     "about": "Sobre nosotros",
     "primaryLabel": "Principal",
@@ -30,7 +30,7 @@
   "footer": {
     "tagline": "Un directorio independiente de congresos de cirugía de columna y cirujanos verificados en Latinoamérica. Es solo informativo — no reemplaza el consejo médico profesional.",
     "discoverHeading": "Descubrir",
-    "searchEvents": "Buscar congresos",
+    "searchEvents": "Buscar eventos",
     "surgeonDirectory": "Directorio de cirujanos",
     "aboutHeading": "Sobre nosotros",
     "aboutUs": "Quiénes somos y fuentes",
@@ -119,11 +119,11 @@
     "sortSoonest": "Más próximos",
     "sortRecentlyAdded": "Agregados recientemente",
     "sortAlphabetical": "Alfabético",
-    "formAriaLabel": "Filtrar congresos",
+    "formAriaLabel": "Filtrar eventos",
     "includePastLabel": "Mostrar eventos pasados",
     "languageLabel": "Idioma",
     "anyLanguage": "Cualquier idioma",
-    "openSearch": "Buscar congresos",
+    "openSearch": "Buscar eventos",
     "hideSearch": "Ocultar búsqueda"
   },
   "surgeonFilters": {
@@ -143,21 +143,21 @@
     "formAriaLabel": "Filtrar cirujanos"
   },
   "home": {
-    "metaTitle": "Congresos de columna y directorio de cirujanos verificados en LATAM",
+    "metaTitle": "Eventos de columna y directorio de cirujanos verificados en LATAM",
     "heroBadge": "Latinoamérica · Cirugía de columna",
-    "heroTitle": "Encontrá todos los congresos de columna y cirujanos verificados en LATAM",
+    "heroTitle": "Encontrá todos los eventos de columna y cirujanos verificados en LATAM",
     "heroSubtitle": "Un índice editorial confiable de próximos congresos, cursos y talleres, junto con un directorio buscable de especialistas en columna traumatólogos y neurocirujanos en toda Latinoamérica.",
-    "searchAriaLabel": "Buscar congresos",
-    "searchLabel": "Buscar congresos por nombre, organizador, ciudad o tema",
+    "searchAriaLabel": "Buscar eventos",
+    "searchLabel": "Buscar eventos por nombre, organizador, ciudad o tema",
     "searchPlaceholder": "Buscá por nombre del evento, organizador, ciudad o tema…",
-    "searchButton": "Buscar congresos",
+    "searchButton": "Buscar eventos",
     "viewSurgeonDirectory": "Ver el directorio de cirujanos",
     "howWeVerify": "Cómo verificamos nuestros datos",
-    "featuredEventBadge": "Congreso destacado",
+    "featuredEventBadge": "Evento destacado",
     "viewDetails": "Ver detalles",
-    "upcomingHeading": "Próximos congresos",
+    "upcomingHeading": "Próximos eventos",
     "viewAll": "Ver todos",
-    "noEventsYet": "Todavía no hay congresos publicados. Volvé a revisar pronto.",
+    "noEventsYet": "Todavía no hay eventos publicados. Volvé a revisar pronto.",
     "exploreByCountry": "Explorar por país",
     "dataSourcesHeading": "De dónde vienen nuestros datos",
     "dataSourcesBody": "Todos los congresos listados acá provienen de páginas oficiales de sociedades, hospitales, universidades u organizadores de eventos — nunca son inventados. Cada fuente está documentada y se revisa periódicamente, con una fecha visible de “última verificación” en cada página de evento.",
@@ -167,11 +167,11 @@
     "exploreDirectory": "Explorar el directorio"
   },
   "eventsPage": {
-    "metaTitle": "Congresos de cirugía de columna en Latinoamérica",
+    "metaTitle": "Eventos de cirugía de columna en Latinoamérica",
     "metaDescription": "Buscá y filtrá próximos congresos, cursos, talleres y webinars de cirugía de columna en Latinoamérica por país, fecha, modalidad y tema.",
-    "heading": "Congresos de cirugía de columna en Latinoamérica",
+    "heading": "Eventos de cirugía de columna en Latinoamérica",
     "resultsCount": "{count, plural, one {# evento verificado} other {# eventos verificados}} a partir de fuentes oficiales.",
-    "emptyHeading": "Ningún congreso coincide con tus filtros",
+    "emptyHeading": "Ningún evento coincide con tus filtros",
     "emptyBody": "Probá ampliar el rango de fechas o quitar algún filtro.",
     "clearFilters": "Limpiar todos los filtros",
     "paginationLabel": "Paginación",
@@ -198,7 +198,7 @@
     "metaDescription": "Cómo ColumnaLATAM obtiene los datos de congresos de columna y verifica los perfiles de cirujanos en Latinoamérica.",
     "pageTitle": "Sobre ColumnaLATAM",
     "intro": "ColumnaLATAM es un directorio editorial independiente de congresos de cirugía de columna y cirujanos de columna verificados en Latinoamérica. Lo creamos porque la información sobre eventos y especialistas de columna en la región está dispersa en decenas de sitios de sociedades, páginas de hospitales y redes sociales — nosotros la reunimos en un solo lugar confiable.",
-    "methodologyHeading": "Metodología de datos de congresos",
+    "methodologyHeading": "Metodología de datos de eventos",
     "methodologyP1": "Todo congreso, conferencia, curso, taller o webinar listado acá proviene de una fuente real y pública — la página oficial de una sociedad, un calendario de educación médica continua de un hospital o universidad, el sitio propio de un organizador de eventos, o un feed RSS/API pública abierta. No inventamos eventos, fechas, organizadores ni URLs.",
     "methodologyP2": "Cada página de evento lista su(s) fuente(s) de datos y una fecha de “última verificación”. Cuando una fuente solo publica mes/año, o dice que un evento es anual con fechas aún no anunciadas, lo indicamos explícitamente (a través de una nota de fecha) en vez de inventar un día específico.",
     "methodologyP3": "El proceso de carga de eventos es intencionalmente simple y auditable: los administradores agregan y re-verifican periódicamente los eventos a través del panel de administración, y cada evento enlaza a al menos una fuente que podés verificar vos mismo. No hacemos scraping de sitios que lo prohíben, no evadimos controles de acceso ni generamos volúmenes de solicitudes abusivos contra ninguna fuente.",
@@ -243,7 +243,7 @@
     "heading": "Página no encontrada",
     "body": "La página que buscás no existe o puede haber sido movida.",
     "goHome": "Ir al inicio",
-    "viewEvents": "Ver congresos"
+    "viewEvents": "Ver eventos"
   },
   "auth": {
     "signInTitle": "Iniciar sesión",

@@ -53,7 +53,7 @@ export async function generateMetadata({
   return {
     metadataBase: new URL(SITE_URL),
     title: {
-      default: "ColumnaLATAM — Congresos de columna y directorio de cirujanos en LATAM",
+      default: "ColumnaLATAM — Eventos de columna y directorio de cirujanos en LATAM",
       template: "%s | ColumnaLATAM",
     },
     description:
