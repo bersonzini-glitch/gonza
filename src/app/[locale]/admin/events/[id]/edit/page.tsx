@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 
 import { DeleteEventButton } from "@/components/admin/delete-event-button";
 import { EventForm } from "@/components/admin/event-form";
+import { NotifyInterestedSurgeonsButton } from "@/components/admin/notify-interested-surgeons-button";
 import { Button } from "@/components/ui/button";
 import { updateEventAction } from "@/lib/actions/admin";
 import { getEventForAdmin } from "@/lib/data/admin";
@@ -83,6 +84,7 @@ export default async function EditEventPage({
               {t("viewPublished")}
             </a>
           </Button>
+          <NotifyInterestedSurgeonsButton eventId={event.id} />
           <DeleteEventButton eventId={event.id} />
         </div>
       </div>

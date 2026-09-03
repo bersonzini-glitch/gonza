@@ -140,6 +140,14 @@ export interface ApprovedSurgeonEmailRow {
 export interface ApprovedSurgeonEmailFilters {
   notifyNewEvents?: boolean;
   notifySuggestedInvitations?: boolean;
+  /**
+   * "all" (default) requires every enabled filter to match — the admin
+   * email form's "only those who want X" checkboxes narrow the audience
+   * this way. "any" matches surgeons who opted into at least one of the
+   * enabled filters — used for per-event announcements, where either
+   * preference makes someone a legitimate recipient.
+   */
+  matchMode?: "all" | "any";
 }
 
 /**
@@ -172,9 +180,16 @@ export async function listApprovedSurgeonEmailsForAdmin(
         allSurgeons.map((s) => s.user_id),
       );
     const preferencesById = new Map((profiles ?? []).map((p) => [p.id, p]));
+    const matchMode = filters.matchMode ?? "all";
     surgeons = allSurgeons.filter((s) => {
       const prefs = preferencesById.get(s.user_id);
       if (!prefs) return false;
+      if (matchMode === "any") {
+        return (
+          (filters.notifyNewEvents === true && prefs.notify_new_events) ||
+          (filters.notifySuggestedInvitations === true && prefs.notify_suggested_invitations)
+        );
+      }
       if (filters.notifyNewEvents && !prefs.notify_new_events) return false;
       if (filters.notifySuggestedInvitations && !prefs.notify_suggested_invitations) return false;
       return true;

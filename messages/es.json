@@ -595,7 +595,13 @@
     "selectLanguage": "Elegí un idioma",
     "permalinkLabel": "Dirección del evento (permalink)",
     "permalinkHint": "Si la cambiás, el enlace anterior deja de funcionar. Usá solo minúsculas, números y guiones.",
-    "viewPublished": "Ver sitio publicado"
+    "viewPublished": "Ver sitio publicado",
+    "notifyInterestedSurgeons": "Avisar a cirujanos interesados",
+    "notifyInterestedSurgeonsTitle": "¿Avisar sobre este evento?",
+    "notifyInterestedSurgeonsDescription": "Se envía un email con este evento a todos los cirujanos aprobados que pidieron recibir avisos de nuevos eventos o invitaciones sugeridas.",
+    "notifyInterestedSurgeonsConfirm": "Enviar aviso",
+    "notifyInterestedSurgeonsSending": "Enviando…",
+    "notifyInterestedSurgeonsSentToast": "Aviso enviado a {count, plural, one {# cirujano} other {# cirujanos}}."
   },
   "eventValidation": {
     "invalidUrl": "Debe ser una URL http(s) válida",

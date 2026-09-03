@@ -8,7 +8,7 @@ import { Resend } from "resend";
 
 import { logAdminAction } from "@/lib/audit";
 import { requireAdmin } from "@/lib/auth/session";
-import { listApprovedSurgeonEmailsForAdmin } from "@/lib/data/admin";
+import { getEventForAdmin, listApprovedSurgeonEmailsForAdmin } from "@/lib/data/admin";
 import { renderBrandedEmailHtml, textToParagraphsHtml } from "@/lib/email/template";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { insertWithUniqueSlug } from "@/lib/slug";
@@ -947,6 +947,99 @@ export async function sendAdminEmailAction(
     admin: admin.username,
     mode: input.mode,
     audience: input.mode === "bulk" ? input.audience : null,
+    recipientCount: recipients.length,
+    subject,
+  });
+
+  return { success: true, recipientCount: recipients.length };
+}
+
+/**
+ * Sends a branded "new event" announcement to every approved surgeon who
+ * opted into either notify_new_events or notify_suggested_invitations —
+ * the union of both preferences, since either one makes a surgeon a
+ * legitimate recipient for a specific event announcement (unlike the
+ * generic admin email form's "only those who want X" checkboxes, which
+ * intersect when several are checked).
+ */
+export async function sendEventAnnouncementAction(
+  eventId: string,
+): Promise<AdminEmailActionResult> {
+  const { admin, supabase } = await requireAdminClient();
+
+  const event = await getEventForAdmin(eventId);
+  if (!event) return { error: "No se encontró ese evento." };
+
+  const allowed = await checkRateLimit(supabase, admin.id, "admin-event-announcement", 20, 3600);
+  if (!allowed) return { error: "Hiciste demasiados envíos. Esperá un rato antes de volver a intentar." };
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error("Event announcement email not sent: missing RESEND_API_KEY.");
+    return { error: "El envío de emails no está configurado (falta RESEND_API_KEY)." };
+  }
+
+  const recipients = (
+    await listApprovedSurgeonEmailsForAdmin({
+      notifyNewEvents: true,
+      notifySuggestedInvitations: true,
+      matchMode: "any",
+    })
+  ).map((s) => s.email);
+
+  if (recipients.length === 0) return { error: "No hay destinatarios para este envío." };
+
+  const eventUrl = `${SITE_URL}/events/${event.slug}`;
+  const subject = `Nuevo evento en ColumnaLATAM: ${event.title}`;
+  const html = renderBrandedEmailHtml({
+    heading: "Hay un nuevo evento que te puede interesar",
+    bodyHtml: textToParagraphsHtml(
+      `${event.title}\n\n` +
+        "Te avisamos porque pediste recibir novedades de eventos en ColumnaLATAM. Mirá los detalles y confirmá tu inscripción en la página oficial.",
+    ),
+    ctaButton: { label: "Ver el evento", url: eventUrl },
+  });
+
+  try {
+    const resend = new Resend(apiKey);
+    if (recipients.length === 1) {
+      const { error } = await resend.emails.send({
+        from: ADMIN_EMAIL_FROM,
+        to: recipients[0],
+        replyTo: ADMIN_EMAIL_REPLY_TO,
+        subject,
+        html,
+      });
+      if (error) {
+        console.error("Resend failed to send event announcement email:", error);
+        return { error: "No se pudo enviar el email." };
+      }
+    } else {
+      const BATCH_SIZE = 100;
+      for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
+        const chunk = recipients.slice(i, i + BATCH_SIZE);
+        const { error } = await resend.batch.send(
+          chunk.map((to) => ({
+            from: ADMIN_EMAIL_FROM,
+            to,
+            replyTo: ADMIN_EMAIL_REPLY_TO,
+            subject,
+            html,
+          })),
+        );
+        if (error) {
+          console.error("Resend failed to send event announcement batch:", error);
+          return { error: "No se pudo enviar el email." };
+        }
+      }
+    }
+  } catch (err) {
+    console.error("sendEventAnnouncementAction failed unexpectedly:", err);
+    return { error: "No se pudo enviar el email." };
+  }
+
+  await logAdminAction(supabase, "send_event_announcement", "events", eventId, {
+    admin: admin.username,
     recipientCount: recipients.length,
     subject,
   });
