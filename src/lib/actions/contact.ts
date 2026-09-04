@@ -6,6 +6,7 @@ import { Resend } from "resend";
 
 import { checkRateLimit } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
+import { verifyTurnstileToken } from "@/lib/turnstile";
 import { makeContactSchema } from "@/lib/validation/contact";
 
 export interface ContactActionState {
@@ -44,6 +45,14 @@ export async function sendContactMessageAction(
   const allowed = await checkRateLimit(supabase, ip, "contact-form", 5, 60 * 15);
   if (!allowed) {
     return { error: tErrors("tooManyAttempts") };
+  }
+
+  const captchaValid = await verifyTurnstileToken(
+    formData.get("cf-turnstile-response") as string | null,
+    ip,
+  );
+  if (!captchaValid) {
+    return { error: tErrors("captchaFailed") };
   }
 
   const apiKey = process.env.RESEND_API_KEY;

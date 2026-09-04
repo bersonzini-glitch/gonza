@@ -728,6 +728,7 @@
     "invalidData": "Revisá los datos ingresados.",
     "tooManyAttempts": "Demasiados intentos. Probá de nuevo más tarde.",
     "notConfigured": "El formulario de contacto no está disponible en este momento.",
+    "captchaFailed": "No pudimos verificar que sos una persona. Recargá la página e intentá de nuevo.",
     "sendFailed": "No se pudo enviar el mensaje. Probá de nuevo más tarde.",
     "sent": "¡Mensaje enviado! Te vamos a responder a la brevedad."
   },

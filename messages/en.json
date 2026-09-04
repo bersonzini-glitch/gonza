@@ -728,6 +728,7 @@
     "invalidData": "Check the information you entered.",
     "tooManyAttempts": "Too many attempts. Try again later.",
     "notConfigured": "The contact form isn't available right now.",
+    "captchaFailed": "We couldn't verify you're human. Reload the page and try again.",
     "sendFailed": "Couldn't send the message. Try again later.",
     "sent": "Message sent! We'll get back to you soon."
   },

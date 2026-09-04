@@ -2,7 +2,8 @@
 
 import { AlertCircle, CheckCircle2, Lock } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useActionState } from "react";
+import Script from "next/script";
+import { useActionState, useEffect } from "react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -11,9 +12,17 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { sendContactMessageAction, type ContactActionState } from "@/lib/actions/contact";
 
+declare global {
+  interface Window {
+    turnstile?: { reset: (widget?: string | HTMLElement) => void };
+  }
+}
+
 const initialState: ContactActionState = {};
 
 const LOCKED_FIELD_CLASSNAME = "read-only:bg-input/50 read-only:cursor-default";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 export function ContactForm({
   defaultName,
@@ -28,6 +37,13 @@ export function ContactForm({
     sendContactMessageAction.bind(null, locale),
     initialState,
   );
+
+  // A Turnstile token is single-use, so a fresh one is needed after any
+  // failed attempt (a validation error, a rate limit, etc.) before the
+  // visitor can resubmit.
+  useEffect(() => {
+    if (state.error) window.turnstile?.reset();
+  }, [state.error]);
 
   if (state.success) {
     return (
@@ -77,6 +93,13 @@ export function ContactForm({
         <Label htmlFor="message">{t("messageLabel")}</Label>
         <Textarea id="message" name="message" rows={6} required />
       </div>
+
+      {TURNSTILE_SITE_KEY && (
+        <>
+          <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+          <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="auto" />
+        </>
+      )}
 
       {state.error && (
         <Alert variant="destructive">
